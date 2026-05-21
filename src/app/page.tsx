@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Hero } from "@/components/hero";
 import { Section } from "@/components/section";
 import { CaseCard } from "@/components/case-card";
+import { DitheredPhoto } from "@/components/dithered-photo";
 import { Guestbook } from "@/components/server/guestbook";
 import { GitHubActivity } from "@/components/server/github-activity";
 import { ContactForm } from "@/components/forms/contact-form";
@@ -37,21 +38,34 @@ export default function Home() {
       </Section>
 
       <Section id="about" n="02" title="About">
-        <p>
-          I started in UI/UX — eight-plus years of design work before I wrote production
-          code. The crossover is the thing I sell: I can sit with a PM and sketch the
-          interaction, then go build it through to the database without a handoff.
-        </p>
-        <p>
-          Lately I&apos;m happiest in the messy middle of{" "}
-          <span className="text-fg">products that don&apos;t exist yet</span> — picking the
-          stack, drawing the first screens, shipping the v0 to real users, and rewriting
-          whichever parts were wrong. Phosphene is the current version of that itch.
-        </p>
-        <p className="text-fg-dim">
-          Based in Vietnam. Comfortable async. Open to senior IC, founding engineer, or
-          design-engineering roles.
-        </p>
+        <div className="grid gap-8 sm:grid-cols-[1fr_auto] sm:items-start">
+          <div className="[&>p]:mb-4 [&>p]:text-fg-muted [&>p:last-child]:mb-0">
+            <p>
+              I started in UI/UX — eight-plus years of design work before I wrote production
+              code. The crossover is the thing I sell: I can sit with a PM and sketch the
+              interaction, then go build it through to the database without a handoff.
+            </p>
+            <p>
+              Lately I&apos;m happiest in the messy middle of{" "}
+              <span className="text-fg">products that don&apos;t exist yet</span> — picking the
+              stack, drawing the first screens, shipping the v0 to real users, and rewriting
+              whichever parts were wrong. Phosphene is the current version of that itch.
+            </p>
+            <p className="text-fg-dim">
+              Based in Vietnam. Comfortable async. Open to senior IC, founding engineer, or
+              design-engineering roles.
+            </p>
+          </div>
+
+          <DitheredPhoto
+            src="/about/ilya.jpg"
+            alt="ilya at the rig · saigon"
+            width={260}
+            height={340}
+            pixelSize={2}
+            className="justify-self-end"
+          />
+        </div>
       </Section>
 
       <Section id="stack" n="03" title="Stack">

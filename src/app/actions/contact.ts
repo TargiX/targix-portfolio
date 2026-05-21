@@ -19,6 +19,8 @@ export type ContactFormState = {
 };
 
 const TO_EMAIL = process.env.CONTACT_TO ?? "targix8@gmail.com";
+// Defaults to Resend's shared sender for first-run; override with your verified domain
+// (e.g. CONTACT_FROM="Ilya <targix@phosphene.cc>") for branded delivery.
 const FROM_EMAIL = process.env.CONTACT_FROM ?? "Portfolio <onboarding@resend.dev>";
 
 export async function sendContact(

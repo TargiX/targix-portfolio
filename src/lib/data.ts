@@ -85,7 +85,7 @@ export const STACK = [
 ];
 
 export const CONTACT = [
-  { key: "email", label: "targix8@gmail.com", href: "mailto:targix8@gmail.com" },
+  { key: "email", label: "targix@phosphene.cc", href: "mailto:targix@phosphene.cc" },
   { key: "github", label: "github.com/TargiX", href: "https://github.com/TargiX" },
   { key: "linkedin", label: "linkedin.com/in/ilya-moskovkin", href: "https://www.linkedin.com/in/" },
 ];
