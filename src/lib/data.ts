@@ -74,6 +74,7 @@ export const STACK = [
       "Redis",
       "tRPC / REST",
       "GraphQL / Apollo",
+      "Stripe · Paddle · Creem",
       "AWS · S3 · Hetzner · Vercel",
     ],
   },
