@@ -1,0 +1,52 @@
+---
+slug: phosphene
+title: Phosphene
+year: "2024 — now"
+role: Solo founder · Design + Eng
+blurb: A graph-based prompt workflow for image generation. Designers wire prompts, transforms, and models into a node graph and run the whole pipeline.
+tags: ["Nuxt 4", "tRPC", "Prisma", "Postgres", "Redis", "S3", "Three.js", "Vue Flow", "fal.ai", "Gemini", "Paddle", "Sentry", "PostHog"]
+links:
+  - { label: "phosphene.cc", href: "https://phosphene.cc" }
+  - { label: "github", href: "https://github.com/TargiX" }
+cover: "/work/phosphene/cover.png"
+order: 1
+featured: true
+---
+
+## The pitch
+
+Image generation tools are built around **one prompt at a time**. You type a prompt, you get four images, you tweak the prompt, you get four more. That works for play. It falls apart the moment you want a reproducible **pipeline** — same input, same transforms, predictably different outputs.
+
+Phosphene replaces the prompt box with a **graph**. Each node is one stage: a prompt, a transform (style ref, LoRA, model swap), a generation step, an output sink. You wire them together and run the whole pipeline. Change one node, re-run, see what shifts.
+
+## What's in the box
+
+- **Editor**: a Vue Flow canvas where designers drag nodes, connect ports, and inspect intermediate results.
+- **Runtime**: a tRPC orchestrator that schedules each node, calls the right model provider (fal.ai for image gen, Gemini for vision + reasoning), streams progress back to the canvas, and persists everything to Postgres.
+- **Workspace**: each project is a versioned graph + a gallery of every run. Branch, fork, compare.
+- **Billing**: Paddle on top, metered per generation. Free tier for play, paid for serious runs.
+
+## Stack decisions worth defending
+
+**Nuxt 4 over Next.** This is a heavy editor app, not a content site. Vue's reactivity model is a better fit for canvas state — fewer footguns, less code. Server components were tempting but the editor is fundamentally client-side anyway. Nuxt's auto-imports and file-based server routes get out of the way.
+
+**tRPC over REST.** End-to-end type safety on a tightly-coupled monorepo eliminates a whole class of bugs. The runtime is the only consumer of the API; there's no public surface to design around.
+
+**Prisma + Postgres on Neon.** Boring is good. Branching databases per Vercel preview deploy is the killer feature — every PR gets its own DB snapshot.
+
+**Vue Flow.** The graph editor is the product. Vue Flow gave me a working canvas in 4 hours; building one from scratch would have cost 4 weeks. The downside (limited custom edge routing) was easy to live with.
+
+**fal.ai over running my own GPUs.** Per-generation pricing means I pay only for actual use. When I'm sleeping, I'm not paying for an idle A100.
+
+## What I'd do differently
+
+- **I should have shipped the v0 with three nodes, not seven.** Each extra node type is a UX surface that has to be designed. I burned two weeks on a "loop" node nobody asked for.
+- **The undo history is per-graph, not per-edit.** Means coarse-grained undo. Should have been an event-sourced log from day one.
+- **Auth via Clerk was the right call**, but I should have set it up before the schema. Retrofitting `userId` onto every table is a chore.
+
+## Numbers
+
+- **Time to v0:** 6 weeks, solo.
+- **Time to first paying user:** 9 weeks.
+- **Median pipeline run latency:** 8.4s end-to-end.
+- **Bundle size:** 312KB gzip for the editor.

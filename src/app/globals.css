@@ -1,0 +1,177 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ───────────────────────────────────────────────
+   Base tokens (dark by default — this is the identity)
+   ─────────────────────────────────────────────── */
+:root {
+  /* surfaces */
+  --bg:         oklch(0.135 0.005 250);
+  --bg-2:       oklch(0.165 0.006 250);
+  --bg-3:       oklch(0.19  0.007 250);
+
+  /* text */
+  --fg:         oklch(0.96  0.005 250);
+  --fg-muted:   oklch(0.62  0.005 250);
+  --fg-dim:     oklch(0.45  0.005 250);
+
+  /* lines */
+  --line:       oklch(0.26  0.005 250);
+  --line-soft:  oklch(0.22  0.005 250);
+
+  /* accent (overridable) */
+  --accent:     #a3e635;
+  --accent-rgb: 163 230 53;
+
+  /* shadcn-compat tokens (mapped) */
+  --background: var(--bg);
+  --foreground: var(--fg);
+  --card: var(--bg-2);
+  --card-foreground: var(--fg);
+  --popover: var(--bg-2);
+  --popover-foreground: var(--fg);
+  --primary: var(--accent);
+  --primary-foreground: var(--bg);
+  --secondary: var(--bg-3);
+  --secondary-foreground: var(--fg);
+  --muted: var(--bg-2);
+  --muted-foreground: var(--fg-muted);
+  --accent-bg: var(--bg-3);
+  --accent-foreground: var(--fg);
+  --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: var(--fg);
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--accent);
+  --radius: 0.5rem;
+}
+
+@theme inline {
+  /* fonts wired via next/font in layout.tsx */
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent-bg);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-dim: var(--fg-dim);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-brand: var(--accent);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.65;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100svh;
+  background-image:
+    radial-gradient(1200px 600px at 50% -200px, oklch(0.2 0.01 250 / .8), transparent 60%);
+}
+
+::selection { background: var(--accent); color: var(--bg); }
+
+a { color: inherit; text-decoration: none; }
+
+/* utility for accent-tinted spans */
+.hi { color: var(--fg); }
+.muted { color: var(--fg-dim); }
+
+/* blinking caret */
+@keyframes blink { 50% { opacity: 0; } }
+.caret {
+  display: inline-block;
+  width: 0.5ch;
+  height: 0.9em;
+  background: var(--accent);
+  vertical-align: -0.08em;
+  margin-left: 0.15ch;
+  animation: blink 1.05s steps(2) infinite;
+}
+
+/* body accent dot pattern — a faint, regularly-spaced grid of accent dots
+   that sits behind all body content (below the hero) and fades at top + bottom.
+   tiny enough that you only register it after a second of looking. */
+.body-dots {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: radial-gradient(circle, var(--accent) 0.7px, transparent 1.4px);
+  background-size: 22px 22px;
+  background-position: 0 0;
+  opacity: 0.07;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 60vh,
+    black 95vh,
+    black calc(100% - 240px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 60vh,
+    black 95vh,
+    black calc(100% - 240px),
+    transparent 100%
+  );
+}
+
+/* status dot pulse */
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: oklch(0.78 0.16 145);
+  box-shadow: 0 0 0 3px oklch(0.78 0.16 145 / 0.18);
+  animation: status-pulse 2.4s ease-in-out infinite;
+}
