@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Targix Portfolio
 
-## Getting Started
+Personal portfolio and case-study site for Ilya Moskovkin. Built with Next.js App Router, MDX case studies, a Turso/Drizzle guestbook, and a Resend-backed contact form.
 
-First, run the development server:
+## Stack
+
+- Next.js 16, React 19, TypeScript
+- Tailwind CSS 4
+- MDX content in `content/work`
+- Drizzle ORM with libSQL/Turso
+- Resend for contact-form delivery
+
+## Local Setup
+
+Install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run the development server:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The dev script uses port `3010`, so open `http://localhost:3010`.
 
-## Learn More
+## Environment
 
-To learn more about Next.js, take a look at the following resources:
+The app can run locally without external services. Guestbook writes use `file:./local.db` by default, and the contact form logs the message when `RESEND_API_KEY` is not set.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Optional variables:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+DATABASE_URL=file:./local.db
+DATABASE_AUTH_TOKEN=
+RESEND_API_KEY=
+CONTACT_TO=targix8@gmail.com
+CONTACT_FROM="Portfolio <onboarding@resend.dev>"
+```
 
-## Deploy on Vercel
+For production, use a remote libSQL/Turso `DATABASE_URL`. A production `file:` URL is treated as non-live so serverless deployments do not try to write to a read-only filesystem.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm run dev        # start Next.js on port 3010
+pnpm run build      # production build and type check
+pnpm run start      # serve the production build on port 3010
+pnpm run db:generate
+pnpm run db:migrate
+pnpm run db:push
+pnpm run db:studio
+```
+
+## Content
+
+Case studies live in `content/work/*.mdx`. Each file uses frontmatter consumed by `src/lib/content.ts` and is routed at `/work/<slug>`.
