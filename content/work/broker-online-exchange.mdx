@@ -1,0 +1,62 @@
+---
+slug: broker-online-exchange
+title: Broker Online Exchange
+year: "2021 — 2026"
+role: Lead Frontend · Broker Online Exchange → AppDirect
+blurb: Nearly five years leading frontend — four at Broker Online Exchange, the last after AppDirect acquired it. Ran the team, mentored juniors, and led the Vue → React micro-frontend migration on MyServiceCloud, the telecom-quoting platform.
+tags: ["React", "Vue 3", "TypeScript", "Micro-frontends", "Mantine", "Zustand", "Laravel", "Yii", "Gemini Vision", "Team lead", "Mentoring"]
+links:
+  - { label: "brokeronlinexchange.com", href: "https://www.brokeronlinexchange.com/" }
+  - { label: "the platform", href: "https://www.brokeronlinexchange.com/platform" }
+order: 1.5
+featured: false
+---
+
+## The role
+
+For close to five years I led the frontend on **MyServiceCloud**, the platform behind **Broker Online Exchange** — a B2B telecom-quoting product for brokers. Four of those years were at Broker Online Exchange itself; in the last year **AppDirect acquired the company** and the work continued under them.
+
+I led the frontend the whole way through: set the direction for how we built UI, owned the architecture and component patterns, ran code review, and mentored the junior engineers on the team. When a new product area landed on the roadmap, I was the person who decided how it got built on the client and made sure it shipped.
+
+The product itself is internal tooling I can't put on a public page — but the platform it powers is public, and most of the UI in it is what my team and I shipped.
+
+## The platform
+
+<YouTubeEmbed id="_PRKfDjIIu0" start={21} title="Broker Online Exchange — platform walkthrough" />
+
+That's the product walkthrough. Nearly everything on screen — the quoting flows, dashboards, catalog, document handling — is the frontend I led. It's a dense, data-heavy application: not a marketing site with a few forms, but a real B2B tool where every screen holds a lot of state and still has to feel workable.
+
+## Leading a Vue → React migration
+
+The technical arc I'm proudest of is moving the frontend from **Vue 3** to **React micro-frontends**. We started on Vue 3 + TypeScript; as the product and team grew, we migrated to a React architecture split into independently-deployable micro-frontends, with **Mantine** for the component layer and **Zustand** for state.
+
+Leading that migration meant:
+
+- **Designing the seams** — deciding where the app split into micro-frontends so teams could ship independently without the UI fragmenting into inconsistent islands.
+- **Keeping it shippable** — migrating a live, revenue-bearing platform incrementally, not with a big-bang rewrite. The product kept shipping the whole time.
+- **Setting the React patterns** — component structure, state with Zustand, how we used Mantine and styled it to the product instead of shipping default-kit UI.
+
+This is the work that's invisible in a screen recording but is exactly what "lead frontend" means: choosing the architecture a team builds on, and being responsible for it staying coherent over years.
+
+## Flagship: Bill Scan → Quote
+
+The feature I'm proudest of shipping is the flow that turns a **scanned telecom bill into a structured quote**. A broker uploads a PDF or photo of a customer's existing bill; the system reads it with **Gemini Vision** OCR, extracts the line items and rate plan, and turns that into a comparable quote inside the platform — instead of re-typing a bill by hand.
+
+On the frontend that meant building an interface that could:
+
+- handle messy real-world uploads (skewed scans, multi-page bills, bad photos) without falling over,
+- surface the OCR's confidence and let a human correct it before the numbers became a quote,
+- and keep the review-and-correct loop fast enough that it actually saved brokers time.
+
+It's the kind of feature where the AI is only half the work — the other half is the UI that makes the AI's output trustworthy and editable.
+
+## Stack
+
+- **Frontend:** Vue 3 + TypeScript early on → migrated to **React micro-frontends** with **Mantine** and **Zustand**.
+- **Backend:** PHP — **Yii** in the earlier years, **Laravel** later. (Frontend was my lane; I worked across the API boundary with both.)
+- **Gemini Vision** — OCR for the bill-scanning flow.
+- Years of accumulated component and pattern work to keep a large B2B app maintainable.
+
+## What I take from it
+
+Five years on one platform — through a framework migration and an acquisition — taught me the thing that's easy to skip on side projects: how to keep a real, growing product **coherent** across many features, many engineers, and a long timeline, while still shipping. Leading the frontend there is why I'm comfortable being the senior frontend voice on a team, not just an individual contributor heads-down on a ticket.

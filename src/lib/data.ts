@@ -33,16 +33,16 @@ export const SECONDARY: Project[] = [
   {
     index: "②",
     year: "2021 — 2026",
-    role: "Lead Frontend · AppDirect (MSC)",
-    title: "AppDirect",
+    role: "Lead Frontend · Broker Online Exchange → AppDirect",
+    title: "Broker Online Exchange",
     blurb:
-      "Nearly five years leading frontend in AppDirect's Managed Services division — running the team, mentoring juniors, and setting frontend direction while shipping a steady stream of products across Broker Online Exchange's telecom-quoting platform (Vue 3 + TypeScript over a Yii backend). Flagship: Bill Scan → Quote, which turns scanned telecom bills into structured quotes via Gemini Vision OCR.",
-    tags: ["Vue 3", "TypeScript", "Yii", "Gemini Vision", "Team lead", "Mentoring"],
+      "Nearly five years leading frontend — four at Broker Online Exchange, the last after AppDirect acquired it. Ran the team and mentored juniors while building MyServiceCloud, a telecom-quoting platform, and led the migration from Vue 3 to React micro-frontends (Mantine, Zustand). Flagship: Bill Scan → Quote — scanned bills into structured quotes via Gemini Vision OCR.",
+    tags: ["React", "Vue 3", "TypeScript", "Micro-frontends", "Mantine", "Zustand", "Laravel", "Team lead"],
     links: [
       { label: "brokeronlinexchange.com", href: "https://www.brokeronlinexchange.com/" },
-      { label: "case study", href: "/work/appdirect" },
+      { label: "case study", href: "/work/broker-online-exchange" },
     ],
-    caseSlug: "appdirect",
+    caseSlug: "broker-online-exchange",
   },
   {
     index: "③",
