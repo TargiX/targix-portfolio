@@ -36,7 +36,7 @@ export const SECONDARY: Project[] = [
     role: "Lead Frontend · AppDirect (MSC)",
     title: "AppDirect",
     blurb:
-      "Nearly five years leading frontend in AppDirect's Managed Services division — running the team, mentoring juniors, and setting frontend direction while shipping a steady stream of products across the telecom-quoting platform (Vue 3 + TypeScript over a Yii backend). Flagship: Bill Scan → Quote, which turns scanned telecom bills into structured quotes via Gemini Vision OCR — I lifted unit-test coverage from 28% → 68% while shipping it.",
+      "Nearly five years leading frontend in AppDirect's Managed Services division — running the team, mentoring juniors, and setting frontend direction while shipping a steady stream of products across the telecom-quoting platform (Vue 3 + TypeScript over a Yii backend). Flagship: Bill Scan → Quote, which turns scanned telecom bills into structured quotes via Gemini Vision OCR.",
     tags: ["Vue 3", "TypeScript", "Yii", "Gemini Vision", "Team lead", "Mentoring"],
     links: [{ label: "appdirect.com", href: "https://appdirect.com" }],
   },
