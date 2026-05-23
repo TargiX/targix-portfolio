@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useVietnamTime } from "@/lib/use-vietnam-time";
 import { cn } from "@/lib/utils";
@@ -33,6 +33,11 @@ export function ViewSwitcher({
   const [dir, setDir] = useState(1);
   const time = useVietnamTime();
 
+  const lockRef = useRef(false);
+  const accRef = useRef(0);
+  const lastWheelRef = useRef(0);
+  const touchYRef = useRef(0);
+
   const go = useCallback(
     (next: View, push = true) => {
       setView((cur) => {
@@ -59,7 +64,77 @@ export function ViewSwitcher({
     return () => window.removeEventListener("hashchange", fromHash);
   }, [go]);
 
+  // overscroll-to-advance: at the bottom of a panel, keep scrolling to slide
+  // to the next zone; at the top, scroll up to go back. Requires accumulated
+  // intent + a cooldown so it never jumps on a casual arrival at the edge.
+  useEffect(() => {
+    const THRESHOLD = 160; // accumulated overscroll px before advancing
+    const COOLDOWN = 850;
+
+    const doc = () => document.documentElement;
+    const atBottom = () => window.innerHeight + window.scrollY >= doc().scrollHeight - 2;
+    const atTop = () => window.scrollY <= 1;
+
+    const advance = (delta: number) => {
+      const idx = ORDER.indexOf(view);
+      if (delta > 0 && atBottom() && idx < ORDER.length - 1) {
+        lockRef.current = true;
+        accRef.current = 0;
+        go(ORDER[idx + 1]);
+        setTimeout(() => (lockRef.current = false), COOLDOWN);
+        return true;
+      }
+      if (delta < 0 && atTop() && idx > 0) {
+        lockRef.current = true;
+        accRef.current = 0;
+        go(ORDER[idx - 1]);
+        setTimeout(() => (lockRef.current = false), COOLDOWN);
+        return true;
+      }
+      return false;
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      if (lockRef.current) return;
+      const now = Date.now();
+      if (now - lastWheelRef.current > 250) accRef.current = 0; // decay between bursts
+      lastWheelRef.current = now;
+
+      const goingDown = e.deltaY > 0;
+      const atEdge = goingDown ? atBottom() : atTop();
+      if (!atEdge) {
+        accRef.current = 0;
+        return;
+      }
+      accRef.current += e.deltaY;
+      if (Math.abs(accRef.current) > THRESHOLD) advance(accRef.current);
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchYRef.current = e.touches[0]?.clientY ?? 0;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (lockRef.current) return;
+      const y = e.touches[0]?.clientY ?? 0;
+      const dy = touchYRef.current - y; // +ve = swipe up = scroll-down intent
+      const atEdge = dy > 0 ? atBottom() : atTop();
+      if (atEdge && Math.abs(dy) > 70) advance(dy);
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+    };
+  }, [view, go]);
+
   const panels: Record<View, ReactNode> = { work, lab, about };
+  const idx = ORDER.indexOf(view);
+  const nextView = idx < ORDER.length - 1 ? ORDER[idx + 1] : null;
+  const nextLabel = nextView ? TABS.find((t) => t.id === nextView)?.label : null;
 
   return (
     <>
@@ -120,6 +195,20 @@ export function ViewSwitcher({
           </motion.div>
         </AnimatePresence>
       </div>
+
+      {/* next-zone affordance — clickable, and signals the scroll-to-advance */}
+      {nextView && (
+        <div className="mx-auto -mt-6 max-w-[880px] px-5 pb-10 sm:px-8">
+          <button
+            type="button"
+            onClick={() => go(nextView)}
+            className="group flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-line-soft py-3 font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          >
+            keep scrolling for {nextLabel}
+            <span className="inline-block transition-transform group-hover:translate-y-0.5">↓</span>
+          </button>
+        </div>
+      )}
     </>
   );
 }
