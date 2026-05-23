@@ -126,23 +126,25 @@ void main() {
   // ─── mouse glow ────────────────────────────────────────────
   vec2 mDir = (p - uMouse);
   float mDist = length(mDir);
-  float mGlow = exp(-mDist * mDist / 28000.0);
+  // wider, softer falloff so the glow reads as a real pool of light
+  float mGlow = exp(-mDist * mDist / 42000.0);
   // distance-modulated dot brightness (cursor "wakes up" nearby dots)
-  float mLocal = exp(-mDist * mDist / 90000.0);
+  float mLocal = exp(-mDist * mDist / 120000.0);
 
   // ─── compose ───────────────────────────────────────────────
   vec3 baseDot   = vec3(0.32, 0.34, 0.40);
-  vec3 dotColor  = mix(baseDot, uAccent, 0.35 + mLocal * uMouseActive * 0.5);
+  // near the cursor, dots shift hard toward the accent green
+  vec3 dotColor  = mix(baseDot, uAccent, 0.35 + mLocal * uMouseActive * 0.85);
   vec3 col       = vec3(0.0);
 
-  // dot grid layer
-  col += gridDot * dotColor * dotBright * 0.55;
+  // dot grid layer — brighten dots a touch where the cursor is
+  col += gridDot * dotColor * dotBright * (0.55 + mLocal * uMouseActive * 0.5);
 
   // soft aurora wash (extremely faint, only at noise peaks)
   col += uAccent * aurora * aurora * 0.05;
 
-  // cursor glow on top
-  col += uAccent * mGlow * uMouseActive * 0.18;
+  // cursor glow on top — stronger green pool
+  col += uAccent * mGlow * uMouseActive * 0.42;
 
   // very faint film grain
   float gr = grain(p + uTime * 13.0) - 0.5;
@@ -184,8 +186,17 @@ export function PixiMetaballHero({
     let ro: ResizeObserver | null = null;
     let onMove: ((e: PointerEvent) => void) | null = null;
     let onLeave: (() => void) | null = null;
+    let onTouch: ((e: TouchEvent) => void) | null = null;
+    let onTouchEnd: (() => void) | null = null;
 
-    const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999, active: 0 };
+    // Touch devices have no cursor, so the glow would sit dead. On those we
+    // drive the glow with a slow auto-orbit + scroll position so it stays alive,
+    // and let a finger drag override it directly.
+    const isTouch =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(pointer: coarse)").matches;
+
+    const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999, active: 0, touching: 0 };
 
     function safeDestroy(a: Application) {
       try {
@@ -243,16 +254,34 @@ export function PixiMetaballHero({
       app.stage.addChild(sprite);
 
       onMove = (e: PointerEvent) => {
+        if (e.pointerType === "touch") return; // touch handled separately
         const rect = host.getBoundingClientRect();
         mouse.tx = e.clientX - rect.left;
         mouse.ty = e.clientY - rect.top;
         mouse.active = 1;
+        mouse.touching = 0;
       };
       onLeave = () => {
-        mouse.active = 0;
+        if (!isTouch) mouse.active = 0;
+      };
+      onTouch = (e: TouchEvent) => {
+        const touch = e.touches[0];
+        if (!touch) return;
+        const rect = host.getBoundingClientRect();
+        mouse.tx = touch.clientX - rect.left;
+        mouse.ty = touch.clientY - rect.top;
+        mouse.touching = 1;
+      };
+      onTouchEnd = () => {
+        mouse.touching = 0;
       };
       window.addEventListener("pointermove", onMove, { passive: true });
       window.addEventListener("pointerleave", onLeave);
+      if (isTouch) {
+        window.addEventListener("touchmove", onTouch, { passive: true });
+        window.addEventListener("touchstart", onTouch, { passive: true });
+        window.addEventListener("touchend", onTouchEnd, { passive: true });
+      }
 
       ro = new ResizeObserver(() => {
         if (!app || !sprite || !filter) return;
@@ -269,20 +298,43 @@ export function PixiMetaballHero({
       app.ticker.add((ticker) => {
         if (!app || !filter) return;
         const dt = ticker.deltaTime;
+        const W = app.renderer.width / app.renderer.resolution;
+        const H = app.renderer.height / app.renderer.resolution;
         const uniforms = filter.resources.metaUniforms.uniforms as Record<string, unknown>;
 
         const t = ((uniforms.uTime as number) ?? 0) + dt / 60;
         uniforms.uTime = t;
 
+        let targetActive = mouse.active;
+
+        if (isTouch) {
+          if (mouse.touching) {
+            // finger drag — follow it directly, full glow
+            targetActive = 1;
+          } else {
+            // ambient: slow orbit, biased vertically by scroll so the orbs
+            // visibly drift as the user scrolls the hero
+            const cx = W * 0.5;
+            const cy = H * 0.5;
+            const scrollProg = Math.min(
+              1,
+              Math.max(0, (window.scrollY || 0) / Math.max(1, H)),
+            );
+            mouse.tx = cx + Math.cos(t * 0.45) * W * 0.3;
+            mouse.ty =
+              cy + Math.sin(t * 0.6) * H * 0.16 + (scrollProg - 0.4) * H * 0.7;
+            targetActive = 0.65; // always-on baseline glow on touch
+          }
+        }
+
         if (mouse.tx > -1000) {
-          const lerp = 0.12;
+          const lerp = mouse.touching ? 0.18 : 0.08;
           mouse.x += (mouse.tx - mouse.x) * lerp;
           mouse.y += (mouse.ty - mouse.y) * lerp;
         }
         const uMouse = uniforms.uMouse as Float32Array;
         uMouse[0] = mouse.x;
         uMouse[1] = mouse.y;
-        const targetActive = mouse.active;
         const curActive = (uniforms.uMouseActive as number) ?? 0;
         uniforms.uMouseActive = curActive + (targetActive - curActive) * 0.06;
       });
@@ -292,6 +344,11 @@ export function PixiMetaballHero({
       disposed = true;
       if (onMove) window.removeEventListener("pointermove", onMove);
       if (onLeave) window.removeEventListener("pointerleave", onLeave);
+      if (onTouch) {
+        window.removeEventListener("touchmove", onTouch);
+        window.removeEventListener("touchstart", onTouch);
+      }
+      if (onTouchEnd) window.removeEventListener("touchend", onTouchEnd);
       if (ro) ro.disconnect();
       if (app && inited) {
         safeDestroy(app);

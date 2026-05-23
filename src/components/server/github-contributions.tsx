@@ -204,9 +204,7 @@ export async function GitHubContributions({ username }: { username: string }) {
                   rx={2}
                   fill={LEVEL_FILL[day.level]}
                 >
-                  <title>
-                    {day.count} contribution{day.count === 1 ? "" : "s"} · {day.date}
-                  </title>
+                  <title>{`${day.count} contribution${day.count === 1 ? "" : "s"} · ${day.date}`}</title>
                 </rect>
               );
             }),
