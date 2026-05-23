@@ -32,12 +32,12 @@ export const FEATURED: Project = {
 export const SECONDARY: Project[] = [
   {
     index: "②",
-    year: "2022 — 2024",
-    role: "Senior Frontend · AppDirect MSC",
-    title: "Bill Scan → Quote",
+    year: "2021 — 2026",
+    role: "Lead Frontend · AppDirect (MSC)",
+    title: "AppDirect",
     blurb:
-      "Rebuilt the flow that turns scanned telecom bills into structured quotes — Vue 3 + Yii, Gemini Vision for OCR. Pulled unit-test coverage from 28% → 68% while shipping.",
-    tags: ["Vue 3", "TypeScript", "Yii", "Gemini Vision"],
+      "Nearly five years leading frontend in AppDirect's Managed Services division — running the team, mentoring juniors, and setting frontend direction while shipping a steady stream of products across the telecom-quoting platform (Vue 3 + TypeScript over a Yii backend). Flagship: Bill Scan → Quote, which turns scanned telecom bills into structured quotes via Gemini Vision OCR — I lifted unit-test coverage from 28% → 68% while shipping it.",
+    tags: ["Vue 3", "TypeScript", "Yii", "Gemini Vision", "Team lead", "Mentoring"],
     links: [{ label: "appdirect.com", href: "https://appdirect.com" }],
   },
   {
