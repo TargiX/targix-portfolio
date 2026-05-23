@@ -1,12 +1,18 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
+import { AnchorDemo } from "@/components/anchor-demo";
+import { YouTubeEmbed } from "@/components/youtube-embed";
 
-/** Local lite version of MDXComponents — avoids needing @types/mdx. */
+/** Local lite version of MDXComponents — avoids needing @types/mdx.
+ *  Index signature covers HTML tags; custom components are added explicitly. */
 type MDXComponents = {
   [K in keyof React.JSX.IntrinsicElements]?: (
     props: ComponentPropsWithoutRef<K> & { children?: ReactNode },
   ) => ReactNode;
+} & {
+  AnchorDemo?: typeof AnchorDemo;
+  YouTubeEmbed?: typeof YouTubeEmbed;
 };
 
 /** Custom mapping of HTML elements → styled React components for MDXRemote.
@@ -101,4 +107,7 @@ export const mdxComponents: MDXComponents = {
       {...props}
     />
   ),
+  // Custom components usable directly in MDX:
+  AnchorDemo,
+  YouTubeEmbed,
 };

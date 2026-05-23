@@ -36,19 +36,27 @@ export const SECONDARY: Project[] = [
     role: "Lead Frontend · AppDirect (MSC)",
     title: "AppDirect",
     blurb:
-      "Nearly five years leading frontend in AppDirect's Managed Services division — running the team, mentoring juniors, and setting frontend direction while shipping a steady stream of products across the telecom-quoting platform (Vue 3 + TypeScript over a Yii backend). Flagship: Bill Scan → Quote, which turns scanned telecom bills into structured quotes via Gemini Vision OCR.",
+      "Nearly five years leading frontend in AppDirect's Managed Services division — running the team, mentoring juniors, and setting frontend direction while shipping a steady stream of products across Broker Online Exchange's telecom-quoting platform (Vue 3 + TypeScript over a Yii backend). Flagship: Bill Scan → Quote, which turns scanned telecom bills into structured quotes via Gemini Vision OCR.",
     tags: ["Vue 3", "TypeScript", "Yii", "Gemini Vision", "Team lead", "Mentoring"],
-    links: [{ label: "appdirect.com", href: "https://appdirect.com" }],
+    links: [
+      { label: "brokeronlinexchange.com", href: "https://www.brokeronlinexchange.com/" },
+      { label: "case study", href: "/work/appdirect" },
+    ],
+    caseSlug: "appdirect",
   },
   {
     index: "③",
-    year: "2023",
-    role: "Design Engineer · concept",
-    title: "Project Three",
+    year: "2026",
+    role: "Solo · Design + Eng",
+    title: "Anchor",
     blurb:
-      "Slot for your third case. Drop a one-line problem statement, what you built, and one number that makes a hiring manager pause.",
-    tags: ["TBD"],
-    links: [{ label: "case study", href: "#" }],
+      "A calm daily-ritual app — mood, sleep, intention, journaling. One Next.js codebase shipping to web, iOS/Android (Capacitor), and desktop (Electron).",
+    tags: ["Next.js 16", "React 19", "Capacitor", "Electron", "Framer Motion"],
+    links: [
+      { label: "live app", href: "https://anchor-ritual.vercel.app" },
+      { label: "case study", href: "/work/anchor" },
+    ],
+    caseSlug: "anchor",
   },
   {
     index: "④",
