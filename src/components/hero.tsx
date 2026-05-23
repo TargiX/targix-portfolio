@@ -61,8 +61,8 @@ export function Hero() {
           href="#lab"
           className="group mt-8 inline-flex items-center gap-2 font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim transition-colors hover:text-[var(--accent)]"
         >
-          <span className="inline-block animate-bounce">↓</span>
-          here for the visual / motion work? jump to the lab
+          here for the visual / motion work? open the lab
+          <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
         </a>
       </div>
     </header>

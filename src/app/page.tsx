@@ -9,37 +9,45 @@ import { Guestbook } from "@/components/server/guestbook";
 import { GitHubActivity } from "@/components/server/github-activity";
 import { GitHubContributions } from "@/components/server/github-contributions";
 import { ContactForm } from "@/components/forms/contact-form";
+import { ViewSwitcher } from "@/components/view-switcher";
 import { CONTACT, FEATURED, SECONDARY, STACK } from "@/lib/data";
 
+const CONTAINER = "relative mx-auto max-w-[880px] px-5 pb-24 pt-6 sm:px-8";
+
 export default function Home() {
-  return (
+  // ── WORK ───────────────────────────────────────────────
+  const work = (
     <>
       <Hero />
-      <main className="relative mx-auto max-w-[880px] px-5 pb-20 pt-6 sm:px-8">
+      <main className={CONTAINER}>
+        <Section id="work" n="01" title="Selected Work" kicker={`${1 + SECONDARY.length} projects`}>
+          <CaseCard project={FEATURED} />
+          <div className="mt-7 text-[11px] lowercase tracking-[0.08em] text-fg-dim">
+            more — {SECONDARY.length} smaller cases
+          </div>
+          <div className="mt-2 grid grid-cols-1 border-t border-dashed border-line-soft sm:grid-cols-2">
+            {SECONDARY.map((p, i) => (
+              <CaseCard
+                key={p.title}
+                project={p}
+                compact
+                className={
+                  i % 2 === 0
+                    ? "border-t-0 pr-0 sm:border-r sm:border-dashed sm:border-line-soft sm:pr-8"
+                    : "border-t-0 pl-0 sm:pl-6"
+                }
+              />
+            ))}
+          </div>
+        </Section>
+      </main>
+    </>
+  );
 
-      <Section id="work" n="01" title="Selected Work" kicker={`${1 + SECONDARY.length} projects`}>
-        <CaseCard project={FEATURED} />
-
-        <div className="mt-7 text-[11px] lowercase tracking-[0.08em] text-fg-dim">
-          more — {SECONDARY.length} smaller cases
-        </div>
-        <div className="mt-2 grid grid-cols-1 border-t border-dashed border-line-soft sm:grid-cols-2">
-          {SECONDARY.map((p, i) => (
-            <CaseCard
-              key={p.title}
-              project={p}
-              compact
-              className={
-                i % 2 === 0
-                  ? "border-t-0 pr-0 sm:border-r sm:border-dashed sm:border-line-soft sm:pr-8"
-                  : "border-t-0 pl-0 sm:pl-6"
-              }
-            />
-          ))}
-        </div>
-      </Section>
-
-      <Section id="lab" n="02" title="Lab" kicker="canvas · timelines · drag & drop">
+  // ── LAB ────────────────────────────────────────────────
+  const lab = (
+    <main className={CONTAINER}>
+      <Section id="lab" n="01" title="Lab" kicker="canvas · timelines · drag & drop">
         <p className="mb-6 max-w-[60ch] text-fg-muted">
           The rest of this site is restrained on purpose. This part isn&apos;t — it&apos;s the
           other half of what I do. A working mini video-timeline: real drag-and-drop, trimmable
@@ -54,7 +62,28 @@ export default function Home() {
         </p>
       </Section>
 
-      <Section id="about" n="03" title="About">
+      <Section
+        id="guestbook"
+        n="02"
+        title="Guestbook"
+        kicker="server action · sqlite · useOptimistic"
+      >
+        <p className="mb-6 text-fg-muted">
+          A small thing demonstrating end-to-end App Router: the form submits to a Server Action,
+          writes to libsql via Drizzle, and the list updates optimistically before the network
+          round-trip lands.
+        </p>
+        <Suspense fallback={<GuestbookFallback />}>
+          <Guestbook />
+        </Suspense>
+      </Section>
+    </main>
+  );
+
+  // ── ABOUT ──────────────────────────────────────────────
+  const about = (
+    <main className={CONTAINER}>
+      <Section id="about" n="01" title="About">
         <div className="grid gap-8 sm:grid-cols-[1fr_auto] sm:items-start">
           <div className="[&>p]:mb-4 [&>p]:text-fg-muted [&>p:last-child]:mb-0">
             <p>
@@ -85,7 +114,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section id="stack" n="04" title="Stack">
+      <Section id="stack" n="02" title="Stack">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
           {STACK.map((col) => (
             <div key={col.label}>
@@ -113,26 +142,10 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section
-        id="guestbook"
-        n="05"
-        title="Guestbook"
-        kicker="server action · sqlite · useOptimistic"
-      >
+      <Section id="contact" n="03" title="Contact">
         <p className="mb-6 text-fg-muted">
-          A small thing demonstrating end-to-end App Router: form submits to a Server Action,
-          writes to libsql via Drizzle, the list updates optimistically before the network
-          round-trip lands.
-        </p>
-        <Suspense fallback={<GuestbookFallback />}>
-          <Guestbook />
-        </Suspense>
-      </Section>
-
-      <Section id="contact" n="06" title="Contact">
-        <p className="mb-6 text-fg-muted">
-          The form goes through a Server Action and lands in my inbox via Resend. The mailto
-          and direct links below work too — pick whichever feels less formal.
+          The form goes through a Server Action and lands in my inbox via Resend. The mailto and
+          direct links below work too — pick whichever feels less formal.
         </p>
 
         {!process.env.RESEND_API_KEY && (
@@ -166,15 +179,20 @@ export default function Home() {
           ))}
         </ul>
       </Section>
+    </main>
+  );
 
-        <footer className="mt-16 flex flex-wrap items-center gap-3 border-t border-line-soft pt-6 text-[10px] lowercase tracking-[0.06em] text-fg-dim">
-          <span>im / portfolio / v1.0</span>
-          <span className="size-[3px] rounded-full bg-fg-dim" />
-          <span>built with next 16 · react 19 · tailwind v4 · shadcn · pixi.js</span>
-          <span className="size-[3px] rounded-full bg-fg-dim" />
-          <span>© {new Date().getFullYear()}</span>
-        </footer>
-      </main>
+  return (
+    <>
+      <ViewSwitcher work={work} lab={lab} about={about} />
+
+      <footer className="mx-auto flex max-w-[880px] flex-wrap items-center gap-3 px-5 py-8 text-[10px] lowercase tracking-[0.06em] text-fg-dim sm:px-8">
+        <span>im / portfolio / v1.0</span>
+        <span className="size-[3px] rounded-full bg-fg-dim" />
+        <span>built with next 16 · react 19 · tailwind v4 · pixi · framer</span>
+        <span className="size-[3px] rounded-full bg-fg-dim" />
+        <span>© {new Date().getFullYear()}</span>
+      </footer>
     </>
   );
 }
