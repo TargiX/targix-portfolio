@@ -4,6 +4,7 @@ import { Hero } from "@/components/hero";
 import { Section } from "@/components/section";
 import { CaseCard } from "@/components/case-card";
 import { DitheredPhoto } from "@/components/dithered-photo";
+import { TimelineEditor } from "@/components/lab/timeline-editor";
 import { Guestbook } from "@/components/server/guestbook";
 import { GitHubActivity } from "@/components/server/github-activity";
 import { GitHubContributions } from "@/components/server/github-contributions";
@@ -38,7 +39,22 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section id="about" n="02" title="About">
+      <Section id="lab" n="02" title="Lab" kicker="canvas · timelines · drag & drop">
+        <p className="mb-6 max-w-[60ch] text-fg-muted">
+          The rest of this site is restrained on purpose. This part isn&apos;t — it&apos;s the
+          other half of what I do. A working mini video-timeline: real drag-and-drop, trimmable
+          clips, a scrubbing playhead, and a live preview of what&apos;s on screen. No library
+          doing the heavy lifting — just pointer math, state, and{" "}
+          <code className="rounded bg-bg-2 px-1 py-0.5 text-[0.85em] text-fg">requestAnimationFrame</code>.
+        </p>
+        <TimelineEditor />
+        <p className="mt-4 text-[11px] lowercase tracking-[0.06em] text-fg-dim">
+          this is the kind of surface I like building — editors, timelines, creative tools.
+          more demos landing here over time.
+        </p>
+      </Section>
+
+      <Section id="about" n="03" title="About">
         <div className="grid gap-8 sm:grid-cols-[1fr_auto] sm:items-start">
           <div className="[&>p]:mb-4 [&>p]:text-fg-muted [&>p:last-child]:mb-0">
             <p>
@@ -69,7 +85,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section id="stack" n="03" title="Stack">
+      <Section id="stack" n="04" title="Stack">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
           {STACK.map((col) => (
             <div key={col.label}>
@@ -99,7 +115,7 @@ export default function Home() {
 
       <Section
         id="guestbook"
-        n="04"
+        n="05"
         title="Guestbook"
         kicker="server action · sqlite · useOptimistic"
       >
@@ -113,7 +129,7 @@ export default function Home() {
         </Suspense>
       </Section>
 
-      <Section id="contact" n="05" title="Contact">
+      <Section id="contact" n="06" title="Contact">
         <p className="mb-6 text-fg-muted">
           The form goes through a Server Action and lands in my inbox via Resend. The mailto
           and direct links below work too — pick whichever feels less formal.

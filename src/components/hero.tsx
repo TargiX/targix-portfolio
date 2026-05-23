@@ -56,6 +56,14 @@ export function Hero() {
             v={<span style={{ color: "oklch(0.78 0.16 145)" }}>open to roles</span>}
           />
         </div>
+
+        <a
+          href="#lab"
+          className="group mt-8 inline-flex items-center gap-2 font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim transition-colors hover:text-[var(--accent)]"
+        >
+          <span className="inline-block animate-bounce">↓</span>
+          here for the visual / motion work? jump to the lab
+        </a>
       </div>
     </header>
   );
