@@ -6,6 +6,7 @@ import { CaseCard } from "@/components/case-card";
 import { DitheredPhoto } from "@/components/dithered-photo";
 import { Guestbook } from "@/components/server/guestbook";
 import { GitHubActivity } from "@/components/server/github-activity";
+import { GitHubContributions } from "@/components/server/github-contributions";
 import { ContactForm } from "@/components/forms/contact-form";
 import { CONTACT, FEATURED, SECONDARY, STACK } from "@/lib/data";
 
@@ -86,7 +87,10 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="mt-10">
+        <div className="mt-10 space-y-4">
+          <Suspense fallback={<GitHubFallback />}>
+            <GitHubContributions username="TargiX" />
+          </Suspense>
           <Suspense fallback={<GitHubFallback />}>
             <GitHubActivity username="TargiX" />
           </Suspense>
