@@ -14,10 +14,16 @@ const TABS: { id: View; label: string }[] = [
   { id: "about", label: "About" },
 ];
 
+type Axis = "x" | "y";
+type Custom = { dir: number; axis: Axis };
+
 const variants = {
-  enter: (dir: number) => ({ x: dir > 0 ? 90 : -90, opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit: (dir: number) => ({ x: dir > 0 ? -90 : 90, opacity: 0 }),
+  // nav clicks slide sideways; scroll advances rise from below (vertical scene change)
+  enter: ({ dir, axis }: Custom) =>
+    axis === "y" ? { y: 64, opacity: 0 } : { x: dir > 0 ? 90 : -90, opacity: 0 },
+  center: { x: 0, y: 0, opacity: 1 },
+  exit: ({ dir, axis }: Custom) =>
+    axis === "y" ? { y: -48, opacity: 0 } : { x: dir > 0 ? -90 : 90, opacity: 0 },
 };
 
 export function ViewSwitcher({
@@ -31,6 +37,7 @@ export function ViewSwitcher({
 }) {
   const [view, setView] = useState<View>("work");
   const [dir, setDir] = useState(1);
+  const [axis, setAxis] = useState<Axis>("x");
   const time = useVietnamTime();
 
   const lockRef = useRef(false);
@@ -39,15 +46,19 @@ export function ViewSwitcher({
   const touchYRef = useRef(0);
 
   const go = useCallback(
-    (next: View, push = true) => {
+    (next: View, opts: { axis?: Axis; push?: boolean } = {}) => {
+      const { axis: nextAxis = "x", push = true } = opts;
       setView((cur) => {
         if (cur === next) return cur;
         setDir(ORDER.indexOf(next) > ORDER.indexOf(cur) ? 1 : -1);
+        setAxis(nextAxis);
         return next;
       });
+      // No scroll animation here — the actual reset happens instantly in
+      // onExitComplete, hidden under the transition. Animating the scroll +
+      // sliding at the same time is what made it feel queasy.
       if (push && typeof window !== "undefined") {
         history.replaceState(null, "", `#${next}`);
-        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     },
     [],
@@ -57,7 +68,7 @@ export function ViewSwitcher({
   useEffect(() => {
     const fromHash = () => {
       const h = window.location.hash.replace("#", "") as View;
-      if (ORDER.includes(h)) go(h, false);
+      if (ORDER.includes(h)) go(h, { push: false });
     };
     fromHash();
     window.addEventListener("hashchange", fromHash);
@@ -80,14 +91,14 @@ export function ViewSwitcher({
       if (delta > 0 && atBottom() && idx < ORDER.length - 1) {
         lockRef.current = true;
         accRef.current = 0;
-        go(ORDER[idx + 1]);
+        go(ORDER[idx + 1], { axis: "y" });
         setTimeout(() => (lockRef.current = false), COOLDOWN);
         return true;
       }
       if (delta < 0 && atTop() && idx > 0) {
         lockRef.current = true;
         accRef.current = 0;
-        go(ORDER[idx - 1]);
+        go(ORDER[idx - 1], { axis: "y" });
         setTimeout(() => (lockRef.current = false), COOLDOWN);
         return true;
       }
@@ -181,15 +192,20 @@ export function ViewSwitcher({
 
       {/* sliding panels */}
       <div className="overflow-x-hidden">
-        <AnimatePresence mode="wait" custom={dir} initial={false}>
+        <AnimatePresence
+          mode="wait"
+          custom={{ dir, axis }}
+          initial={false}
+          onExitComplete={() => window.scrollTo({ top: 0, behavior: "auto" })}
+        >
           <motion.div
             key={view}
-            custom={dir}
+            custom={{ dir, axis }}
             variants={variants}
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: axis === "y" ? 0.4 : 0.32, ease: [0.22, 1, 0.36, 1] }}
           >
             {panels[view]}
           </motion.div>
@@ -201,7 +217,7 @@ export function ViewSwitcher({
         <div className="mx-auto -mt-6 max-w-[880px] px-5 pb-10 sm:px-8">
           <button
             type="button"
-            onClick={() => go(nextView)}
+            onClick={() => go(nextView, { axis: "y" })}
             className="group flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-line-soft py-3 font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
           >
             keep scrolling for {nextLabel}
