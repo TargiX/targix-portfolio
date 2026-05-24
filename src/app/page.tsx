@@ -2,41 +2,34 @@ import { Suspense } from "react";
 
 import { Hero } from "@/components/hero";
 import { Section } from "@/components/section";
-import { CaseCard } from "@/components/case-card";
+import { ProjectCard } from "@/components/project-card";
 import { DitheredPhoto } from "@/components/dithered-photo";
 import { TimelineEditor } from "@/components/lab/timeline-editor";
-import { Guestbook } from "@/components/server/guestbook";
 import { GitHubActivity } from "@/components/server/github-activity";
 import { GitHubContributions } from "@/components/server/github-contributions";
 import { ContactForm } from "@/components/forms/contact-form";
 import { ViewSwitcher } from "@/components/view-switcher";
+import { PromptCompilerArtifact } from "@/components/prompt-compiler-artifact";
 import { CONTACT, FEATURED, SECONDARY, STACK } from "@/lib/data";
 
+// Narrow measure for text-heavy sections (readability ~70ch).
 const CONTAINER = "relative mx-auto max-w-[880px] px-5 pb-24 pt-6 sm:px-8";
+// Wider stage for the visual work showcase — lets cards breathe on big screens.
+const WORK_CONTAINER = "relative mx-auto max-w-[1280px] px-5 pb-24 pt-6 sm:px-8";
 
 export default function Home() {
+  const isContactConfigured = Boolean(process.env.RESEND_API_KEY);
+  const EMAIL = CONTACT.find((c) => c.key === "email") ?? CONTACT[0];
+
   // ── WORK ───────────────────────────────────────────────
   const work = (
     <>
       <Hero />
-      <main className={CONTAINER}>
+      <main className={WORK_CONTAINER}>
         <Section id="work" n="01" title="Selected Work" kicker={`${1 + SECONDARY.length} projects`}>
-          <CaseCard project={FEATURED} />
-          <div className="mt-7 text-[11px] lowercase tracking-[0.08em] text-fg-dim">
-            more — {SECONDARY.length} smaller cases
-          </div>
-          <div className="mt-2 grid grid-cols-1 border-t border-dashed border-line-soft sm:grid-cols-2">
-            {SECONDARY.map((p, i) => (
-              <CaseCard
-                key={p.title}
-                project={p}
-                compact
-                className={
-                  i % 2 === 0
-                    ? "border-t-0 pr-0 sm:border-r sm:border-dashed sm:border-line-soft sm:pr-8"
-                    : "border-t-0 pl-0 sm:pl-6"
-                }
-              />
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            {[FEATURED, ...SECONDARY].map((p) => (
+              <ProjectCard key={p.title} project={p} />
             ))}
           </div>
         </Section>
@@ -46,8 +39,9 @@ export default function Home() {
 
   // ── LAB ────────────────────────────────────────────────
   const lab = (
-    <main className={CONTAINER}>
+    <main className={WORK_CONTAINER}>
       <Section id="lab" n="01" title="Lab" kicker="canvas · timelines · drag & drop">
+        {/* intro text stays a readable measure; the editor spans the full stage */}
         <p className="mb-6 max-w-[60ch] text-fg-muted">
           The rest of this site is restrained on purpose. This part isn&apos;t — it&apos;s the
           other half of what I do. A working mini video-timeline: real drag-and-drop, trimmable
@@ -56,26 +50,25 @@ export default function Home() {
           <code className="rounded bg-bg-2 px-1 py-0.5 text-[0.85em] text-fg">requestAnimationFrame</code>.
         </p>
         <TimelineEditor />
-        <p className="mt-4 text-[11px] lowercase tracking-[0.06em] text-fg-dim">
+        <p className="mt-4 max-w-[60ch] text-[11px] lowercase tracking-[0.06em] text-fg-dim">
           this is the kind of surface I like building — editors, timelines, creative tools.
           more demos landing here over time.
         </p>
       </Section>
 
       <Section
-        id="guestbook"
+        id="artifact"
         n="02"
-        title="Guestbook"
-        kicker="server action · sqlite · useOptimistic"
+        title="Mini Artifact"
+        kicker="graph state · prompt compiler · run plan"
       >
-        <p className="mb-6 text-fg-muted">
-          A small thing demonstrating end-to-end App Router: the form submits to a Server Action,
-          writes to libsql via Drizzle, and the list updates optimistically before the network
-          round-trip lands.
-        </p>
-        <Suspense fallback={<GuestbookFallback />}>
-          <Guestbook />
-        </Suspense>
+        <div>
+          <p className="mb-6 text-fg-muted">
+            A small interactive compiler surface that shows the actual product idea. Toggle nodes,
+            watch the prompt rebuild, and see how the generation run would be routed.
+          </p>
+          <PromptCompilerArtifact />
+        </div>
       </Section>
     </main>
   );
@@ -148,14 +141,14 @@ export default function Home() {
           direct links below work too — pick whichever feels less formal.
         </p>
 
-        {!process.env.RESEND_API_KEY && (
+        {!isContactConfigured && (
           <div className="mb-3 flex items-center gap-2 rounded-sm border border-dashed border-line bg-bg-2/30 px-3 py-1.5 font-mono text-[10px] lowercase tracking-[0.06em] text-fg-dim">
             <span className="inline-block size-1.5 rounded-full bg-amber-400/70" />
-            demo mode · RESEND_API_KEY not set — submissions are logged, not sent
+            contact form not configured here — use the direct email link below
           </div>
         )}
 
-        <ContactForm />
+        <ContactForm disabled={!isContactConfigured} />
 
         <ul className="mt-10 flex flex-col gap-2.5">
           {CONTACT.map((c) => (
@@ -186,12 +179,61 @@ export default function Home() {
     <>
       <ViewSwitcher work={work} lab={lab} about={about} />
 
-      <footer className="mx-auto flex max-w-[880px] flex-wrap items-center gap-3 px-5 py-8 text-[10px] lowercase tracking-[0.06em] text-fg-dim sm:px-8">
-        <span>im / portfolio / v1.0</span>
-        <span className="size-[3px] rounded-full bg-fg-dim" />
-        <span>built with next 16 · react 19 · tailwind v4 · pixi · framer</span>
-        <span className="size-[3px] rounded-full bg-fg-dim" />
-        <span>© {new Date().getFullYear()}</span>
+      <footer className="relative mt-10 border-t border-line-soft">
+        <div className="mx-auto max-w-[1280px] px-5 py-14 sm:px-8">
+          <div className="grid gap-10 sm:grid-cols-[1fr_auto] sm:items-start">
+            {/* big CTA */}
+            <div>
+              <div className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] lowercase tracking-[0.1em] text-fg-dim">
+                <span className="relative flex size-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--accent)] opacity-60" />
+                  <span className="relative inline-flex size-2 rounded-full bg-[var(--accent)]" />
+                </span>
+                available for work
+              </div>
+              <a
+                href={EMAIL.href}
+                className="group block font-sans text-[30px] font-medium tracking-[-0.02em] text-fg transition-colors hover:text-[var(--accent)] sm:text-[44px]"
+              >
+                {EMAIL.label}
+                <span className="ml-2 inline-block text-[0.6em] align-middle transition-transform group-hover:-translate-y-1 group-hover:translate-x-1">
+                  ↗
+                </span>
+              </a>
+              <p className="mt-3 max-w-[46ch] text-[13px] leading-relaxed text-fg-muted">
+                Open to senior IC, founding engineer, or design-engineering roles. Based in
+                Vietnam, comfortable async.
+              </p>
+            </div>
+
+            {/* links */}
+            <nav className="flex flex-col gap-2.5 text-[12px] sm:text-right">
+              {CONTACT.map((c) => (
+                <a
+                  key={c.key}
+                  href={c.href}
+                  target={c.href.startsWith("mailto:") ? undefined : "_blank"}
+                  rel={c.href.startsWith("mailto:") ? undefined : "noreferrer"}
+                  className="group inline-flex items-center gap-2 text-fg-muted transition-colors hover:text-[var(--accent)] sm:justify-end"
+                >
+                  <span className="font-mono text-[10px] lowercase tracking-[0.08em] text-fg-dim">
+                    {c.key}
+                  </span>
+                  <span className="text-fg group-hover:text-[var(--accent)]">{c.label}</span>
+                </a>
+              ))}
+            </nav>
+          </div>
+
+          {/* credits */}
+          <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-line-soft/60 pt-6 text-[10px] lowercase tracking-[0.06em] text-fg-dim">
+            <span>im / portfolio / v1.0</span>
+            <span className="size-[3px] rounded-full bg-fg-dim" />
+            <span>built with next 16 · react 19 · tailwind v4 · pixi · framer</span>
+            <span className="size-[3px] rounded-full bg-fg-dim" />
+            <span className="ml-auto">© {new Date().getFullYear()} ilya moskovkin</span>
+          </div>
+        </div>
       </footer>
     </>
   );
@@ -205,19 +247,6 @@ function GitHubFallback() {
         <div className="h-3 w-full rounded bg-bg-2" />
         <div className="h-3 w-5/6 rounded bg-bg-2" />
         <div className="h-3 w-3/4 rounded bg-bg-2" />
-      </div>
-    </div>
-  );
-}
-
-function GuestbookFallback() {
-  return (
-    <div className="grid animate-pulse gap-7 sm:grid-cols-[1fr_1.3fr]">
-      <div className="h-44 rounded-md border border-line-soft bg-bg-2/40" />
-      <div className="space-y-2.5">
-        <div className="h-3 w-32 rounded bg-bg-2" />
-        <div className="h-14 rounded-md border border-line-soft bg-bg-2/30" />
-        <div className="h-14 rounded-md border border-line-soft bg-bg-2/30" />
       </div>
     </div>
   );

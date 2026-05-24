@@ -27,43 +27,65 @@ export function Hero() {
         }}
       />
 
-      {/* content — width-constrained, stacked above canvas */}
-      <div className="relative z-10 mx-auto flex min-h-[78svh] max-w-[880px] flex-col justify-center px-5 pb-24 pt-6 sm:px-8">
+      {/* content — same width as Work (1280), stacked above canvas */}
+      <div className="relative z-10 mx-auto flex min-h-[78svh] max-w-[1280px] flex-col justify-center px-5 pb-24 pt-6 sm:px-8">
         <StatusBar />
 
-        <div className="mb-7 inline-flex items-center gap-2.5 font-mono text-[11px] tracking-[0.3em] text-fg-dim">
-          <span className="h-px w-5 bg-line" />
-          IM / portfolio · v1.0
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,42%)]">
+          {/* left — intro */}
+          <div>
+            <div className="mb-7 inline-flex items-center gap-2.5 font-mono text-[11px] tracking-[0.3em] text-fg-dim">
+              <span className="h-px w-5 bg-line" />
+              IM / portfolio · v1.0
+            </div>
+
+            <h1 className="m-0 mb-6 font-sans text-[44px] font-medium leading-none tracking-[-0.025em] sm:text-[60px]">
+              <Typed text="Ilya Moskovkin" />
+            </h1>
+
+            <p className="m-0 mb-7 max-w-[44ch] font-mono text-base leading-[1.55] text-fg-muted">
+              Senior <span className="text-fg">frontend</span> engineer with fullstack chops
+              and <span className="text-fg">UI/UX</span> roots.
+              <br />
+              Building products, not pages.
+            </p>
+
+            <div className="flex flex-wrap gap-x-5 gap-y-4 text-[11px] lowercase tracking-[0.04em] text-fg-dim">
+              <MetaItem k="based" v="vietnam → remote" />
+              <MetaItem k="years" v="8+" />
+              <MetaItem k="stack" v="vue · react · node" />
+              <MetaItem
+                k="status"
+                v={<span style={{ color: "oklch(0.78 0.16 145)" }}>open to roles</span>}
+              />
+            </div>
+
+            <a
+              href="#lab"
+              className="group mt-8 inline-flex items-center gap-2 font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim transition-colors hover:text-[var(--accent)]"
+            >
+              here for the visual / motion work? open the lab
+              <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+            </a>
+          </div>
+
+          {/* right — reserved mount point for the Three.js glass object.
+              Mount your canvas/scene into #hero-three-slot. The dashed
+              placeholder below is just a guide — delete it once the scene lands. */}
+          <div
+            id="hero-three-slot"
+            className="relative hidden aspect-square w-full max-w-[460px] justify-self-end lg:block"
+          >
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-4 flex items-center justify-center rounded-[2rem] border border-dashed border-line/50"
+            >
+              <span className="font-mono text-[10px] lowercase tracking-[0.12em] text-fg-dim/70">
+                three.js · glass — reserved
+              </span>
+            </div>
+          </div>
         </div>
-
-        <h1 className="m-0 mb-6 font-sans text-[44px] font-medium leading-none tracking-[-0.025em] sm:text-[60px]">
-          <Typed text="Ilya Moskovkin" />
-        </h1>
-
-        <p className="m-0 mb-7 max-w-[44ch] font-mono text-base leading-[1.55] text-fg-muted">
-          Senior <span className="text-fg">frontend</span> engineer with fullstack chops
-          and <span className="text-fg">UI/UX</span> roots.
-          <br />
-          Building products, not pages.
-        </p>
-
-        <div className="flex flex-wrap gap-x-5 gap-y-4 text-[11px] lowercase tracking-[0.04em] text-fg-dim">
-          <MetaItem k="based" v="vietnam → remote" />
-          <MetaItem k="years" v="8+" />
-          <MetaItem k="stack" v="vue · react · node" />
-          <MetaItem
-            k="status"
-            v={<span style={{ color: "oklch(0.78 0.16 145)" }}>open to roles</span>}
-          />
-        </div>
-
-        <a
-          href="#lab"
-          className="group mt-8 inline-flex items-center gap-2 font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim transition-colors hover:text-[var(--accent)]"
-        >
-          here for the visual / motion work? open the lab
-          <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
-        </a>
       </div>
     </header>
   );

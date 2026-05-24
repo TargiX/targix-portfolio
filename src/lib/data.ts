@@ -11,6 +11,12 @@ export type Project = {
   featured?: boolean;
   /** When present, the case-study link is wired to /work/<slug>. */
   caseSlug?: string;
+  /** Small preview image shown beside the text on the home page card. */
+  thumb?: string;
+  /** Screens splayed as a fan in the media stage (mobile-style projects). */
+  screens?: string[];
+  /** Renders a live interactive demo in the media stage instead of images. */
+  demo?: "phosphene";
 };
 
 export const FEATURED: Project = {
@@ -19,14 +25,15 @@ export const FEATURED: Project = {
   role: "Solo founder · Design + Eng",
   title: "Phosphene",
   blurb:
-    "A graph-based prompt workflow for image generation. Designers wire prompts, transforms, and models into a node graph and run the whole pipeline — instead of chatting one prompt at a time.",
-  tags: ["Nuxt 4", "tRPC", "Prisma", "Postgres", "Three.js", "fal.ai", "Gemini", "Paddle"],
+    "A visual prompt workspace for image generation. Users compose zones, references, models, templates, and generated outputs without losing the structure behind the prompt.",
+  tags: ["Nuxt 4", "Vue 3", "tRPC", "Prisma", "Postgres", "D3", "Vue Flow", "fal.ai", "Gemini", "Paddle"],
   links: [
     { label: "phosphene.cc", href: "https://phosphene.cc" },
     { label: "case study", href: "/work/phosphene" },
   ],
   featured: true,
   caseSlug: "phosphene",
+  demo: "phosphene",
 };
 
 export const SECONDARY: Project[] = [
@@ -53,10 +60,18 @@ export const SECONDARY: Project[] = [
       "A calm daily-ritual app — mood, sleep, intention, journaling. One Next.js codebase shipping to web, iOS/Android (Capacitor), and desktop (Electron).",
     tags: ["Next.js 16", "React 19", "Capacitor", "Electron", "Framer Motion"],
     links: [
-      { label: "live app", href: "https://anchor-ritual.vercel.app" },
+      // TODO: once Anchor is deployed, swap this to { label: "live app", href: ANCHOR_URL }
+      { label: "github", href: "https://github.com/TargiX/Next.js-Tether" },
       { label: "case study", href: "/work/anchor" },
     ],
     caseSlug: "anchor",
+    thumb: "/work/anchor/dashboard.png",
+    screens: [
+      "/work/anchor/landing.png",
+      "/work/anchor/dashboard.png",
+      "/work/anchor/sleep.png",
+      "/work/anchor/evening.png",
+    ],
   },
   {
     index: "④",
@@ -95,5 +110,9 @@ export const STACK = [
 export const CONTACT = [
   { key: "email", label: "ilya@phosphene.cc", href: "mailto:ilya@phosphene.cc" },
   { key: "github", label: "github.com/TargiX", href: "https://github.com/TargiX" },
-  { key: "linkedin", label: "linkedin.com/in/ilya-moskovkin", href: "https://www.linkedin.com/in/" },
+  {
+    key: "linkedin",
+    label: "linkedin.com/in/ilya-moskovkin",
+    href: "https://www.linkedin.com/in/ilya-moskovkin",
+  },
 ];

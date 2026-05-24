@@ -1,22 +1,10 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion, type Variants } from "motion/react";
 import type { Project } from "@/lib/data";
 import { cn } from "@/lib/utils";
-
-const PhospheneDemo = dynamic(
-  () => import("@/components/phosphene-demo").then((m) => m.PhospheneDemo),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex h-[220px] w-full items-center justify-center font-mono text-[10px] tracking-[0.08em] text-[var(--fg-dim)]">
-        loading workspace…
-      </div>
-    ),
-  },
-);
+import { PhospheneShowcase } from "@/components/phosphene-showcase";
 
 const cardVariants: Variants = {
   rest: { y: 0 },
@@ -132,7 +120,7 @@ export function CaseCard({
                 live
               </span>
             </div>
-            <PhospheneDemo />
+            <PhospheneShowcase />
           </div>
         )}
 

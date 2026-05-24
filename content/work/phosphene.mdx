@@ -3,8 +3,8 @@ slug: phosphene
 title: Phosphene
 year: "2024 — now"
 role: Solo founder · Design + Eng
-blurb: A graph-based prompt workflow for image generation. Designers wire prompts, transforms, and models into a node graph and run the whole pipeline.
-tags: ["Nuxt 4", "tRPC", "Prisma", "Postgres", "Redis", "S3", "Three.js", "Vue Flow", "fal.ai", "Gemini", "Paddle", "Sentry", "PostHog"]
+blurb: A visual prompt workspace for image generation. Users compose zones, references, models, templates, and generated outputs without losing the structure behind the prompt.
+tags: ["Nuxt 4", "Vue 3", "tRPC", "Prisma", "Postgres", "Redis", "Hetzner S3", "D3", "Vue Flow", "fal.ai", "Gemini", "Paddle", "Auth.js", "Sentry", "PostHog"]
 links:
   - { label: "phosphene.cc", href: "https://phosphene.cc" }
   - { label: "github", href: "https://github.com/TargiX" }
@@ -15,38 +15,48 @@ featured: true
 
 ## The pitch
 
-Image generation tools are built around **one prompt at a time**. You type a prompt, you get four images, you tweak the prompt, you get four more. That works for play. It falls apart the moment you want a reproducible **pipeline** — same input, same transforms, predictably different outputs.
+Image generation tools are built around **one prompt at a time**. You type a sentence, wait for images, edit the sentence, and slowly lose track of what changed. That works for play. It falls apart when the prompt has structure: subject, setting, mood, references, model choice, variations, and a history you want to come back to.
 
-Phosphene replaces the prompt box with a **graph**. Each node is one stage: a prompt, a transform (style ref, LoRA, model swap), a generation step, an output sink. You wire them together and run the whole pipeline. Change one node, re-run, see what shifts.
+Phosphene replaces the blank prompt box with a **visual workspace**. You compose prompt ingredients as zones and nodes, switch between feed, graph, flow, and template views, then let the app compile the structure into a generation request. The product is less "chat with a model" and more "keep the creative state legible while you iterate."
+
+<PhospheneScreen screen="hero" />
 
 ## What's in the box
 
-- **Editor**: a Vue Flow canvas where designers drag nodes, connect ports, and inspect intermediate results.
-- **Runtime**: a tRPC orchestrator that schedules each node, calls the right model provider (fal.ai for image gen, Gemini for vision + reasoning), streams progress back to the canvas, and persists everything to Postgres.
-- **Workspace**: each project is a versioned graph + a gallery of every run. Branch, fork, compare.
-- **Billing**: Paddle on top, metered per generation. Free tier for play, paid for serious runs.
+- **Canvas modes**: a D3 graph for prompt exploration, a feed for generated images, a Vue Flow surface for chained modules, and template forms for guided workflows.
+- **Prompt compiler**: shared services turn graph state, zones, template fields, references, and model settings into provider-ready prompts.
+- **Generation layer**: Nuxt Nitro and tRPC routes fan out to Google/Gemini, fal.ai-hosted models, Alibaba/Qwen paths, and image-edit utilities.
+- **Persistence**: Prisma and Postgres save users, dreams, generated images, graph state, model preferences, lineage, payments, and activity events.
+- **Product plumbing**: Auth.js with Google and email/password, Paddle subscriptions/credits, Resend email, Turnstile, Redis-backed rate limits, Sentry, and PostHog.
+- **Infra**: GitHub Actions builds the Nuxt bundle and deploys it to a self-managed Hetzner/PM2 setup with Hetzner S3-compatible object storage for generated image variants.
+
+<PhospheneScreen screen="graph" />
+
+<PromptCompilerArtifact compact />
 
 ## Stack decisions worth defending
 
 **Nuxt 4 over Next.** This is a heavy editor app, not a content site. Vue's reactivity model is a better fit for canvas state — fewer footguns, less code. Server components were tempting but the editor is fundamentally client-side anyway. Nuxt's auto-imports and file-based server routes get out of the way.
 
-**tRPC over REST.** End-to-end type safety on a tightly-coupled monorepo eliminates a whole class of bugs. The runtime is the only consumer of the API; there's no public surface to design around.
+**D3 plus Vue Flow, not one graph abstraction for everything.** The freeform prompt graph wants force layout, zones, positions, and weird interaction details. The flow surface wants modules, ports, and connections. Keeping those as different surfaces made the product easier to reason about.
 
-**Prisma + Postgres on Neon.** Boring is good. Branching databases per Vercel preview deploy is the killer feature — every PR gets its own DB snapshot.
+**tRPC where the app is tightly coupled, Nitro endpoints where the boundary is external.** Internal dream/image/user flows get typed contracts. Webhooks, auth, storage, and provider calls stay as explicit server routes.
 
-**Vue Flow.** The graph editor is the product. Vue Flow gave me a working canvas in 4 hours; building one from scratch would have cost 4 weeks. The downside (limited custom edge routing) was easy to live with.
+**Prisma + Postgres.** The state model is not just users and images. It includes saved dreams, generated-image metadata, graph JSON, custom subjects, model preferences, branch/moment lineage, likes, payments, and rate-limit records. A boring relational core is the right kind of boring here.
 
-**fal.ai over running my own GPUs.** Per-generation pricing means I pay only for actual use. When I'm sleeping, I'm not paying for an idle A100.
+<PhospheneScreen screen="feed" />
 
-## What I'd do differently
+**Provider adapters over running my own GPUs.** The catalogue changes quickly: Gemini/Nano Banana, Imagen, FLUX, Seedream, Qwen, GPT Image, utilities for upscale/inpaint/rotation. The app needs a stable product model while providers stay replaceable.
 
-- **I should have shipped the v0 with three nodes, not seven.** Each extra node type is a UX surface that has to be designed. I burned two weeks on a "loop" node nobody asked for.
-- **The undo history is per-graph, not per-edit.** Means coarse-grained undo. Should have been an event-sourced log from day one.
-- **Auth via Clerk was the right call**, but I should have set it up before the schema. Retrofitting `userId` onto every table is a chore.
+<PhospheneScreen screen="template" />
 
-## Numbers
+## What I am still tightening
 
-- **Time to v0:** 6 weeks, solo.
-- **Time to first paying user:** 9 weeks.
-- **Median pipeline run latency:** 8.4s end-to-end.
-- **Bundle size:** 312KB gzip for the editor.
+- **One source of truth for editor state.** Feed, Graph, Flow, Templates, and Simple Create all want to look like separate products. They still need one canonical document underneath, or saved sessions and reloads get fragile.
+- **Lineage without making the UI feel like Git.** Branches, moments, snapshots, image provenance, and "expand to graph" are powerful, but the interaction has to stay understandable to someone who only came to make an image.
+- **Provider failure UX.** Image generation fails in provider-specific ways: rate limits, content filters, timeouts, bad reference images, model quirks. The product needs to explain those failures without dumping infrastructure into the user's face.
+- **Self-managed ops discipline.** Running the app on my own Hetzner/PM2 setup is flexible, but it means deploy health, rollback paths, Sentry, PostHog, storage, and payment readiness all have to be treated as product work.
+
+## The honest read
+
+The hard part is not calling an image API. The hard part is making a creative system where the prompt structure, generated outputs, model choices, references, and history remain visible after the first exciting result. Phosphene is my attempt to turn that mess into an interface people can actually steer.

@@ -3,6 +3,8 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { AnchorDemo } from "@/components/anchor-demo";
 import { YouTubeEmbed } from "@/components/youtube-embed";
+import { PhospheneScreen } from "@/components/phosphene-screens";
+import { PromptCompilerArtifact } from "@/components/prompt-compiler-artifact";
 
 /** Local lite version of MDXComponents — avoids needing @types/mdx.
  *  Index signature covers HTML tags; custom components are added explicitly. */
@@ -13,6 +15,8 @@ type MDXComponents = {
 } & {
   AnchorDemo?: typeof AnchorDemo;
   YouTubeEmbed?: typeof YouTubeEmbed;
+  PhospheneScreen?: typeof PhospheneScreen;
+  PromptCompilerArtifact?: typeof PromptCompilerArtifact;
 };
 
 /** Custom mapping of HTML elements → styled React components for MDXRemote.
@@ -110,4 +114,6 @@ export const mdxComponents: MDXComponents = {
   // Custom components usable directly in MDX:
   AnchorDemo,
   YouTubeEmbed,
+  PhospheneScreen,
+  PromptCompilerArtifact,
 };

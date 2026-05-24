@@ -21,6 +21,8 @@ const SNAP = 0.25;
 const TOTAL = 12; // seconds
 const TRACK_H = 46;
 const MIN_DUR = 0.5;
+const LABEL_W = 64;
+const TIMELINE_W = TOTAL * PX_PER_SEC;
 
 const TONE: Record<Clip["tone"], { bg: string; bar: string; text: string }> = {
   accent: { bg: "color-mix(in oklab, var(--accent) 22%, var(--bg-2))", bar: "var(--accent)", text: "var(--accent)" },
@@ -150,8 +152,29 @@ export function TimelineEditor() {
     dragRef.current = null;
   }, []);
 
+  const nudgePlayhead = useCallback((delta: number) => {
+    setPlayhead((p) => clamp(snap(p + delta), 0, TOTAL));
+  }, []);
+
+  const onRulerKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      nudgePlayhead(-SNAP);
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      nudgePlayhead(SNAP);
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      setPlayhead(0);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      setPlayhead(TOTAL);
+    }
+  }, [nudgePlayhead]);
+
   // active clips under the playhead
   const activeClips = clips.filter((c) => playhead >= c.start && playhead < c.start + c.duration);
+  const activeVisualClips = activeClips.filter((c) => c.track < 2);
 
   return (
     <div className="select-none rounded-lg border border-line-soft bg-bg-2/40 p-3 font-mono">
@@ -169,21 +192,19 @@ export function TimelineEditor() {
         {/* preview pane: shows what's "on screen" at the playhead */}
         <div className="relative flex-1 overflow-hidden rounded-md border border-line bg-[oklch(0.12_0.005_250)]">
           <div className="absolute inset-0 flex items-center justify-center gap-2">
-            {activeClips.filter((c) => c.track < 2).length === 0 ? (
+            {activeVisualClips.length === 0 ? (
               <span className="text-[10px] lowercase tracking-[0.1em] text-fg-dim">— no frame —</span>
             ) : (
-              activeClips
-                .filter((c) => c.track < 2)
-                .map((c) => (
-                  <motion.span
-                    key={c.id}
-                    layout
-                    className="rounded px-2 py-1 text-[10px] tracking-wide"
-                    style={{ background: TONE[c.tone].bg, color: TONE[c.tone].text }}
-                  >
-                    {c.label}
-                  </motion.span>
-                ))
+              activeVisualClips.map((c) => (
+                <motion.span
+                  key={c.id}
+                  layout
+                  className="rounded px-2 py-1 text-[10px] tracking-wide"
+                  style={{ background: TONE[c.tone].bg, color: TONE[c.tone].text }}
+                >
+                  {c.label}
+                </motion.span>
+              ))
             )}
           </div>
           {/* audio indicator */}
@@ -209,86 +230,98 @@ export function TimelineEditor() {
       </div>
 
       {/* ── timeline ── */}
-      <div
-        className="relative"
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerLeave={onPointerUp}
-      >
-        {/* ruler */}
+      <div className="-mx-3 overflow-x-auto px-3 pb-2">
         <div
-          ref={laneRef}
-          className="relative ml-16 h-6 cursor-ew-resize border-b border-line-soft"
-          onPointerDown={(e) => onPointerDown(e, "scrub")}
+          className="relative"
+          style={{ width: LABEL_W + TIMELINE_W }}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerLeave={onPointerUp}
         >
-          {Array.from({ length: TOTAL + 1 }).map((_, s) => (
-            <div key={s} className="absolute top-0 h-full" style={{ left: s * PX_PER_SEC }}>
-              <div className="h-2 w-px bg-line" />
-              <div className="mt-0.5 text-[8px] text-fg-dim">{s}s</div>
+          {/* ruler */}
+          <div
+            ref={laneRef}
+            className="relative ml-16 h-6 cursor-ew-resize border-b border-line-soft outline-none focus-visible:border-[var(--accent)]"
+            style={{ width: TIMELINE_W }}
+            onPointerDown={(e) => onPointerDown(e, "scrub")}
+            onKeyDown={onRulerKeyDown}
+            tabIndex={0}
+            role="slider"
+            aria-label="Timeline playhead"
+            aria-valuemin={0}
+            aria-valuemax={TOTAL}
+            aria-valuenow={Number(playhead.toFixed(2))}
+            aria-valuetext={`${playhead.toFixed(2)} seconds`}
+          >
+            {Array.from({ length: TOTAL + 1 }).map((_, s) => (
+              <div key={s} className="absolute top-0 h-full" style={{ left: s * PX_PER_SEC }}>
+                <div className="h-2 w-px bg-line" />
+                <div className="mt-0.5 text-[8px] text-fg-dim">{s}s</div>
+              </div>
+            ))}
+          </div>
+
+          {/* tracks */}
+          {TRACKS.map((name, ti) => (
+            <div key={name} className="flex items-stretch border-b border-line-soft/60">
+              <div className="flex w-16 shrink-0 items-center text-[10px] lowercase tracking-[0.08em] text-fg-dim">
+                {name}
+              </div>
+              <div className="relative shrink-0" style={{ height: TRACK_H, width: TIMELINE_W }}>
+                {clips
+                  .filter((c) => c.track === ti)
+                  .map((c) => {
+                    const tone = TONE[c.tone];
+                    const isActive = activeClips.some((a) => a.id === c.id);
+                    return (
+                      <div
+                        key={c.id}
+                        onPointerDown={(e) => onPointerDown(e, "move", c)}
+                        className={cn(
+                          "group/clip absolute top-1.5 flex h-[34px] cursor-grab items-center overflow-hidden rounded-md border active:cursor-grabbing",
+                          activeId === c.id ? "z-10" : "z-0",
+                        )}
+                        style={{
+                          left: c.start * PX_PER_SEC,
+                          width: c.duration * PX_PER_SEC,
+                          background: tone.bg,
+                          borderColor: isActive ? tone.bar : "var(--line)",
+                          boxShadow: isActive ? `0 0 0 1px ${tone.bar}, 0 0 14px -4px ${tone.bar}` : "none",
+                        }}
+                      >
+                        {/* trim handles */}
+                        <span
+                          onPointerDown={(e) => onPointerDown(e, "trim-start", c)}
+                          className="absolute left-0 top-0 h-full w-1.5 cursor-ew-resize bg-white/0 hover:bg-white/20"
+                        />
+                        <span
+                          onPointerDown={(e) => onPointerDown(e, "trim-end", c)}
+                          className="absolute right-0 top-0 h-full w-1.5 cursor-ew-resize bg-white/0 hover:bg-white/20"
+                        />
+                        <span
+                          className="truncate px-2 text-[10px]"
+                          style={{ color: tone.text }}
+                        >
+                          {c.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
           ))}
-        </div>
 
-        {/* tracks */}
-        {TRACKS.map((name, ti) => (
-          <div key={name} className="flex items-stretch border-b border-line-soft/60">
-            <div className="flex w-16 shrink-0 items-center text-[10px] lowercase tracking-[0.08em] text-fg-dim">
-              {name}
-            </div>
-            <div className="relative flex-1" style={{ height: TRACK_H, width: TOTAL * PX_PER_SEC }}>
-              {clips
-                .filter((c) => c.track === ti)
-                .map((c) => {
-                  const tone = TONE[c.tone];
-                  const isActive = activeClips.some((a) => a.id === c.id);
-                  return (
-                    <div
-                      key={c.id}
-                      onPointerDown={(e) => onPointerDown(e, "move", c)}
-                      className={cn(
-                        "group/clip absolute top-1.5 flex h-[34px] cursor-grab items-center overflow-hidden rounded-md border active:cursor-grabbing",
-                        activeId === c.id ? "z-10" : "z-0",
-                      )}
-                      style={{
-                        left: c.start * PX_PER_SEC,
-                        width: c.duration * PX_PER_SEC,
-                        background: tone.bg,
-                        borderColor: isActive ? tone.bar : "var(--line)",
-                        boxShadow: isActive ? `0 0 0 1px ${tone.bar}, 0 0 14px -4px ${tone.bar}` : "none",
-                      }}
-                    >
-                      {/* trim handles */}
-                      <span
-                        onPointerDown={(e) => onPointerDown(e, "trim-start", c)}
-                        className="absolute left-0 top-0 h-full w-1.5 cursor-ew-resize bg-white/0 hover:bg-white/20"
-                      />
-                      <span
-                        onPointerDown={(e) => onPointerDown(e, "trim-end", c)}
-                        className="absolute right-0 top-0 h-full w-1.5 cursor-ew-resize bg-white/0 hover:bg-white/20"
-                      />
-                      <span
-                        className="truncate px-2 text-[10px]"
-                        style={{ color: tone.text }}
-                      >
-                        {c.label}
-                      </span>
-                    </div>
-                  );
-                })}
-            </div>
+          {/* playhead — spans ruler + tracks, offset by the label gutter */}
+          <div
+            className="pointer-events-none absolute top-0 z-20"
+            style={{
+              left: LABEL_W + playhead * PX_PER_SEC,
+              height: 24 + TRACKS.length * (TRACK_H + 1),
+            }}
+          >
+            <div className="h-full w-px bg-[var(--accent)]" />
+            <div className="absolute -left-[5px] -top-0.5 size-2.5 rotate-45 bg-[var(--accent)]" />
           </div>
-        ))}
-
-        {/* playhead — spans ruler + tracks, offset by the 64px label gutter */}
-        <div
-          className="pointer-events-none absolute top-0 z-20"
-          style={{
-            left: 64 + playhead * PX_PER_SEC,
-            height: 24 + TRACKS.length * (TRACK_H + 1),
-          }}
-        >
-          <div className="h-full w-px bg-[var(--accent)]" />
-          <div className="absolute -left-[5px] -top-0.5 size-2.5 rotate-45 bg-[var(--accent)]" />
         </div>
       </div>
 

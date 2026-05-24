@@ -9,6 +9,8 @@ type GitHubEvent = {
   repo: { name: string };
   payload: {
     commits?: Array<{ message: string; sha: string }>;
+    size?: number;
+    distinct_size?: number;
     ref?: string;
     ref_type?: string;
     action?: string;
@@ -53,7 +55,12 @@ function summarize(e: GitHubEvent): { verb: string; detail: string } | null {
     case "PushEvent": {
       const commits = e.payload.commits ?? [];
       const last = commits[commits.length - 1]?.message?.split("\n")[0] ?? "";
-      return { verb: "pushed", detail: last || `${commits.length} commit(s)` };
+      // The public events API often returns an empty commits array for
+      // force-pushes / branch ref updates. Use the real count when present,
+      // and never render a misleading "0 commit(s)".
+      const count = e.payload.distinct_size ?? e.payload.size ?? commits.length;
+      const detail = last || (count > 0 ? `${count} commit${count === 1 ? "" : "s"}` : "");
+      return { verb: "pushed", detail };
     }
     case "PullRequestEvent": {
       const pr = e.payload.pull_request;
@@ -101,7 +108,17 @@ export async function GitHubActivity({ username }: { username: string }) {
 
   const summarized = events
     .map((e) => ({ event: e, summary: summarize(e) }))
-    .filter((x): x is { event: GitHubEvent; summary: NonNullable<ReturnType<typeof summarize>> } => !!x.summary);
+    .filter((x): x is { event: GitHubEvent; summary: NonNullable<ReturnType<typeof summarize>> } => !!x.summary)
+    // Collapse runs of the same verb on the same repo (e.g. several pushes in
+    // a row to one repo) into a single, most-recent line.
+    .filter((x, i, arr) => {
+      const prev = arr[i - 1];
+      return !(
+        prev &&
+        prev.event.repo.name === x.event.repo.name &&
+        prev.summary.verb === x.summary.verb
+      );
+    });
 
   if (summarized.length === 0) {
     return (

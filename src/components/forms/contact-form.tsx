@@ -9,10 +9,11 @@ import { cn } from "@/lib/utils";
 
 const INITIAL_STATE: ContactFormState = { ok: false, version: 0 };
 
-export function ContactForm() {
+export function ContactForm({ disabled = false }: { disabled?: boolean }) {
   const [state, formAction, isPending] = useActionState(sendContact, INITIAL_STATE);
   const formRef = useRef<HTMLFormElement>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const hasFieldErrors = !!state.fieldErrors && Object.keys(state.fieldErrors).length > 0;
 
   useEffect(() => {
     if (state.ok) {
@@ -30,7 +31,14 @@ export function ContactForm() {
       className="grid gap-3 sm:grid-cols-2"
       aria-label="Contact form"
     >
-      <Field label="name" name="name" error={state.fieldErrors?.name} required maxLength={80} />
+      <Field
+        label="name"
+        name="name"
+        error={state.fieldErrors?.name}
+        required
+        maxLength={80}
+        disabled={disabled}
+      />
       <Field
         label="email"
         name="email"
@@ -38,6 +46,7 @@ export function ContactForm() {
         error={state.fieldErrors?.email}
         required
         maxLength={120}
+        disabled={disabled}
       />
 
       <div className="sm:col-span-2">
@@ -49,6 +58,7 @@ export function ContactForm() {
           required
           rows={5}
           maxLength={2000}
+          disabled={disabled}
           placeholder="what you're building, what you need, what you'd want me to do…"
           className="w-full resize-none rounded-sm border border-line bg-bg-2/40 px-2.5 py-2 font-mono text-[12px] text-fg outline-none transition-colors placeholder:text-fg-dim focus:border-[var(--accent)]"
           aria-invalid={!!state.fieldErrors?.message}
@@ -72,15 +82,15 @@ export function ContactForm() {
       <div className="flex items-center gap-3 sm:col-span-2">
         <button
           type="submit"
-          disabled={isPending}
+          disabled={disabled || isPending}
           className={cn(
             "inline-flex items-center gap-1.5 rounded-sm border px-3 py-1.5 font-mono text-[11px] tracking-[0.04em] transition-all",
-            isPending
+            disabled || isPending
               ? "border-line text-fg-dim"
               : "border-line bg-bg-2 text-fg hover:border-[var(--accent)] hover:text-[var(--accent)] active:translate-y-px",
           )}
         >
-          {isPending ? "sending…" : "send message"}
+          {disabled ? "email directly" : isPending ? "sending…" : "send message"}
         </button>
 
         <div className="text-[10px] lowercase tracking-[0.08em] text-fg-dim">
@@ -102,7 +112,7 @@ export function ContactForm() {
         )}
       </AnimatePresence>
 
-      {state.error && !state.fieldErrors && (
+      {state.error && !hasFieldErrors && (
         <div className="sm:col-span-2 text-[10px] text-red-400">{state.error}</div>
       )}
     </form>

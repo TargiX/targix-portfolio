@@ -3,12 +3,13 @@
 import { z } from "zod";
 import { Resend } from "resend";
 
+import { checkRateLimit } from "@/lib/rate-limit";
+
 const ContactSchema = z.object({
   name: z.string().trim().min(1, "name is required").max(80, "too long"),
   email: z.string().trim().email("must be a valid email"),
   message: z.string().trim().min(8, "tell me more than that").max(2000, "too long"),
-  // honeypot — bots fill anything, humans see nothing
-  website: z.string().max(0, "no").optional().default(""),
+  website: z.string().optional().default(""),
 });
 
 export type ContactFormState = {
@@ -38,7 +39,11 @@ export async function sendContact(
     const fieldErrors: ContactFormState["fieldErrors"] = {};
     for (const issue of parsed.error.issues) {
       const key = issue.path[0];
-      if (typeof key === "string" && (key === "name" || key === "email" || key === "message") && !fieldErrors[key]) {
+      if (
+        typeof key === "string" &&
+        (key === "name" || key === "email" || key === "message") &&
+        !fieldErrors[key]
+      ) {
         fieldErrors[key] = issue.message;
       }
     }
@@ -55,16 +60,31 @@ export async function sendContact(
     return { ok: true, version: prev.version + 1 };
   }
 
+  const rateLimit = await checkRateLimit({
+    namespace: "contact",
+    limit: 3,
+    windowMs: 60 * 60 * 1000,
+  });
+  if (!rateLimit.ok) {
+    return {
+      ok: false,
+      error: `too many messages — try again in ${Math.ceil(rateLimit.retryAfterSeconds / 60)}m`,
+      version: prev.version,
+    };
+  }
+
   const { name, email, message } = parsed.data;
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
-    // Dev fallback — log instead of fail, so the form is testable without keys.
-    console.warn(
-      "[contact] RESEND_API_KEY not set — would have sent:",
-      { from: FROM_EMAIL, to: TO_EMAIL, name, email, message },
-    );
-    return { ok: true, version: prev.version + 1 };
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[contact] RESEND_API_KEY not set — skipped delivery.");
+    }
+    return {
+      ok: false,
+      error: "contact form is not configured — use the email link instead",
+      version: prev.version,
+    };
   }
 
   try {
