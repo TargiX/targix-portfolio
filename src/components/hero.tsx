@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import { Typed } from "@/components/typed";
 import { StatusBar } from "@/components/status-bar";
-import { GlassForms } from "@/components/hero/glass-forms";
 
 const PixiMetaballHero = dynamic(
   () => import("@/components/hero/pixi-metaball-hero").then((m) => m.PixiMetaballHero),
@@ -16,7 +15,7 @@ export function Hero() {
       className="relative isolate w-full overflow-hidden"
       data-screen-label="00 Hero"
     >
-      {/* full-bleed reactive dot/aurora background */}
+      {/* full-bleed background canvas */}
       <PixiMetaballHero accent="#a3e635" />
 
       {/* soft fade into the bg at the bottom + radial highlight */}
@@ -28,11 +27,8 @@ export function Hero() {
         }}
       />
 
-      {/* floating frosted-glass forms (below text, above bg) */}
-      <GlassForms />
-
-      {/* content */}
-      <div className="relative z-10 mx-auto flex min-h-[86svh] max-w-[1000px] flex-col justify-center px-5 pb-24 pt-6 sm:px-8">
+      {/* content — width-constrained, stacked above canvas */}
+      <div className="relative z-10 mx-auto flex min-h-[78svh] max-w-[880px] flex-col justify-center px-5 pb-24 pt-6 sm:px-8">
         <StatusBar />
 
         <div className="mb-7 inline-flex items-center gap-2.5 font-mono text-[11px] tracking-[0.3em] text-fg-dim">
@@ -40,11 +36,11 @@ export function Hero() {
           IM / portfolio · v1.0
         </div>
 
-        <h1 className="m-0 mb-7 font-sans font-medium leading-[0.95] tracking-[-0.03em] text-[clamp(3rem,8vw,6rem)]">
+        <h1 className="m-0 mb-6 font-sans text-[44px] font-medium leading-none tracking-[-0.025em] sm:text-[60px]">
           <Typed text="Ilya Moskovkin" />
         </h1>
 
-        <p className="m-0 mb-8 max-w-[46ch] font-mono text-[17px] leading-[1.55] text-fg-muted sm:text-[19px]">
+        <p className="m-0 mb-7 max-w-[44ch] font-mono text-base leading-[1.55] text-fg-muted">
           Senior <span className="text-fg">frontend</span> engineer with fullstack chops
           and <span className="text-fg">UI/UX</span> roots.
           <br />
