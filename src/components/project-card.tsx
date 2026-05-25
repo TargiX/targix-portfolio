@@ -6,6 +6,7 @@ import type { Project } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { ScreenFan } from "@/components/screen-fan";
 import { PhospheneShowcase } from "@/components/phosphene-showcase";
+import { RoomboardShowcase } from "@/components/roomboard-showcase";
 
 const cardVariants: Variants = {
   rest: { y: 0 },
@@ -53,6 +54,10 @@ export function ProjectCard({ project, className }: { project: Project; classNam
           {demo === "phosphene" ? (
             <div className="absolute inset-0">
               <PhospheneShowcase />
+            </div>
+          ) : demo === "roomboard" ? (
+            <div className="absolute inset-0">
+              <RoomboardShowcase />
             </div>
           ) : fan ? (
             <ScreenFan screens={fan} alt={title} />
