@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { AnchorDemo } from "@/components/anchor-demo";
 import { YouTubeEmbed } from "@/components/youtube-embed";
 import { PhospheneScreen } from "@/components/phosphene-screens";
+import { RoomboardScreen } from "@/components/roomboard-screens";
 import { PromptCompilerArtifact } from "@/components/prompt-compiler-artifact";
 
 /** Local lite version of MDXComponents — avoids needing @types/mdx.
@@ -16,6 +17,7 @@ type MDXComponents = {
   AnchorDemo?: typeof AnchorDemo;
   YouTubeEmbed?: typeof YouTubeEmbed;
   PhospheneScreen?: typeof PhospheneScreen;
+  RoomboardScreen?: typeof RoomboardScreen;
   PromptCompilerArtifact?: typeof PromptCompilerArtifact;
 };
 
@@ -115,5 +117,6 @@ export const mdxComponents: MDXComponents = {
   AnchorDemo,
   YouTubeEmbed,
   PhospheneScreen,
+  RoomboardScreen,
   PromptCompilerArtifact,
 };

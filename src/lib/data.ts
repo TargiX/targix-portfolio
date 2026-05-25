@@ -16,7 +16,7 @@ export type Project = {
   /** Screens splayed as a fan in the media stage (mobile-style projects). */
   screens?: string[];
   /** Renders a live interactive demo in the media stage instead of images. */
-  demo?: "phosphene";
+  demo?: "phosphene" | "roomboard";
 };
 
 export const FEATURED: Project = {
@@ -75,13 +75,19 @@ export const SECONDARY: Project[] = [
   },
   {
     index: "④",
-    year: "2022",
-    role: "Solo · weekend",
-    title: "Project Four",
+    year: "2026",
+    role: "Solo · Design + Eng",
+    title: "Roomboard",
     blurb:
-      "Another slot. Smaller side projects work great here — open source, tooling, demos, anything you'd be proud to show on call one.",
-    tags: ["TBD"],
-    links: [{ label: "github", href: "https://github.com/TargiX" }],
+      "A realtime visual collaboration room for moodboards, landing-page reviews, and creative decisions. Drop images, write notes, add comments, link cards, and share one lockable room URL.",
+    tags: ["Next.js 16", "React 19", "Pixi.js", "Elixir/Phoenix", "Supabase", "Realtime", "Canvas UX"],
+    links: [
+      { label: "roomboard.online", href: "https://roomboard.online" },
+      { label: "case study", href: "/work/roomboard" },
+    ],
+    caseSlug: "roomboard",
+    thumb: "/work/roomboard/landing-hero.png",
+    demo: "roomboard",
   },
 ];
 
