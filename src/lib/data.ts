@@ -121,4 +121,5 @@ export const CONTACT = [
     label: "linkedin.com/in/ilya-moskovkin",
     href: "https://www.linkedin.com/in/ilya-moskovkin",
   },
+  { key: "résumé", label: "Ilya_Moskovkin_CV.pdf", href: "/Ilya_Moskovkin_CV.pdf" },
 ];

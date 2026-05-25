@@ -220,7 +220,7 @@ export function ViewSwitcher({
             onClick={() => go(nextView, { axis: "y" })}
             className="group flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-line-soft py-3 font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
           >
-            keep scrolling for {nextLabel}
+            keep scrolling — or click — to open {nextLabel}
             <span className="inline-block transition-transform group-hover:translate-y-0.5">↓</span>
           </button>
         </div>
