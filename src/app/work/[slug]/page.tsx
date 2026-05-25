@@ -19,13 +19,23 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { slug } = await params;
   const c = await getCase(slug);
   if (!c) return {};
+  const title = `${c.title} — Ilya Moskovkin`;
+  const ogImage = `/work/${c.slug}/opengraph-image`;
+
   return {
-    title: `${c.title} — Ilya Moskovkin`,
+    title,
     description: c.blurb,
     openGraph: {
-      title: `${c.title} — Ilya Moskovkin`,
+      title,
       description: c.blurb,
       type: "article",
+      images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: c.blurb,
+      images: [ogImage],
     },
   };
 }
@@ -36,7 +46,7 @@ export default async function CasePage({ params }: { params: Params }) {
   if (!c) notFound();
 
   return (
-    <main className="relative mx-auto max-w-[760px] px-5 pb-24 pt-12 sm:px-8">
+    <main className="relative mx-auto max-w-[1040px] px-5 pb-24 pt-12 sm:px-8">
       <Link
         href="/#work"
         className="group inline-flex items-center gap-2 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim transition-colors hover:text-fg"
@@ -46,6 +56,20 @@ export default async function CasePage({ params }: { params: Params }) {
       </Link>
 
       <header className="mt-10 mb-12 border-b border-line-soft pb-10">
+        {c.cover && (
+          <figure className="mb-9">
+            <div className="overflow-hidden rounded-md border border-line-soft bg-bg-2/60">
+              <div className="relative aspect-[1200/630] bg-bg">
+                <img
+                  src={c.cover}
+                  alt={`${c.title} product preview`}
+                  className="h-full w-full object-cover object-top"
+                />
+              </div>
+            </div>
+          </figure>
+        )}
+
         <div className="mb-4 flex items-center gap-3 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-muted">
           <span className="text-fg-dim">{c.role}</span>
           <span className="size-1 rounded-full bg-fg-dim" />
@@ -91,7 +115,7 @@ export default async function CasePage({ params }: { params: Params }) {
         )}
       </header>
 
-      <article>
+      <article className="mx-auto max-w-[760px]">
         <MDXRemote
           source={c.content}
           components={mdxComponents}

@@ -5,13 +5,37 @@ export const alt = "Case study — Ilya Moskovkin";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default async function Image({ params }: { params: { slug: string } }) {
-  const c = await getCase(params.slug);
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : process.env.NODE_ENV === "development"
+      ? "http://localhost:3010"
+      : "https://targix.dev");
+
+function getCoverUrl(cover?: string) {
+  if (!cover) return null;
+  if (cover.startsWith("http://") || cover.startsWith("https://")) return cover;
+  return new URL(cover, siteUrl).toString();
+}
+
+function truncateAtWord(value: string, maxLength: number) {
+  if (value.length <= maxLength) return value;
+  const trimmed = value.slice(0, maxLength).trim();
+  const lastSpace = trimmed.lastIndexOf(" ");
+  return `${(lastSpace > 80 ? trimmed.slice(0, lastSpace) : trimmed).trim()}...`;
+}
+
+export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const c = await getCase(slug);
 
   const title = c?.title ?? "Case study";
   const blurb = c?.blurb ?? "";
   const role = c?.role ?? "";
   const year = c?.year ?? "";
+  const coverUrl = getCoverUrl(c?.cover);
+  const tags = c?.tags.slice(0, 4) ?? [];
 
   return new ImageResponse(
     (
@@ -22,14 +46,13 @@ export default async function Image({ params }: { params: { slug: string } }) {
           display: "flex",
           flexDirection: "column",
           background:
-            "radial-gradient(1200px 600px at 20% 0%, rgba(163,230,53,0.10), transparent 60%), #161719",
+            "radial-gradient(900px 520px at 18% 0%, rgba(163,230,53,0.11), transparent 62%), radial-gradient(780px 520px at 100% 18%, rgba(146,114,255,0.12), transparent 58%), #151619",
           color: "#f5f5f7",
-          padding: "72px 80px",
+          padding: "58px 64px",
           fontFamily: "Geist, sans-serif",
           position: "relative",
         }}
       >
-        {/* subtle dot grid background */}
         <div
           style={{
             position: "absolute",
@@ -41,91 +64,169 @@ export default async function Image({ params }: { params: { slug: string } }) {
           }}
         />
 
-        {/* top label */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
+            justifyContent: "space-between",
             gap: 14,
-            fontSize: 16,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.45)",
             fontFamily: "Geist Mono, ui-monospace, monospace",
           }}
         >
-          <div style={{ width: 32, height: 1, background: "rgba(255,255,255,0.4)" }} />
-          <span>IM · portfolio · case</span>
-        </div>
-
-        <div style={{ marginTop: "auto", display: "flex", flexDirection: "column" }}>
-          {/* role · year */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
               gap: 14,
-              fontSize: 18,
-              color: "rgba(255,255,255,0.55)",
-              fontFamily: "Geist Mono, ui-monospace, monospace",
-              marginBottom: 22,
+              fontSize: 15,
+              letterSpacing: "0.16em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.48)",
             }}
           >
-            <span>{role}</span>
-            {year && (
-              <>
-                <span style={{ width: 4, height: 4, borderRadius: 999, background: "rgba(255,255,255,0.3)" }} />
-                <span>{year}</span>
-              </>
-            )}
+            <div style={{ width: 32, height: 1, background: "rgba(255,255,255,0.38)" }} />
+            <span>IM · portfolio · case study</span>
           </div>
-
-          {/* title */}
-          <div
-            style={{
-              fontSize: 116,
-              fontWeight: 500,
-              letterSpacing: "-0.03em",
-              lineHeight: 0.98,
-              color: "#fafafa",
-              marginBottom: 28,
-            }}
-          >
-            {title}
-          </div>
-
-          {/* blurb */}
-          {blurb && (
-            <div
-              style={{
-                fontSize: 26,
-                lineHeight: 1.4,
-                color: "rgba(255,255,255,0.7)",
-                maxWidth: 900,
-                fontFamily: "Geist Mono, ui-monospace, monospace",
-              }}
-            >
-              {blurb.length > 180 ? blurb.slice(0, 180) + "…" : blurb}
-            </div>
-          )}
+          <span style={{ color: "#a3e635", fontSize: 17 }}>targix.dev</span>
         </div>
 
-        {/* footer band */}
         <div
           style={{
             display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: 56,
-            paddingTop: 28,
-            borderTop: "1px solid rgba(255,255,255,0.12)",
-            fontFamily: "Geist Mono, ui-monospace, monospace",
-            fontSize: 18,
-            color: "rgba(255,255,255,0.55)",
+            alignItems: "stretch",
+            gap: 42,
+            marginTop: 48,
+            flex: 1,
           }}
         >
-          <span>ilya moskovkin · senior frontend</span>
-          <span style={{ color: "#a3e635" }}>● live</span>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              width: 470,
+              padding: "10px 0 2px",
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  fontSize: 17,
+                  color: "rgba(255,255,255,0.56)",
+                  fontFamily: "Geist Mono, ui-monospace, monospace",
+                  marginBottom: 18,
+                }}
+              >
+                <span>{role}</span>
+                {year && (
+                  <>
+                    <span
+                      style={{
+                        width: 4,
+                        height: 4,
+                        borderRadius: 999,
+                        background: "rgba(255,255,255,0.28)",
+                      }}
+                    />
+                    <span>{year}</span>
+                  </>
+                )}
+              </div>
+
+              <div
+                style={{
+                  fontSize: title.length > 24 ? 78 : 92,
+                  fontWeight: 540,
+                  letterSpacing: "-0.025em",
+                  lineHeight: 0.95,
+                  color: "#fafafa",
+                  marginBottom: 24,
+                }}
+              >
+                {title}
+              </div>
+
+              {blurb && (
+                <div
+                  style={{
+                    fontSize: 23,
+                    lineHeight: 1.35,
+                    color: "rgba(255,255,255,0.7)",
+                    fontFamily: "Geist Mono, ui-monospace, monospace",
+                  }}
+                >
+                  {truncateAtWord(blurb, 132)}
+                </div>
+              )}
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                flexWrap: "wrap",
+                fontFamily: "Geist Mono, ui-monospace, monospace",
+              }}
+            >
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  style={{
+                    border: "1px solid rgba(255,255,255,0.14)",
+                    borderRadius: 999,
+                    padding: "7px 11px",
+                    color: "rgba(255,255,255,0.62)",
+                    background: "rgba(255,255,255,0.04)",
+                    fontSize: 15,
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              flex: 1,
+              minWidth: 0,
+              border: "1px solid rgba(255,255,255,0.14)",
+              borderRadius: 18,
+              overflow: "hidden",
+              background: "rgba(255,255,255,0.045)",
+              boxShadow: "0 28px 80px rgba(0,0,0,0.38)",
+            }}
+          >
+            {coverUrl ? (
+              <img
+                src={coverUrl}
+                alt=""
+                width={650}
+                height={500}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "top center",
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  height: "100%",
+                  background:
+                    "linear-gradient(135deg, rgba(163,230,53,0.16), rgba(146,114,255,0.16))",
+                }}
+              />
+            )}
+          </div>
         </div>
       </div>
     ),
