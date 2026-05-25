@@ -246,7 +246,7 @@ export function ThreeHero({ accent = "#a3e635", className, onStatus, time, onLay
     };
 
     const PARA = "Senior frontend engineer with fullstack\nchops and UI/UX roots.\nBuilding products, not pages.";
-    const META = "based  vietnam → remote      years  8+      stack  vue · react · node      status  open to roles";
+    const META = "based  vietnam → remote      years  12+      stack  vue · react · node      status  open to roles";
 
     const status = mkText(FONT_MONO, 13, C_MUTED, 0.02);
     const eyebrow = mkText(FONT_MONO, 12, C_DIM, 0.3);
@@ -269,7 +269,7 @@ export function ThreeHero({ accent = "#a3e635", className, onStatus, time, onLay
     {
       const ranges: Record<number, number> = { 0: C_DIM };
       paintRange(ranges, META, "vietnam → remote", C_FG, C_DIM);
-      paintRange(ranges, META, "8+", C_FG, C_DIM);
+      paintRange(ranges, META, "12+", C_FG, C_DIM);
       paintRange(ranges, META, "vue · react · node", C_FG, C_DIM);
       paintRange(ranges, META, "open to roles", C_GREEN, C_DIM);
       // @ts-expect-error troika runtime prop

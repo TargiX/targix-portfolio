@@ -2,7 +2,9 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 import { AnchorDemo } from "@/components/anchor-demo";
+import { AnchorScrollytell, AnchorParallaxGallery } from "@/components/anchor-screens";
 import { YouTubeEmbed } from "@/components/youtube-embed";
+import { BrokerVideos } from "@/components/broker-videos";
 import { PhospheneScreen } from "@/components/phosphene-screens";
 import { RoomboardScreen } from "@/components/roomboard-screens";
 import { RoomboardThemeShowcase } from "@/components/roomboard-theme-showcase";
@@ -16,7 +18,10 @@ type MDXComponents = {
   ) => ReactNode;
 } & {
   AnchorDemo?: typeof AnchorDemo;
+  AnchorScrollytell?: typeof AnchorScrollytell;
+  AnchorParallaxGallery?: typeof AnchorParallaxGallery;
   YouTubeEmbed?: typeof YouTubeEmbed;
+  BrokerVideos?: typeof BrokerVideos;
   PhospheneScreen?: typeof PhospheneScreen;
   RoomboardScreen?: typeof RoomboardScreen;
   RoomboardThemeShowcase?: typeof RoomboardThemeShowcase;
@@ -117,7 +122,10 @@ export const mdxComponents: MDXComponents = {
   ),
   // Custom components usable directly in MDX:
   AnchorDemo,
+  AnchorScrollytell,
+  AnchorParallaxGallery,
   YouTubeEmbed,
+  BrokerVideos,
   PhospheneScreen,
   RoomboardScreen,
   RoomboardThemeShowcase,
