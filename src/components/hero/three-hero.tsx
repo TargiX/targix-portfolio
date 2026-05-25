@@ -291,7 +291,7 @@ export function ThreeHero({ accent = "#a3e635", className, onStatus, time, onLay
     );
     textScene.add(dot);
 
-    // ── glass cube cluster (3×3) ──
+    // ── glass cube cluster (3×3×3) ──
     const cubeScene = new THREE.Scene();
     const cubeCam = new THREE.PerspectiveCamera(30, W / H, 0.1, 100);
     cubeCam.position.set(0, 0, 6);
@@ -311,23 +311,31 @@ export function ThreeHero({ accent = "#a3e635", className, onStatus, time, onLay
     });
 
     const cubeGroup = new THREE.Group();
-    // rounded box → soft, liquid-glass corners + smooth normals (gentler refraction)
     const CUBE = 0.84;
     const GAP = 0.92; // centre-to-centre spacing (small gap between cubes)
     const cubeGeo = new RoundedBoxGeometry(CUBE, CUBE, CUBE, 5, 0.17);
-    const cubes: Array<{ mesh: THREE.Mesh; gx: number; gy: number; gz: number }> = [];
+    // each cube tracks its logical grid coord (g) + baked orientation (q),
+    // so the occasional layer twist can permute a slice and stay consistent
+    const cubes: Array<{ mesh: THREE.Mesh; g: THREE.Vector3; q: THREE.Quaternion }> = [];
     for (let gx = -1; gx <= 1; gx++) {
       for (let gy = -1; gy <= 1; gy++) {
         for (let gz = -1; gz <= 1; gz++) {
           const mesh = new THREE.Mesh(cubeGeo, cubeMat);
           cubeGroup.add(mesh);
-          cubes.push({ mesh, gx, gy, gz });
+          cubes.push({ mesh, g: new THREE.Vector3(gx, gy, gz), q: new THREE.Quaternion() });
         }
       }
     }
     cubeScene.add(cubeGroup);
 
-    // place the cluster on the right, sized to the viewport
+    // occasional, calm layer twist
+    const AXES = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1)];
+    const _q = new THREE.Quaternion();
+    const _p = new THREE.Vector3();
+    const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+    let twist: { axisIdx: number; layer: number; dir: number; t0: number; dur: number } | null = null;
+    let nextTwistAt = 4.0;
+
     function placeCluster() {
       cubeCam.aspect = W / H;
       cubeCam.updateProjectionMatrix();
@@ -337,7 +345,7 @@ export function ThreeHero({ accent = "#a3e635", className, onStatus, time, onLay
       const fracX = 0.73;
       const fracY = 0.46;
       cubeGroup.position.set((fracX - 0.5) * visW, (0.5 - fracY) * visH, 0);
-      const clusterScale = (Math.min(visH, visW) * 0.36) / 3.0; // ~2.8 world units wide
+      const clusterScale = (Math.min(visH, visW) * 0.36) / 3.0;
       cubeGroup.scale.setScalar(clusterScale);
     }
     placeCluster();
@@ -497,23 +505,62 @@ export function ThreeHero({ accent = "#a3e635", className, onStatus, time, onLay
       const dotMat = dot.material as THREE.MeshBasicMaterial;
       dotMat.opacity = h1ease * (0.6 + 0.4 * Math.sin(elapsed * 3.0));
 
-      // ── cube cluster: reveal, spin, breathe ──
+      // ── cube cluster: reveal, slow spin, breathe ──
       const reveal = 1 - Math.pow(1 - Math.min(1, elapsed / 1.1), 3);
       cubeMat.uniforms.uReveal.value = reveal;
 
       const mActive = bgMat.uniforms.uMouseActive.value as number;
       const mx = mouse.x / W - 0.5;
       const my = mouse.y / H - 0.5;
-      cubeGroup.rotation.y = elapsed * 0.35 + mx * 0.9;
-      cubeGroup.rotation.x = Math.sin(elapsed * 0.4) * 0.25 + my * 0.6;
-      cubeGroup.rotation.z = Math.sin(elapsed * 0.22) * 0.08;
+      cubeGroup.rotation.y = elapsed * 0.3 + mx * 0.8;
+      cubeGroup.rotation.x = Math.sin(elapsed * 0.4) * 0.22 + my * 0.5;
+      cubeGroup.rotation.z = Math.sin(elapsed * 0.22) * 0.07;
 
-      // breathing spread (tight; opens a touch on hover)
       const spread = GAP * (1.0 + 0.05 * Math.sin(elapsed * 1.1) + 0.12 * mActive);
       const popIn = 0.6 + 0.4 * reveal;
+
+      // schedule an occasional calm layer twist
+      if (!twist && reveal > 0.95 && elapsed >= nextTwistAt) {
+        twist = {
+          axisIdx: (Math.random() * 3) | 0,
+          layer: [-1, 0, 1][(Math.random() * 3) | 0],
+          dir: Math.random() < 0.5 ? 1 : -1,
+          t0: elapsed,
+          dur: 0.9,
+        };
+      }
+
+      let prog = 1;
+      let angle = 0;
+      if (twist) {
+        prog = Math.min(1, (elapsed - twist.t0) / twist.dur);
+        angle = twist.dir * (Math.PI / 2) * easeInOut(prog);
+      }
+      _q.setFromAxisAngle(twist ? AXES[twist.axisIdx] : AXES[0], angle);
+
       for (const c of cubes) {
-        c.mesh.position.set(c.gx * spread, c.gy * spread, c.gz * spread);
+        _p.copy(c.g).multiplyScalar(spread);
+        if (twist && Math.round(c.g.getComponent(twist.axisIdx)) === twist.layer) {
+          _p.applyQuaternion(_q); // rotate the slice
+          c.mesh.quaternion.copy(_q).multiply(c.q);
+        } else {
+          c.mesh.quaternion.copy(c.q);
+        }
+        c.mesh.position.copy(_p);
         c.mesh.scale.setScalar(popIn);
+      }
+
+      // bake the 90° permutation into grid coords + orientation, schedule next
+      if (twist && prog >= 1) {
+        const R90 = new THREE.Quaternion().setFromAxisAngle(AXES[twist.axisIdx], twist.dir * (Math.PI / 2));
+        for (const c of cubes) {
+          if (Math.round(c.g.getComponent(twist.axisIdx)) === twist.layer) {
+            c.g.applyQuaternion(R90).round();
+            c.q.premultiply(R90);
+          }
+        }
+        nextTwistAt = elapsed + 4.5 + Math.random() * 3.5; // rare + calm
+        twist = null;
       }
 
       // ── render: scene (bg+text) → RT, composite → screen, cubes on top ──

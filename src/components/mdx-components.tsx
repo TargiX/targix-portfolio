@@ -5,6 +5,7 @@ import { AnchorDemo } from "@/components/anchor-demo";
 import { YouTubeEmbed } from "@/components/youtube-embed";
 import { PhospheneScreen } from "@/components/phosphene-screens";
 import { RoomboardScreen } from "@/components/roomboard-screens";
+import { RoomboardThemeShowcase } from "@/components/roomboard-theme-showcase";
 import { PromptCompilerArtifact } from "@/components/prompt-compiler-artifact";
 
 /** Local lite version of MDXComponents — avoids needing @types/mdx.
@@ -18,6 +19,7 @@ type MDXComponents = {
   YouTubeEmbed?: typeof YouTubeEmbed;
   PhospheneScreen?: typeof PhospheneScreen;
   RoomboardScreen?: typeof RoomboardScreen;
+  RoomboardThemeShowcase?: typeof RoomboardThemeShowcase;
   PromptCompilerArtifact?: typeof PromptCompilerArtifact;
 };
 
@@ -118,5 +120,6 @@ export const mdxComponents: MDXComponents = {
   YouTubeEmbed,
   PhospheneScreen,
   RoomboardScreen,
+  RoomboardThemeShowcase,
   PromptCompilerArtifact,
 };

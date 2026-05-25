@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllSlugs } from "@/lib/content";
 
-const SITE_URL = process.env.SITE_URL ?? "https://targix.dev";
+const SITE_URL = process.env.SITE_URL ?? "https://ilyamoskovkin.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const slugs = await getAllSlugs();

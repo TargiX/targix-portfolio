@@ -23,8 +23,6 @@ export function ProjectCard({ project, className }: { project: Project; classNam
     project;
   const href = caseSlug ? `/work/${caseSlug}` : undefined;
   const fan = screens && screens.length > 0 ? screens : thumb ? [thumb] : null;
-  // A live demo is interactive, so its stage must NOT be a navigation link.
-  const stageHref = demo ? undefined : href;
 
   return (
     <motion.article
@@ -33,12 +31,13 @@ export function ProjectCard({ project, className }: { project: Project; classNam
       animate="rest"
       variants={cardVariants}
       className={cn(
-        "group/card flex flex-col overflow-hidden rounded-2xl border border-line-soft bg-bg-2/30 transition-colors duration-300 hover:border-[color:color-mix(in_oklab,var(--accent)_30%,var(--line))]",
+        "group/card relative flex flex-col overflow-hidden rounded-2xl border border-line-soft bg-bg-2/30 transition-colors duration-300 hover:border-[color:color-mix(in_oklab,var(--accent)_30%,var(--line))]",
+        href && "cursor-pointer",
         className,
       )}
     >
-      {/* Media stage */}
-      <MediaWrap href={stageHref} title={title}>
+      {/* Media stage (static showcase images — the whole card is the link) */}
+      <div>
         <div className="relative aspect-[16/10] w-full overflow-hidden bg-bg-2">
           {/* gradient backdrop */}
           <div
@@ -74,24 +73,16 @@ export function ProjectCard({ project, className }: { project: Project; classNam
             {index} · {year}
           </span>
         </div>
-      </MediaWrap>
+      </div>
 
       {/* Text */}
       <div className="flex flex-1 flex-col p-5">
         <div className="mb-1.5 text-[11px] lowercase tracking-[0.06em] text-fg-muted">{role}</div>
 
         <div className="mb-2 inline-block self-start">
-          {href ? (
-            <Link href={href} prefetch className="group/title">
-              <h3 className="m-0 font-sans text-[22px] font-medium tracking-[-0.015em] text-fg transition-colors duration-300 group-hover/card:text-[color:var(--accent)]">
-                {title}
-              </h3>
-            </Link>
-          ) : (
-            <h3 className="m-0 font-sans text-[22px] font-medium tracking-[-0.015em] text-fg transition-colors duration-300 group-hover/card:text-[color:var(--accent)]">
-              {title}
-            </h3>
-          )}
+          <h3 className="m-0 font-sans text-[22px] font-medium tracking-[-0.015em] text-fg transition-colors duration-300 group-hover/card:text-[color:var(--accent)]">
+            {title}
+          </h3>
           <motion.span
             variants={underlineVariants}
             className="block h-[2px] origin-left rounded-full bg-[var(--accent)] will-change-transform"
@@ -116,7 +107,7 @@ export function ProjectCard({ project, className }: { project: Project; classNam
         )}
 
         {links?.length > 0 && (
-          <div className="mt-auto flex flex-wrap gap-x-4 gap-y-2 pt-1 text-xs">
+          <div className="relative z-20 mt-auto flex flex-wrap gap-x-4 gap-y-2 self-start pt-1 text-xs">
             {links.map((l) => {
               const isExternal = /^https?:\/\//.test(l.href);
               const arrow = isExternal ? "↗" : "→";
@@ -143,24 +134,17 @@ export function ProjectCard({ project, className }: { project: Project; classNam
           </div>
         )}
       </div>
-    </motion.article>
-  );
-}
 
-function MediaWrap({
-  href,
-  title,
-  children,
-}: {
-  href?: string;
-  title: string;
-  children: React.ReactNode;
-}) {
-  return href ? (
-    <Link href={href} prefetch aria-label={`${title} — open case study`} className="block">
-      {children}
-    </Link>
-  ) : (
-    <div>{children}</div>
+      {/* Stretched link — clicking anywhere on the card opens the case study.
+          Footer links sit at z-20 so they stay independently clickable. */}
+      {href && (
+        <Link
+          href={href}
+          prefetch
+          aria-label={`${title} — open case study`}
+          className="absolute inset-0 z-10"
+        />
+      )}
+    </motion.article>
   );
 }

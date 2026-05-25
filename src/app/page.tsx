@@ -229,7 +229,7 @@ export default function Home() {
           <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-line-soft/60 pt-6 text-[10px] lowercase tracking-[0.06em] text-fg-dim">
             <span>im / portfolio / v1.0</span>
             <span className="size-[3px] rounded-full bg-fg-dim" />
-            <span>built with next 16 · react 19 · tailwind v4 · pixi · framer</span>
+            <span>built with next 16 · react 19 · tailwind v4 · three.js · framer</span>
             <span className="size-[3px] rounded-full bg-fg-dim" />
             <span className="ml-auto">© {new Date().getFullYear()} ilya moskovkin</span>
           </div>

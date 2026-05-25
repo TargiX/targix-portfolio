@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Ilya Moskovkin — Portfolio",
   description:
     "Senior frontend engineer with fullstack chops and UI/UX roots. Building products, not pages.",
-  metadataBase: new URL("https://targix.dev"),
+  metadataBase: new URL("https://ilyamoskovkin.com"),
   openGraph: {
     title: "Ilya Moskovkin — Portfolio",
     description: "Senior frontend engineer · UI/UX roots · building products.",
