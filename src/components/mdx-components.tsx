@@ -5,6 +5,7 @@ import { AnchorDemo } from "@/components/anchor-demo";
 import { AnchorScrollytell, AnchorParallaxGallery } from "@/components/anchor-screens";
 import { YouTubeEmbed } from "@/components/youtube-embed";
 import { BrokerVideos } from "@/components/broker-videos";
+import { BrokerShots } from "@/components/broker-showcase";
 import { PhospheneScreen } from "@/components/phosphene-screens";
 import { RoomboardScreen } from "@/components/roomboard-screens";
 import { RoomboardThemeShowcase } from "@/components/roomboard-theme-showcase";
@@ -22,6 +23,7 @@ type MDXComponents = {
   AnchorParallaxGallery?: typeof AnchorParallaxGallery;
   YouTubeEmbed?: typeof YouTubeEmbed;
   BrokerVideos?: typeof BrokerVideos;
+  BrokerShots?: typeof BrokerShots;
   PhospheneScreen?: typeof PhospheneScreen;
   RoomboardScreen?: typeof RoomboardScreen;
   RoomboardThemeShowcase?: typeof RoomboardThemeShowcase;
@@ -126,6 +128,7 @@ export const mdxComponents: MDXComponents = {
   AnchorParallaxGallery,
   YouTubeEmbed,
   BrokerVideos,
+  BrokerShots,
   PhospheneScreen,
   RoomboardScreen,
   RoomboardThemeShowcase,

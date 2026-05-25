@@ -16,7 +16,7 @@ export type Project = {
   /** Screens splayed as a fan in the media stage (mobile-style projects). */
   screens?: string[];
   /** Renders a live interactive demo in the media stage instead of images. */
-  demo?: "phosphene" | "roomboard";
+  demo?: "phosphene" | "roomboard" | "broker";
 };
 
 export const FEATURED: Project = {
@@ -50,6 +50,7 @@ export const SECONDARY: Project[] = [
       { label: "case study", href: "/work/broker-online-exchange" },
     ],
     caseSlug: "broker-online-exchange",
+    demo: "broker",
   },
   {
     index: "③",

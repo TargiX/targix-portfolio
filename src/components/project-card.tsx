@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { ScreenFan } from "@/components/screen-fan";
 import { PhospheneShowcase } from "@/components/phosphene-showcase";
 import { RoomboardShowcase } from "@/components/roomboard-showcase";
+import { BrokerShowcase } from "@/components/broker-showcase";
 
 const cardVariants: Variants = {
   rest: { y: 0 },
@@ -17,6 +18,14 @@ const cardVariants: Variants = {
 const underlineVariants: Variants = {
   rest: { scaleX: 0 },
   hover: { scaleX: 1, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+};
+
+// "Laid on a table" reveal — Framer Motion variants, triggered by our own
+// IntersectionObserver (motion's whileInView/useInView mis-detect inside the
+// ViewSwitcher's AnimatePresence + overflow container, but `animate` works fine).
+const revealVariants: Variants = {
+  hidden: (tilt: number) => ({ opacity: 0, y: 46, rotateX: -16, rotateZ: tilt, scale: 0.96 }),
+  shown: { opacity: 1, y: 0, rotateX: 0, rotateZ: 0, scale: 1 },
 };
 
 export function ProjectCard({
@@ -33,9 +42,11 @@ export function ProjectCard({
   const href = caseSlug ? `/work/${caseSlug}` : undefined;
   const fan = screens && screens.length > 0 ? screens : thumb ? [thumb] : null;
 
-  // "Laid on a table" reveal via IntersectionObserver + CSS transition.
-  // (motion's whileInView/initial doesn't apply reliably in this Next 16 /
-  // React 19 / React-Compiler setup, so we drive it with plain CSS.)
+  const col = order % 2;
+  // left column lands first, right a touch later; rows cascade
+  const delay = Math.floor(order / 2) * 0.14 + col * 0.1;
+  const tilt = col === 0 ? -2.5 : 2.5;
+
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
   useEffect(() => {
@@ -53,25 +64,17 @@ export function ProjectCard({
     io.observe(el);
     return () => io.disconnect();
   }, []);
-  const col = order % 2;
-  // left column lands first, right a touch later; rows cascade
-  const delay = Math.floor(order / 2) * 0.14 + col * 0.1;
-  const tilt = col === 0 ? -2.5 : 2.5;
 
   return (
-    <div ref={ref} className={cn("h-full [perspective:1000px]", className)}>
-      <div
-        className="h-full will-change-transform"
-        style={{
-          opacity: shown ? 1 : 0,
-          transform: shown
-            ? "none"
-            : `translateY(46px) rotateX(-16deg) rotateZ(${tilt}deg) scale(0.96)`,
-          transition:
-            "opacity 0.72s cubic-bezier(0.22,1,0.36,1), transform 0.72s cubic-bezier(0.22,1,0.36,1)",
-          transitionDelay: `${delay}s`,
-        }}
-      >
+    <motion.div
+      ref={ref}
+      className={cn("h-full", className)}
+      variants={revealVariants}
+      custom={tilt}
+      initial="hidden"
+      animate={shown ? "shown" : "hidden"}
+      transition={{ delay, duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
+    >
       <motion.article
         initial="rest"
         whileHover="hover"
@@ -103,6 +106,10 @@ export function ProjectCard({
           ) : demo === "roomboard" ? (
             <div className="absolute inset-0">
               <RoomboardShowcase />
+            </div>
+          ) : demo === "broker" ? (
+            <div className="absolute inset-0">
+              <BrokerShowcase />
             </div>
           ) : fan ? (
             <ScreenFan screens={fan} alt={title} />
@@ -192,7 +199,6 @@ export function ProjectCard({
         />
       )}
       </motion.article>
-      </div>
-    </div>
+    </motion.div>
   );
 }

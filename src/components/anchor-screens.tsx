@@ -42,20 +42,44 @@ export function AnchorScrollytell() {
   const [activeIndex, setActiveIndex] = useState(0);
   const beatRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Single source of truth: on scroll, the beat whose center sits closest to a
+  // fixed focus line (≈42% down the viewport) is active. No competing observers,
+  // so it never flickers or jumps two sections at once.
   useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-    beatRefs.current.forEach((el, i) => {
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveIndex(i);
-        },
-        { threshold: 0.4, rootMargin: "0px 0px -30% 0px" },
-      );
-      obs.observe(el);
-      observers.push(obs);
-    });
-    return () => observers.forEach((o) => o.disconnect());
+    let raf = 0;
+
+    const recompute = () => {
+      raf = 0;
+      const focusY = window.innerHeight * 0.42;
+      let bestIndex = 0;
+      let bestDist = Infinity;
+      for (let i = 0; i < beatRefs.current.length; i++) {
+        const el = beatRefs.current[i];
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        const dist = Math.abs(center - focusY);
+        if (dist < bestDist) {
+          bestDist = dist;
+          bestIndex = i;
+        }
+      }
+      setActiveIndex((prev) => (prev === bestIndex ? prev : bestIndex));
+    };
+
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(recompute);
+    };
+
+    recompute();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   const active = BEATS[activeIndex];
@@ -114,7 +138,7 @@ export function AnchorScrollytell() {
             ref={(el) => {
               beatRefs.current[i] = el;
             }}
-            className="flex min-h-[210px] flex-col justify-center py-8"
+            className="flex min-h-[280px] flex-col justify-center py-10"
           >
             {/* Mobile: inline screenshot */}
             <div className="mb-5 sm:hidden">
