@@ -7,7 +7,18 @@ import { checkRateLimit } from "@/lib/rate-limit";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const MODEL = process.env.OPENROUTER_MODEL ?? "meta-llama/llama-3.2-3b-instruct:free";
+// Free OpenRouter models are heavily (and unpredictably) rate-limited, so we
+// try a list in order and stream the first one that's actually available.
+// OPENROUTER_MODEL, if set, is tried first.
+const MODELS = [
+  ...(process.env.OPENROUTER_MODEL ? [process.env.OPENROUTER_MODEL] : []),
+  "openai/gpt-oss-20b:free",
+  "openai/gpt-oss-120b:free",
+  "meta-llama/llama-3.3-70b-instruct:free",
+  "google/gemma-4-31b-it:free",
+  "qwen/qwen3-next-80b-a3b-instruct:free",
+  "meta-llama/llama-3.2-3b-instruct:free",
+];
 
 const SYSTEM_PROMPT =
   "You are the assistant embedded in the Lab section of Ilya Moskovkin's developer portfolio. " +
@@ -52,29 +63,39 @@ export async function POST(req: Request) {
     return Response.json({ error: "bad_request" }, { status: 400 });
   }
 
-  let upstream: Response;
-  try {
-    upstream = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${key}`,
-        "Content-Type": "application/json",
-        "HTTP-Referer": process.env.SITE_URL ?? "https://targix.dev",
-        "X-Title": "Ilya Moskovkin Portfolio",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        stream: true,
-        messages: [{ role: "system", content: SYSTEM_PROMPT }, ...parsed.messages],
-      }),
-    });
-  } catch {
-    return Response.json({ error: "upstream_error" }, { status: 502 });
+  const outMessages = [{ role: "system", content: SYSTEM_PROMPT }, ...parsed.messages];
+
+  // try models in order; stream the first available one
+  let upstream: Response | null = null;
+  let lastStatus = 502;
+  for (const model of MODELS) {
+    let r: Response;
+    try {
+      r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${key}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": process.env.SITE_URL ?? "https://targix.dev",
+          "X-Title": "Ilya Moskovkin Portfolio",
+        },
+        body: JSON.stringify({ model, stream: true, messages: outMessages }),
+      });
+    } catch {
+      lastStatus = 502;
+      continue;
+    }
+    if (r.ok && r.body) {
+      upstream = r;
+      break;
+    }
+    lastStatus = r.status;
+    await r.body?.cancel().catch(() => {}); // free the connection before retrying
   }
 
-  if (!upstream.ok || !upstream.body) {
-    const status = upstream.status === 429 ? 429 : 502;
-    return Response.json({ error: "upstream_error" }, { status });
+  if (!upstream || !upstream.body) {
+    const status = lastStatus === 429 ? 429 : 502;
+    return Response.json({ error: lastStatus === 429 ? "rate_limited" : "upstream_error" }, { status });
   }
 
   // Transform OpenRouter's SSE into a plain UTF-8 token stream.
