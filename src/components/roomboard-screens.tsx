@@ -13,12 +13,6 @@ const SCREENS = {
     caption:
       "The room surface combines Pixi-rendered cards and connectors with DOM controls for inspection, sharing, locking, comments, and uploads.",
   },
-  full: {
-    src: "/work/roomboard/landing-full.png",
-    aspect: "aspect-[10/16]",
-    caption:
-      "The full product page is structured like a SaaS launch surface: positioning, workflow, active rooms, practical rules, and a direct CTA.",
-  },
 } as const;
 
 type ScreenKey = keyof typeof SCREENS;

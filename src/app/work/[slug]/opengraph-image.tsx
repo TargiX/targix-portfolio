@@ -11,7 +11,7 @@ const siteUrl =
     ? `https://${process.env.VERCEL_URL}`
     : process.env.NODE_ENV === "development"
       ? "http://localhost:3010"
-      : "https://targix.dev");
+      : "https://ilyamoskovkin.com");
 
 function getCoverUrl(cover?: string) {
   if (!cover) return null;
@@ -87,7 +87,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             <div style={{ width: 32, height: 1, background: "rgba(255,255,255,0.38)" }} />
             <span>IM · portfolio · case study</span>
           </div>
-          <span style={{ color: "#a3e635", fontSize: 17 }}>targix.dev</span>
+          <span style={{ color: "#a3e635", fontSize: 17 }}>ilyamoskovkin.com</span>
         </div>
 
         <div
