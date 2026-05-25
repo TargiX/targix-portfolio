@@ -316,17 +316,29 @@ export function ThreeHero({ accent = "#a3e635", className, onStatus, time, onLay
     const cubeGeo = new RoundedBoxGeometry(CUBE, CUBE, CUBE, 5, 0.17);
     // each cube tracks its logical grid coord (g) + baked orientation (q),
     // so the occasional layer twist can permute a slice and stay consistent
-    const cubes: Array<{ mesh: THREE.Mesh; g: THREE.Vector3; q: THREE.Quaternion }> = [];
+    type Cube = { mesh: THREE.Mesh; g: THREE.Vector3; q: THREE.Quaternion; dir: THREE.Vector3 };
+    const cubes: Cube[] = [];
+    let dirPick = 0;
     for (let gx = -1; gx <= 1; gx++) {
       for (let gy = -1; gy <= 1; gy++) {
         for (let gz = -1; gz <= 1; gz++) {
           const mesh = new THREE.Mesh(cubeGeo, cubeMat);
           cubeGroup.add(mesh);
-          cubes.push({ mesh, g: new THREE.Vector3(gx, gy, gz), q: new THREE.Quaternion() });
+          // explode straight along one of the cube's outward face normals
+          // (axis-aligned). Edge/corner cubes have 2–3 open faces → alternate
+          // which one. The centre cube has no open face, so it stays put.
+          const cands: THREE.Vector3[] = [];
+          if (gx !== 0) cands.push(new THREE.Vector3(Math.sign(gx), 0, 0));
+          if (gy !== 0) cands.push(new THREE.Vector3(0, Math.sign(gy), 0));
+          if (gz !== 0) cands.push(new THREE.Vector3(0, 0, Math.sign(gz)));
+          const dir = cands.length ? cands[dirPick++ % cands.length] : new THREE.Vector3();
+          cubes.push({ mesh, g: new THREE.Vector3(gx, gy, gz), q: new THREE.Quaternion(), dir });
         }
       }
     }
     cubeScene.add(cubeGroup);
+    const EXPLODE = 5.0; // cube-local units at full scroll
+    let scrollSmooth = 0;
 
     // occasional, calm layer twist
     const AXES = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1)];
@@ -519,8 +531,14 @@ export function ThreeHero({ accent = "#a3e635", className, onStatus, time, onLay
       const spread = GAP * (1.0 + 0.05 * Math.sin(elapsed * 1.1) + 0.12 * mActive);
       const popIn = 0.6 + 0.4 * reveal;
 
-      // schedule an occasional calm layer twist
-      if (!twist && reveal > 0.95 && elapsed >= nextTwistAt) {
+      // scroll drives explode (down) / reassemble (up); 0 at top → 1 below
+      const scrollTarget = Math.min(1, Math.max(0, (window.scrollY || 0) / Math.max(1, H * 0.85)));
+      scrollSmooth += (scrollTarget - scrollSmooth) * 0.12;
+      const atTop = scrollSmooth < 0.02;
+
+      // layer twists only run at the top; abandon any in-flight twist once scrolling
+      if (!atTop && twist) twist = null;
+      if (atTop && !twist && reveal > 0.95 && elapsed >= nextTwistAt) {
         twist = {
           axisIdx: (Math.random() * 3) | 0,
           layer: [-1, 0, 1][(Math.random() * 3) | 0],
@@ -545,6 +563,10 @@ export function ThreeHero({ accent = "#a3e635", className, onStatus, time, onLay
           c.mesh.quaternion.copy(_q).multiply(c.q);
         } else {
           c.mesh.quaternion.copy(c.q);
+        }
+        // scroll explode: slide straight out along the face normal, no spin
+        if (scrollSmooth > 0.001) {
+          _p.addScaledVector(c.dir, EXPLODE * scrollSmooth);
         }
         c.mesh.position.copy(_p);
         c.mesh.scale.setScalar(popIn);

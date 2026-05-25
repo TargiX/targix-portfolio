@@ -40,10 +40,10 @@ export const SECONDARY: Project[] = [
   {
     index: "②",
     year: "2021 — 2026",
-    role: "Lead Frontend · Broker Online Exchange → AppDirect",
+    role: "Lead Frontend · Broker Online Exchange",
     title: "Broker Online Exchange",
     blurb:
-      "Nearly five years leading frontend — four at Broker Online Exchange, the last after AppDirect acquired it. Ran the team and mentored juniors while building MyServiceCloud, a telecom-quoting platform, and led the migration from Vue 3 to React micro-frontends (Mantine, Zustand). Flagship: Bill Scan → Quote — scanned bills into structured quotes via Gemini Vision OCR.",
+      "Nearly five years leading the frontend team at Broker Online Exchange (acquired by AppDirect along the way). Mentored juniors and built MyServiceCloud, a telecom-quoting platform, then led the migration from Vue 3 to React micro-frontends (Mantine, Zustand). Flagship: Bill Scan → Quote — scanned bills turned into structured quotes via Gemini Vision OCR.",
     tags: ["React", "Vue 3", "TypeScript", "Micro-frontends", "Mantine", "Zustand", "Laravel", "Team lead"],
     links: [
       { label: "brokeronlinexchange.com", href: "https://www.brokeronlinexchange.com/" },
