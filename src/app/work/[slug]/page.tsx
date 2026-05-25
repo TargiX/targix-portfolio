@@ -76,7 +76,7 @@ export default async function CasePage({ params }: { params: Params }) {
           <span>{c.year}</span>
         </div>
 
-        <h1 className="m-0 mb-6 font-sans text-[52px] font-medium leading-[1.05] tracking-[-0.025em] text-fg sm:text-[64px]">
+        <h1 className="heading-gradient m-0 mb-6 w-fit font-sans text-[52px] font-medium leading-[1.05] tracking-[-0.025em] sm:text-[64px]">
           {c.title}
         </h1>
 

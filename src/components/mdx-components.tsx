@@ -43,7 +43,7 @@ export const mdxComponents: MDXComponents = {
   h2: ({ className, ...props }) => (
     <h2
       className={cn(
-        "font-sans text-[22px] font-medium tracking-[-0.015em] text-fg mb-4 mt-10",
+        "heading-gradient w-fit font-sans text-[22px] font-medium tracking-[-0.015em] mb-4 mt-10",
         className,
       )}
       {...props}
