@@ -48,3 +48,4 @@ local.db-*
 *.tsbuildinfo
 next-env.d.ts
 .gstack/
+.claude/

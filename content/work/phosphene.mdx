@@ -8,7 +8,7 @@ tags: ["Nuxt 4", "Vue 3", "tRPC", "Prisma", "Postgres", "Redis", "Hetzner S3", "
 links:
   - { label: "phosphene.cc", href: "https://phosphene.cc" }
   - { label: "github", href: "https://github.com/TargiX" }
-cover: "/work/phosphene/cover.png"
+cover: "/work/phosphene/cyber-oasis-hero.jpeg"
 order: 1
 featured: true
 ---
@@ -19,7 +19,7 @@ Image generation tools are built around **one prompt at a time**. You type a sen
 
 Phosphene replaces the blank prompt box with a **visual workspace**. You compose prompt ingredients as zones and nodes, switch between feed, graph, flow, and template views, then let the app compile the structure into a generation request. The product is less "chat with a model" and more "keep the creative state legible while you iterate."
 
-<PhospheneScreen screen="hero" />
+<PhospheneScreen screen="graph" />
 
 ## What's in the box
 
@@ -29,8 +29,6 @@ Phosphene replaces the blank prompt box with a **visual workspace**. You compose
 - **Persistence**: Prisma and Postgres save users, dreams, generated images, graph state, model preferences, lineage, payments, and activity events.
 - **Product plumbing**: Auth.js with Google and email/password, Paddle subscriptions/credits, Resend email, Turnstile, Redis-backed rate limits, Sentry, and PostHog.
 - **Infra**: GitHub Actions builds the Nuxt bundle and deploys it to a self-managed Hetzner/PM2 setup with Hetzner S3-compatible object storage for generated image variants.
-
-<PhospheneScreen screen="graph" />
 
 <PromptCompilerArtifact compact />
 

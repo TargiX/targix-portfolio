@@ -1,22 +1,44 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useCallback, useState } from "react";
 import { Typed } from "@/components/typed";
 import { StatusBar } from "@/components/status-bar";
+import { useVietnamTime } from "@/lib/use-vietnam-time";
+import type { HeroLayout } from "@/components/hero/three-hero";
 
-const PixiMetaballHero = dynamic(
-  () => import("@/components/hero/pixi-metaball-hero").then((m) => m.PixiMetaballHero),
+const ThreeHero = dynamic(
+  () => import("@/components/hero/three-hero").then((m) => m.ThreeHero),
   { ssr: false },
 );
 
 export function Hero() {
+  // 'pending' until the WebGL hero comes up; on 'failed' we fall back to the
+  // plain DOM hero. When ready, the WebGL scene owns bg + the whole left block
+  // + glass; the only DOM left is a transparent, clickable overlay for the link.
+  const [webgl, setWebgl] = useState<"pending" | "ready" | "failed">("pending");
+  const [linkRect, setLinkRect] = useState<HeroLayout["link"] | null>(null);
+  const time = useVietnamTime();
+  const webglReady = webgl === "ready";
+
+  const onLayout = useCallback((l: HeroLayout) => setLinkRect(l.link), []);
+
   return (
     <header
-      className="relative isolate w-full overflow-hidden"
+      className="relative isolate min-h-[78svh] w-full overflow-hidden"
       data-screen-label="00 Hero"
     >
-      {/* full-bleed background canvas */}
-      <PixiMetaballHero accent="#a3e635" />
+      {/* full-bleed WebGL scene: ported bg shader + SDF typography + glass */}
+      <ThreeHero accent="#a3e635" onStatus={setWebgl} time={time} onLayout={onLayout} />
+
+      {/* SEO / a11y: the hero copy always lives in the DOM, even when WebGL paints it */}
+      <div className="sr-only">
+        <h1>Ilya Moskovkin — Senior frontend engineer</h1>
+        <p>
+          Senior frontend engineer with fullstack chops and UI/UX roots. Building products, not
+          pages. Based in Vietnam, open to remote roles. Stack: Vue, React, Node.
+        </p>
+      </div>
 
       {/* soft fade into the bg at the bottom + radial highlight */}
       <div
@@ -27,12 +49,29 @@ export function Hero() {
         }}
       />
 
-      {/* content — same width as Work (1280), stacked above canvas */}
-      <div className="relative z-10 mx-auto flex min-h-[78svh] max-w-[1280px] flex-col justify-center px-5 pb-24 pt-6 sm:px-8">
-        <StatusBar />
+      {/* transparent, clickable overlay for the "open the lab" link (WebGL draws
+          the visible text; this keeps it a real, focusable anchor). */}
+      {webglReady && linkRect && (
+        <a
+          href="#lab"
+          aria-label="here for the visual / motion work? open the lab"
+          className="absolute z-20 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
+          style={{
+            left: linkRect.x,
+            top: linkRect.y,
+            width: linkRect.w,
+            height: linkRect.h,
+            color: "transparent",
+          }}
+        >
+          open the lab
+        </a>
+      )}
 
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,42%)]">
-          {/* left — intro */}
+      {/* DOM fallback — only when WebGL fails to initialise */}
+      {webgl === "failed" && (
+        <div className="relative z-10 mx-auto flex min-h-[78svh] max-w-[1280px] flex-col justify-center px-5 pb-24 pt-6 sm:px-8">
+          <StatusBar />
           <div>
             <div className="mb-7 inline-flex items-center gap-2.5 font-mono text-[11px] tracking-[0.3em] text-fg-dim">
               <span className="h-px w-5 bg-line" />
@@ -44,8 +83,8 @@ export function Hero() {
             </h1>
 
             <p className="m-0 mb-7 max-w-[44ch] font-mono text-base leading-[1.55] text-fg-muted">
-              Senior <span className="text-fg">frontend</span> engineer with fullstack chops
-              and <span className="text-fg">UI/UX</span> roots.
+              Senior <span className="text-fg">frontend</span> engineer with fullstack chops and{" "}
+              <span className="text-fg">UI/UX</span> roots.
               <br />
               Building products, not pages.
             </p>
@@ -54,10 +93,7 @@ export function Hero() {
               <MetaItem k="based" v="vietnam → remote" />
               <MetaItem k="years" v="8+" />
               <MetaItem k="stack" v="vue · react · node" />
-              <MetaItem
-                k="status"
-                v={<span style={{ color: "oklch(0.78 0.16 145)" }}>open to roles</span>}
-              />
+              <MetaItem k="status" v={<span style={{ color: "oklch(0.78 0.16 145)" }}>open to roles</span>} />
             </div>
 
             <a
@@ -68,25 +104,8 @@ export function Hero() {
               <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
             </a>
           </div>
-
-          {/* right — reserved mount point for the Three.js glass object.
-              Mount your canvas/scene into #hero-three-slot. The dashed
-              placeholder below is just a guide — delete it once the scene lands. */}
-          <div
-            id="hero-three-slot"
-            className="relative hidden aspect-square w-full max-w-[460px] justify-self-end lg:block"
-          >
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-4 flex items-center justify-center rounded-[2rem] border border-dashed border-line/50"
-            >
-              <span className="font-mono text-[10px] lowercase tracking-[0.12em] text-fg-dim/70">
-                three.js · glass — reserved
-              </span>
-            </div>
-          </div>
         </div>
-      </div>
+      )}
     </header>
   );
 }
