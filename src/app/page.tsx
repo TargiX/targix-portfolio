@@ -10,6 +10,7 @@ import { GitHubContributions } from "@/components/server/github-contributions";
 import { ContactForm } from "@/components/forms/contact-form";
 import { ViewSwitcher } from "@/components/view-switcher";
 import { PromptCompilerArtifact } from "@/components/prompt-compiler-artifact";
+import { AiChat } from "@/components/lab/ai-chat";
 import { CONTACT, FEATURED, SECONDARY, STACK } from "@/lib/data";
 
 // Narrow measure for text-heavy sections (readability ~70ch).
@@ -70,6 +71,21 @@ export default function Home() {
           <PromptCompilerArtifact />
         </div>
       </Section>
+
+      <Section
+        id="ai"
+        n="03"
+        title="AI Chat"
+        kicker="streaming · provider-agnostic · openrouter"
+      >
+        <p className="mb-6 max-w-[60ch] text-fg-muted">
+          A provider-agnostic chat surface. Today it streams tokens from a free model via a server
+          proxy (the API key never touches the browser); the interface is built around a swappable
+          provider, so an in-browser <code className="rounded bg-bg-2 px-1 py-0.5 text-[0.85em] text-fg">WebLLM</code> backend
+          drops in next behind the same toggle.
+        </p>
+        <AiChat />
+      </Section>
     </main>
   );
 
@@ -80,9 +96,10 @@ export default function Home() {
         <div className="grid gap-8 sm:grid-cols-[1fr_auto] sm:items-start">
           <div className="[&>p]:mb-4 [&>p]:text-fg-muted [&>p:last-child]:mb-0">
             <p>
-              I started in UI/UX — eight-plus years of design work before I wrote production
-              code. The crossover is the thing I sell: I can sit with a PM and sketch the
-              interaction, then go build it through to the database without a handoff.
+              ~12 years building for the web, the last several as a frontend engineer and
+              lead. I came up through UI/UX design, and that&apos;s the crossover I sell — not
+              a separate track: I can sit with a PM, sketch the interaction, then build it
+              through to the database without a handoff.
             </p>
             <p>
               Lately I&apos;m happiest in the messy middle of{" "}

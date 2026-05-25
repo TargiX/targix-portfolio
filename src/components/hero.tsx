@@ -12,6 +12,13 @@ const ThreeHero = dynamic(
   { ssr: false },
 );
 
+// Reliable 2D Pixi hero — only mounts when the 3D scene can't initialise
+// (locked-down browsers, no WebGL context). Keeps the fallback from looking raw.
+const PixiMetaballHero = dynamic(
+  () => import("@/components/hero/pixi-metaball-hero").then((m) => m.PixiMetaballHero),
+  { ssr: false },
+);
+
 export function Hero() {
   // 'pending' until the WebGL hero comes up; on 'failed' we fall back to the
   // plain DOM hero. When ready, the WebGL scene owns bg + the whole left block
@@ -68,7 +75,8 @@ export function Hero() {
         </a>
       )}
 
-      {/* DOM fallback — only when WebGL fails to initialise */}
+      {/* fallback — reliable Pixi 2D hero when the 3D scene can't initialise */}
+      {webgl === "failed" && <PixiMetaballHero accent="#a3e635" />}
       {webgl === "failed" && (
         <div className="relative z-10 mx-auto flex min-h-[78svh] max-w-[1280px] flex-col justify-center px-5 pb-24 pt-6 sm:px-8">
           <StatusBar />
@@ -91,7 +99,7 @@ export function Hero() {
 
             <div className="flex flex-wrap gap-x-5 gap-y-4 text-[11px] lowercase tracking-[0.04em] text-fg-dim">
               <MetaItem k="based" v="vietnam → remote" />
-              <MetaItem k="years" v="8+" />
+              <MetaItem k="years" v="12+" />
               <MetaItem k="stack" v="vue · react · node" />
               <MetaItem k="status" v={<span style={{ color: "oklch(0.78 0.16 145)" }}>open to roles</span>} />
             </div>
