@@ -10,6 +10,9 @@ type Props = {
   start?: number;
   /** Accessible title / caption */
   title?: string;
+  /** Custom poster image. Overrides YouTube's thumbnail (useful when the
+   *  uploaded thumbnail is a title card rather than the actual UI). */
+  poster?: string;
 };
 
 /**
@@ -17,10 +20,10 @@ type Props = {
  * mounts the (heavy, tracker-laden) iframe after the user clicks. Keeps the
  * page fast and avoids loading YouTube's ~1MB player on initial paint.
  */
-export function YouTubeEmbed({ id, start = 0, title = "Video" }: Props) {
+export function YouTubeEmbed({ id, start = 0, title = "Video", poster }: Props) {
   const [active, setActive] = useState(false);
 
-  const thumb = `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+  const thumb = poster ?? `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
   const src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0${
     start ? `&start=${start}` : ""
   }`;

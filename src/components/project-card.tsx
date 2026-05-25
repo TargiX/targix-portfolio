@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, type Variants } from "motion/react";
 import type { Project } from "@/lib/data";
@@ -18,24 +19,69 @@ const underlineVariants: Variants = {
   hover: { scaleX: 1, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
 
-export function ProjectCard({ project, className }: { project: Project; className?: string }) {
+export function ProjectCard({
+  project,
+  className,
+  order = 0,
+}: {
+  project: Project;
+  className?: string;
+  order?: number;
+}) {
   const { index, year, role, title, blurb, tags, links, caseSlug, screens, thumb, demo } =
     project;
   const href = caseSlug ? `/work/${caseSlug}` : undefined;
   const fan = screens && screens.length > 0 ? screens : thumb ? [thumb] : null;
 
+  // "Laid on a table" reveal via IntersectionObserver + CSS transition.
+  // (motion's whileInView/initial doesn't apply reliably in this Next 16 /
+  // React 19 / React-Compiler setup, so we drive it with plain CSS.)
+  const ref = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  const col = order % 2;
+  // left column lands first, right a touch later; rows cascade
+  const delay = Math.floor(order / 2) * 0.14 + col * 0.1;
+  const tilt = col === 0 ? -2.5 : 2.5;
+
   return (
-    <motion.article
-      initial="rest"
-      whileHover="hover"
-      animate="rest"
-      variants={cardVariants}
-      className={cn(
-        "group/card relative flex flex-col overflow-hidden rounded-2xl border border-line-soft bg-bg-2/30 transition-colors duration-300 hover:border-[color:color-mix(in_oklab,var(--accent)_30%,var(--line))]",
-        href && "cursor-pointer",
-        className,
-      )}
-    >
+    <div ref={ref} className={cn("h-full [perspective:1000px]", className)}>
+      <div
+        className="h-full will-change-transform"
+        style={{
+          opacity: shown ? 1 : 0,
+          transform: shown
+            ? "none"
+            : `translateY(46px) rotateX(-16deg) rotateZ(${tilt}deg) scale(0.96)`,
+          transition:
+            "opacity 0.72s cubic-bezier(0.22,1,0.36,1), transform 0.72s cubic-bezier(0.22,1,0.36,1)",
+          transitionDelay: `${delay}s`,
+        }}
+      >
+      <motion.article
+        initial="rest"
+        whileHover="hover"
+        animate="rest"
+        variants={cardVariants}
+        className={cn(
+          "group/card relative flex h-full flex-col overflow-hidden rounded-2xl border border-line-soft bg-bg-2/30 transition-colors duration-300 hover:border-[color:color-mix(in_oklab,var(--accent)_30%,var(--line))]",
+          href && "cursor-pointer",
+        )}
+      >
       {/* Media stage (static showcase images — the whole card is the link) */}
       <div>
         <div className="relative aspect-[16/10] w-full overflow-hidden bg-bg-2">
@@ -145,6 +191,8 @@ export function ProjectCard({ project, className }: { project: Project; classNam
           className="absolute inset-0 z-10"
         />
       )}
-    </motion.article>
+      </motion.article>
+      </div>
+    </div>
   );
 }

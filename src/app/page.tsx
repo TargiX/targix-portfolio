@@ -29,8 +29,8 @@ export default function Home() {
       <main className={WORK_CONTAINER}>
         <Section id="work" n="01" title="Selected Work" kicker={`${1 + SECONDARY.length} projects`}>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {[FEATURED, ...SECONDARY].map((p) => (
-              <ProjectCard key={p.title} project={p} />
+            {[FEATURED, ...SECONDARY].map((p, i) => (
+              <ProjectCard key={p.title} project={p} order={i} />
             ))}
           </div>
         </Section>
