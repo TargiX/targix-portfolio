@@ -706,6 +706,11 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
           if (Math.round(c.g.getComponent(twist.axisIdx)) === twist.layer) {
             c.g.applyQuaternion(R90).round();
             c.q.premultiply(R90);
+            // the explode vector is a face normal — it must follow the slice turn,
+            // or after a twist the cube flies along a stale direction and overlaps
+            // its neighbours instead of fanning out cleanly. round() keeps it an
+            // exact axis-aligned unit vector despite float drift.
+            c.dir.applyQuaternion(R90).round();
           }
         }
         nextTwistAt = elapsed + 4.5 + Math.random() * 3.5; // rare + calm
