@@ -24,6 +24,9 @@
   /* accent (overridable) */
   --accent:     #a3e635;
   --accent-rgb: 163 230 53;
+  /* teal companion — blends with --accent for the blue-green flow */
+  --accent-2:     #2dd4bf;
+  --accent-2-rgb: 45 212 191;
 
   /* shadcn-compat tokens (mapped) */
   --background: var(--bg);
@@ -173,6 +176,16 @@ a { color: inherit; text-decoration: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .heading-gradient { animation: none; }
+}
+
+/* project-card title: lime→teal gradient sweeps in on card hover */
+.card-title { color: var(--fg); transition: color 0.3s; }
+.group\/card:hover .card-title {
+  background-image: linear-gradient(110deg, var(--accent), var(--accent-2) 55%, var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 /* blinking caret */

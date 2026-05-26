@@ -133,12 +133,12 @@ export function ProjectCard({
         <div className="mb-1.5 text-[11px] lowercase tracking-[0.06em] text-fg-muted">{role}</div>
 
         <div className="mb-2 inline-block self-start">
-          <h3 className="m-0 font-sans text-[22px] font-medium tracking-[-0.015em] text-fg transition-colors duration-300 group-hover/card:text-[color:var(--accent)]">
+          <h3 className="card-title m-0 font-sans text-[22px] font-medium tracking-[-0.015em]">
             {title}
           </h3>
           <motion.span
             variants={underlineVariants}
-            className="block h-[2px] origin-left rounded-full bg-[var(--accent)] will-change-transform"
+            className="block h-[2px] origin-left rounded-full bg-[linear-gradient(90deg,var(--accent),var(--accent-2))] will-change-transform"
           />
         </div>
 

@@ -14,8 +14,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * the "open" link points at the repo). Once live it embeds the real app and
  * still falls back to a screenshot if the iframe is blocked or slow.
  */
-const ANCHOR_URL = "https://anchor-ritual.vercel.app"; // placeholder — replace with live URL
-const ANCHOR_DEPLOYED = false; // flip to true once the live URL embeds cleanly
+const ANCHOR_URL = "https://anchor.ilyamoskovkin.com"; // live deployment (Vercel, web build)
+const ANCHOR_DEPLOYED = true; // live URL embeds cleanly (no X-Frame-Options)
 const ANCHOR_REPO = "https://github.com/TargiX/Next.js-Tether";
 const LOAD_TIMEOUT_MS = 4500;
 const ROTATE_MS = 4000;

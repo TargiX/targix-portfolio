@@ -36,7 +36,7 @@ export function Hero() {
       data-screen-label="00 Hero"
     >
       {/* full-bleed WebGL scene: ported bg shader + SDF typography + glass */}
-      <ThreeHero accent="#a3e635" onStatus={setWebgl} time={time} onLayout={onLayout} />
+      <ThreeHero accent="#a3e635" accent2="#2dd4bf" onStatus={setWebgl} time={time} onLayout={onLayout} />
 
       {/* SEO / a11y: the hero copy always lives in the DOM, even when WebGL paints it */}
       <div className="sr-only">

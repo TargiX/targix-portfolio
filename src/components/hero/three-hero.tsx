@@ -12,6 +12,8 @@ export type HeroLayout = {
 
 type Props = {
   accent?: string;
+  /** teal companion — blends with `accent` for the blue-green flow */
+  accent2?: string;
   className?: string;
   onStatus?: (status: "ready" | "failed") => void;
   /** time string for the status line, e.g. "09:46:35" */
@@ -41,6 +43,7 @@ uniform vec2  uResolution;
 uniform vec2  uMouse;
 uniform float uMouseActive;
 uniform vec3  uAccent;
+uniform vec3  uAccent2;
 uniform float uTime;
 
 float hash21(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
@@ -68,12 +71,21 @@ void main(){
   float mGlow = exp(-mDist*mDist/42000.0);
   float mLocal = exp(-mDist*mDist/120000.0);
 
+  // the smoke/aurora drifts toward teal, but the blend is capped so lime
+  // always reads through — never a flat cold cyan
+  float hue = smoothstep(0.2, 0.9, aurora*0.6 + 0.25*fbm(uv*1.4 - vec2(t*1.3, t)));
+  vec3 accSmoke = mix(uAccent, uAccent2, hue*0.62);
+  // anything driven by the cursor stays the brand green
+  vec3 accHover = uAccent;
+  // base dots: green right under the cursor, teal-leaning out in the smoke
+  vec3 dotTint = mix(accSmoke, accHover, mLocal*uMouseActive);
+
   vec3 baseDot = vec3(0.32,0.34,0.40);
-  vec3 dotColor = mix(baseDot, uAccent, 0.35 + mLocal*uMouseActive*0.85);
+  vec3 dotColor = mix(baseDot, dotTint, 0.35 + mLocal*uMouseActive*0.85);
   vec3 col = vec3(0.0);
   col += gridDot * dotColor * dotBright * (0.55 + mLocal*uMouseActive*0.5);
-  col += uAccent * aurora*aurora * 0.05;
-  col += uAccent * mGlow * uMouseActive * 0.42;
+  col += accSmoke * aurora*aurora * 0.05;       // smoke glow → teal-leaning
+  col += accHover * mGlow * uMouseActive * 0.42; // cursor glow → green
   col += (grain(p+uTime*13.0)-0.5) * 0.006;
   vec2 vc = p/uResolution - 0.5;
   col *= 0.45 + (1.0 - smoothstep(0.30,0.85,length(vc))) * 0.55;
@@ -155,7 +167,7 @@ function paintRange(
   ranges[i + needle.length] = back;
 }
 
-export function ThreeHero({ accent = "#a3e635", className, onStatus, time, onLayout }: Props) {
+export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, onStatus, time, onLayout }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const timeRef = useRef(time ?? "");
   timeRef.current = time ?? "";
@@ -166,6 +178,7 @@ export function ThreeHero({ accent = "#a3e635", className, onStatus, time, onLay
 
     let disposed = false;
     const accentRgb = hexToRgb(accent);
+    const accent2Rgb = hexToRgb(accent2);
 
     let renderer: THREE.WebGLRenderer;
     try {
@@ -211,6 +224,7 @@ export function ThreeHero({ accent = "#a3e635", className, onStatus, time, onLay
         uMouse: { value: new THREE.Vector2(W / 2, H / 2) },
         uMouseActive: { value: 0 },
         uAccent: { value: new THREE.Vector3(...accentRgb) },
+        uAccent2: { value: new THREE.Vector3(...accent2Rgb) },
         uTime: { value: 0 },
       },
     });
@@ -623,7 +637,7 @@ export function ThreeHero({ accent = "#a3e635", className, onStatus, time, onLay
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accent, onStatus, onLayout]);
+  }, [accent, accent2, onStatus, onLayout]);
 
   return (
     <div
