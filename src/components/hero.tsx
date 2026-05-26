@@ -61,7 +61,7 @@ export function Hero() {
       {webglReady && linkRect && (
         <a
           href="#lab"
-          aria-label="here for the visual / motion work? open the lab"
+          aria-label="interactive experiments — open the lab"
           className="absolute z-20 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
           style={{
             left: linkRect.x,
@@ -108,7 +108,7 @@ export function Hero() {
               href="#lab"
               className="group mt-8 inline-flex items-center gap-2 font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim transition-colors hover:text-[var(--accent)]"
             >
-              here for the visual / motion work? open the lab
+              interactive experiments — open the lab
               <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
             </a>
           </div>

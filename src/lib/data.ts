@@ -92,6 +92,16 @@ export const SECONDARY: Project[] = [
   },
 ];
 
+/**
+ * Smaller side-projects — rendered below "Selected Work" as a compact
+ * tier (the "more work" band). The section only renders when this array is
+ * non-empty, so it stays hidden until you add real entries here.
+ *
+ * To bring it back: push Project objects into this array (same shape as
+ * SECONDARY above) and the band appears automatically.
+ */
+export const MINOR: Project[] = [];
+
 export const STACK = [
   {
     label: "core",

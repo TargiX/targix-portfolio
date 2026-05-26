@@ -289,7 +289,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       // @ts-expect-error troika runtime prop
       meta.colorRanges = ranges;
     }
-    const LINK = "here for the visual / motion work? open the lab →";
+    const LINK = "interactive experiments — open the lab →";
     const link = mkText(FONT_MONO, 14, 0xc2c7cf, 0.04);
     link.text = LINK;
     {
@@ -359,6 +359,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
     const _q = new THREE.Quaternion();
     const _p = new THREE.Vector3();
     const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+    const TWIST_DUR = 0.9;
     let twist: { axisIdx: number; layer: number; dir: number; t0: number; dur: number } | null = null;
     let nextTwistAt = 4.0;
 
@@ -473,6 +474,118 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
     onStatus?.("ready");
 
     const start = performance.now();
+
+    // ── drag-to-rotate: grab a face and swipe; the slice turns in the swipe
+    // direction, exactly like a 3D twisty-puzzle. Drag right on the bottom row →
+    // it rolls right; drag up → that column tips up. Direction is yours, not a
+    // heuristic. Reuses the ambient twist slot, so user + auto never collide.
+    const raycaster = new THREE.Raycaster();
+    const _ndc = new THREE.Vector2();
+    const _faceN = new THREE.Vector3();
+    const hitCube = (clientX: number, clientY: number): { c: Cube; faceN: THREE.Vector3 } | null => {
+      const rect = host.getBoundingClientRect();
+      _ndc.set(((clientX - rect.left) / W) * 2 - 1, -(((clientY - rect.top) / H) * 2 - 1));
+      raycaster.setFromCamera(_ndc, cubeCam);
+      const hit = raycaster.intersectObjects(cubeGroup.children, false)[0];
+      if (!hit?.face) return null;
+      const c = cubes.find((c) => c.mesh === hit.object);
+      if (!c) return null;
+      // face normal → cluster space (mesh orientation only, not the group spin)
+      _faceN.copy(hit.face.normal).applyQuaternion(hit.object.quaternion);
+      return { c, faceN: _faceN };
+    };
+
+    // screen-space direction (client px, y-down) of a cluster axis at a world anchor
+    const _wa = new THREE.Vector3();
+    const _pa = new THREE.Vector3();
+    const _pb = new THREE.Vector3();
+    const _cross = new THREE.Vector3();
+    const _dFace = new THREE.Vector3();
+    const _anchor = new THREE.Vector3();
+    const tangentDir = (anchor: THREE.Vector3, axisIdx: number, out: { x: number; y: number }) => {
+      _wa.copy(AXES[axisIdx]).applyQuaternion(cubeGroup.quaternion);
+      _pa.copy(anchor).project(cubeCam);
+      _pb.copy(anchor).addScaledVector(_wa, 0.3).project(cubeCam);
+      const dx = (_pb.x - _pa.x) * (W / 2);
+      const dy = -(_pb.y - _pa.y) * (H / 2);
+      const len = Math.hypot(dx, dy) || 1;
+      out.x = dx / len;
+      out.y = dy / len;
+    };
+
+    const DRAG_MIN = 7; // px before a swipe registers
+    type Drag = {
+      c: Cube;
+      faceN: THREE.Vector3;
+      t1: number; t2: number;          // the two cluster axes in the face plane
+      s1: { x: number; y: number };    // their screen directions (y-down)
+      s2: { x: number; y: number };
+      x0: number; y0: number;
+    };
+    let drag: Drag | null = null;
+    let hovering = false;
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.pointerType === "touch") return;
+      drag = null;
+      const elapsed = (performance.now() - start) / 1000;
+      // one turn at a time, only on the assembled cluster, after the entrance
+      if (twist || scrollSmooth > 0.02 || elapsed < 1.1) return;
+      const hit = hitCube(e.clientX, e.clientY);
+      if (!hit) return;
+      const n = hit.faceN;
+      const nAxis = Math.abs(n.x) >= Math.abs(n.y) && Math.abs(n.x) >= Math.abs(n.z) ? 0 : Math.abs(n.y) >= Math.abs(n.z) ? 1 : 2;
+      const t1 = nAxis === 0 ? 1 : 0;
+      const t2 = nAxis === 2 ? 1 : 2;
+      hit.c.mesh.getWorldPosition(_anchor);
+      const s1 = { x: 0, y: 0 };
+      const s2 = { x: 0, y: 0 };
+      tangentDir(_anchor, t1, s1);
+      tangentDir(_anchor, t2, s2);
+      drag = { c: hit.c, faceN: n.clone(), t1, t2, s1, s2, x0: e.clientX, y0: e.clientY };
+    };
+    window.addEventListener("pointerdown", onPointerDown);
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (e.pointerType === "touch") return;
+
+      // resolve a swipe into a slice turn
+      if (drag && !twist) {
+        const dx = e.clientX - drag.x0;
+        const dy = e.clientY - drag.y0;
+        if (Math.hypot(dx, dy) >= DRAG_MIN) {
+          // which in-plane axis did the swipe follow, and which way
+          const c1 = dx * drag.s1.x + dy * drag.s1.y;
+          const c2 = dx * drag.s2.x + dy * drag.s2.y;
+          const useT1 = Math.abs(c1) >= Math.abs(c2);
+          const tAxis = useT1 ? drag.t1 : drag.t2;
+          _dFace.copy(AXES[tAxis]).multiplyScalar((useT1 ? c1 : c2) >= 0 ? 1 : -1);
+          // rotation axis ω = faceNormal × swipeDir → the grabbed sticker moves with the swipe
+          _cross.crossVectors(drag.faceN, _dFace);
+          const ax = Math.abs(_cross.x), ay = Math.abs(_cross.y), az = Math.abs(_cross.z);
+          const axisIdx = ax >= ay && ax >= az ? 0 : ay >= az ? 1 : 2;
+          const dir = _cross.getComponent(axisIdx) >= 0 ? 1 : -1;
+          const layer = Math.round(drag.c.g.getComponent(axisIdx));
+          const elapsed = (performance.now() - start) / 1000;
+          twist = { axisIdx, layer, dir, t0: elapsed, dur: TWIST_DUR };
+          nextTwistAt = elapsed + TWIST_DUR + 4.5 + Math.random() * 3.5; // hold off the next auto turn
+          drag = null;
+        }
+      }
+
+      // pointer cursor while hovering the cluster, so it reads as interactive
+      const over = scrollSmooth < 0.02 && !!hitCube(e.clientX, e.clientY);
+      if (over !== hovering) {
+        hovering = over;
+        document.body.style.cursor = over ? "grab" : "";
+      }
+    };
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+
+    const onPointerUp = () => { drag = null; };
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
+
     let raf = 0;
     let lastTime = "";
     const items: Array<{ t: { fillOpacity: number; position: { y: number } }; base: number; delay: number }> = [];
@@ -558,7 +671,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
           layer: [-1, 0, 1][(Math.random() * 3) | 0],
           dir: Math.random() < 0.5 ? 1 : -1,
           t0: elapsed,
-          dur: 0.9,
+          dur: TWIST_DUR,
         };
       }
 
@@ -618,6 +731,11 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
+      document.body.style.cursor = "";
       if (isTouch) {
         window.removeEventListener("touchmove", onTouch);
         window.removeEventListener("touchstart", onTouch);

@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Hero } from "@/components/hero";
 import { Section } from "@/components/section";
 import { ProjectCard } from "@/components/project-card";
+import { CompactProjectCard } from "@/components/compact-project-card";
 import { DitheredPhoto } from "@/components/dithered-photo";
 import { TimelineEditor } from "@/components/lab/timeline-editor";
 import { GitHubActivity } from "@/components/server/github-activity";
@@ -11,7 +12,7 @@ import { ContactForm } from "@/components/forms/contact-form";
 import { ViewSwitcher } from "@/components/view-switcher";
 import { PromptCompilerArtifact } from "@/components/prompt-compiler-artifact";
 import { AiChat } from "@/components/lab/ai-chat";
-import { CONTACT, FEATURED, SECONDARY, STACK } from "@/lib/data";
+import { CONTACT, FEATURED, MINOR, SECONDARY, STACK } from "@/lib/data";
 
 // Narrow measure for text-heavy sections (readability ~70ch).
 const CONTAINER = "relative mx-auto max-w-[880px] px-5 pb-24 pt-6 sm:px-8";
@@ -33,6 +34,21 @@ export default function Home() {
               <ProjectCard key={p.title} project={p} order={i} />
             ))}
           </div>
+
+          {MINOR.length > 0 && (
+            <div className="mt-16">
+              <div className="mb-6 flex items-center gap-4 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim">
+                <span>more work</span>
+                <span className="h-px flex-1 bg-line-soft" />
+                <span>{MINOR.length} side projects</span>
+              </div>
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+                {MINOR.map((p) => (
+                  <CompactProjectCard key={p.title} project={p} />
+                ))}
+              </div>
+            </div>
+          )}
         </Section>
       </main>
     </>
