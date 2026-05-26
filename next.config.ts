@@ -1,8 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
+  // Reverse-proxy PostHog through our own origin so analytics survive ad-blockers.
+  async rewrites() {
+    return [
+      { source: "/ingest/static/:path*", destination: "https://us-assets.i.posthog.com/static/:path*" },
+      { source: "/ingest/:path*", destination: "https://us.i.posthog.com/:path*" },
+    ];
+  },
+  // PostHog's API routes are sensitive to trailing-slash redirects.
+  skipTrailingSlashRedirect: true,
 };
 
 export default nextConfig;

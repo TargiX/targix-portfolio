@@ -1,6 +1,8 @@
 allowBuilds:
+  core-js: false
   esbuild: true
   msw: false
+  protobufjs: false
   sharp: true
 ignoredBuiltDependencies:
   - msw
