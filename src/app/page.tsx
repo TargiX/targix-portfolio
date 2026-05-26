@@ -4,6 +4,7 @@ import { Hero } from "@/components/hero";
 import { Section } from "@/components/section";
 import { ProjectCard } from "@/components/project-card";
 import { CompactProjectCard } from "@/components/compact-project-card";
+import { FooterJellyfish } from "@/components/footer-jellyfish";
 import { DitheredPhoto } from "@/components/dithered-photo";
 import { TimelineEditor } from "@/components/lab/timeline-editor";
 import { GitHubActivity } from "@/components/server/github-activity";
@@ -57,7 +58,7 @@ export default function Home() {
   // ── LAB ────────────────────────────────────────────────
   const lab = (
     <main className={WORK_CONTAINER}>
-      <Section id="lab" n="01" title="Lab" kicker="canvas · timelines · drag & drop">
+      <Section id="lab" n="01" title="Lab" kicker="canvas · timelines · drag & drop" accent>
         {/* intro text stays a readable measure; the editor spans the full stage */}
         <p className="mb-6 max-w-[60ch] text-fg-muted">
           The rest of this site is restrained on purpose. This part isn&apos;t — it&apos;s the
@@ -78,6 +79,7 @@ export default function Home() {
         n="02"
         title="Mini Artifact"
         kicker="graph state · prompt compiler · run plan"
+        accent
       >
         <div>
           <p className="mb-6 text-fg-muted">
@@ -93,6 +95,7 @@ export default function Home() {
         n="03"
         title="AI Chat"
         kicker="streaming · provider-agnostic · openrouter"
+        accent
       >
         <p className="mb-6 max-w-[60ch] text-fg-muted">
           A provider-agnostic chat surface. Today it streams tokens from a free model via a server
@@ -212,8 +215,9 @@ export default function Home() {
     <>
       <ViewSwitcher work={work} lab={lab} about={about} />
 
-      <footer className="relative mt-10 border-t border-line-soft">
-        <div className="mx-auto max-w-[1280px] px-5 py-14 sm:px-8">
+      <footer className="relative mt-10 overflow-hidden border-t border-line-soft">
+        <FooterJellyfish />
+        <div className="relative z-10 mx-auto max-w-[1280px] px-5 py-14 sm:px-8">
           <div className="grid gap-10 sm:grid-cols-[1fr_auto] sm:items-start">
             {/* big CTA */}
             <div>
