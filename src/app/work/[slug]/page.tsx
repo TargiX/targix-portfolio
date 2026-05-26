@@ -7,6 +7,7 @@ import remarkGfm from "remark-gfm";
 
 import { getAllSlugs, getCase } from "@/lib/content";
 import { mdxComponents } from "@/components/mdx-components";
+import { BackToWork } from "@/components/back-to-work";
 
 type Params = Promise<{ slug: string }>;
 
@@ -46,95 +47,118 @@ export default async function CasePage({ params }: { params: Params }) {
   if (!c) notFound();
 
   return (
-    <main className="relative mx-auto max-w-[1040px] px-5 pb-24 pt-12 sm:px-8">
-      <Link
-        href="/#work"
-        className="group inline-flex items-center gap-2 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim transition-colors hover:text-fg"
-      >
-        <span className="inline-block transition-transform group-hover:-translate-x-0.5">←</span>
-        back to work
-      </Link>
+    <main className="relative mx-auto max-w-[1080px] px-5 pb-24 pt-12 sm:px-8">
+      <BackToWork />
 
-      <header className="mt-10 mb-12 border-b border-line-soft pb-10">
-        {c.cover && (
-          <figure className="mb-9">
-            <div className="overflow-hidden rounded-md border border-line-soft bg-bg-2/60">
-              <div className="relative aspect-[1200/630] bg-bg">
-                <img
-                  src={c.cover}
-                  alt={`${c.title} product preview`}
-                  className="h-full w-full object-cover object-top"
-                />
+      {/* Cover is a full-width band above the article grid — the wide "hero". */}
+      {c.cover && (
+        <figure className="mb-12 mt-10">
+          <div className="overflow-hidden rounded-md border border-line-soft bg-bg-2/60">
+            <div className="relative aspect-[1200/630] bg-bg">
+              <img
+                src={c.cover}
+                alt={`${c.title} product preview`}
+                className="h-full w-full object-cover object-top"
+              />
+            </div>
+          </div>
+        </figure>
+      )}
+
+      {/* One grid runs through the whole article: a left reading column
+          (title, lede, body — same left edge top to bottom) and a sticky
+          meta rail on the right. On mobile it stacks head → rail → body. */}
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_13.75rem] lg:items-start lg:gap-x-16">
+        <header className="lg:col-start-1 lg:row-start-1">
+          <div className="mb-4 flex items-center gap-3 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-muted">
+            <span className="text-fg-dim">{c.role}</span>
+            <span className="size-1 rounded-full bg-[var(--accent)]" />
+            <span>{c.year}</span>
+          </div>
+
+          <h1 className="heading-gradient m-0 mb-6 w-fit font-sans text-[52px] font-medium leading-[1.05] tracking-[-0.025em] sm:text-[64px]">
+            {c.title}
+          </h1>
+
+          <p className="m-0 max-w-[56ch] font-mono text-[17px] leading-[1.6] text-fg-muted">
+            {c.blurb}
+          </p>
+        </header>
+
+        <aside className="mt-12 font-mono text-[11px] text-fg-muted lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-1 lg:self-start lg:sticky lg:top-8">
+          <div className="pb-3.5">
+            <div className="mb-2 text-[10.5px] lowercase tracking-[0.08em] text-fg-dim">role</div>
+            <div className="text-xs leading-[1.5] text-fg">{c.role}</div>
+          </div>
+          <div className="border-t border-line-soft py-3.5">
+            <div className="mb-2 text-[10.5px] lowercase tracking-[0.08em] text-fg-dim">year</div>
+            <div className="text-xs leading-[1.5] text-fg">{c.year}</div>
+          </div>
+          {c.links.length > 0 && (
+            <div className="border-t border-line-soft py-3.5">
+              <div className="mb-2 text-[10.5px] lowercase tracking-[0.08em] text-fg-dim">links</div>
+              <div className="flex flex-col items-start gap-2">
+                {c.links.map((l) => {
+                  const ext = /^https?:\/\//.test(l.href);
+                  return (
+                    <a
+                      key={l.label}
+                      href={l.href}
+                      target={ext ? "_blank" : undefined}
+                      rel={ext ? "noreferrer" : undefined}
+                      className="group inline-flex w-fit items-center gap-1 border-b border-line pb-0.5 text-xs text-fg transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                    >
+                      {l.label}
+                      <span className="inline-block transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+                        {ext ? "↗" : "→"}
+                      </span>
+                    </a>
+                  );
+                })}
               </div>
             </div>
-          </figure>
-        )}
+          )}
+          {c.tags.length > 0 && (
+            <div className="border-t border-line-soft py-3.5">
+              <div className="mb-2 text-[10.5px] lowercase tracking-[0.08em] text-fg-dim">stack</div>
+              <ul className="flex flex-wrap gap-1.5">
+                {c.tags.map((t) => (
+                  <li
+                    key={t}
+                    className="whitespace-nowrap rounded-full border border-line px-2 py-0.5 text-[10.5px] text-fg-muted"
+                  >
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </aside>
 
-        <div className="mb-4 flex items-center gap-3 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-muted">
-          <span className="text-fg-dim">{c.role}</span>
-          <span className="size-1 rounded-full bg-fg-dim" />
-          <span>{c.year}</span>
+        <div className="lg:col-start-1 lg:row-start-2">
+          <div className="mt-10 mb-10 h-px bg-line-soft" />
+          <article>
+            <MDXRemote
+              source={c.content}
+              components={mdxComponents}
+              options={{
+                mdxOptions: {
+                  remarkPlugins: [remarkGfm],
+                  rehypePlugins: [
+                    [
+                      rehypePrettyCode,
+                      {
+                        theme: { dark: "github-dark-dimmed", light: "github-dark-dimmed" },
+                        keepBackground: false,
+                      },
+                    ],
+                  ],
+                },
+              }}
+            />
+          </article>
         </div>
-
-        <h1 className="heading-gradient m-0 mb-6 w-fit font-sans text-[52px] font-medium leading-[1.05] tracking-[-0.025em] sm:text-[64px]">
-          {c.title}
-        </h1>
-
-        <p className="m-0 mb-6 max-w-[58ch] font-mono text-base leading-[1.55] text-fg-muted">
-          {c.blurb}
-        </p>
-
-        <div className="flex flex-wrap items-center gap-4 text-xs">
-          {c.links.map((l) => (
-            <a
-              key={l.label}
-              href={l.href}
-              target="_blank"
-              rel="noreferrer"
-              className="group border-b border-line pb-0.5 text-fg transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
-            >
-              {l.label}
-              <span className="ml-1 inline-block transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
-                ↗
-              </span>
-            </a>
-          ))}
-        </div>
-
-        {c.tags.length > 0 && (
-          <ul className="mt-7 flex flex-wrap gap-1.5">
-            {c.tags.map((t) => (
-              <li
-                key={t}
-                className="whitespace-nowrap rounded-full border border-line px-2 py-0.5 text-[11px] text-fg-muted"
-              >
-                {t}
-              </li>
-            ))}
-          </ul>
-        )}
-      </header>
-
-      <article className="mx-auto max-w-[760px]">
-        <MDXRemote
-          source={c.content}
-          components={mdxComponents}
-          options={{
-            mdxOptions: {
-              remarkPlugins: [remarkGfm],
-              rehypePlugins: [
-                [
-                  rehypePrettyCode,
-                  {
-                    theme: { dark: "github-dark-dimmed", light: "github-dark-dimmed" },
-                    keepBackground: false,
-                  },
-                ],
-              ],
-            },
-          }}
-        />
-      </article>
+      </div>
 
       <footer className="mt-20 flex items-center justify-between border-t border-line-soft pt-8 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim">
         <Link
