@@ -44,9 +44,13 @@ export function FooterJellyfish({ className }: Props) {
     renderer.setSize(W, H, false);
 
     const scene = new THREE.Scene();
-    // a longer lens (low FOV, camera pushed back) keeps perspective flat so the
-    // wide footer aspect doesn't fish-eye-stretch the model horizontally
-    const camera = new THREE.PerspectiveCamera(24, W / H, 0.1, 100);
+    // Orthographic, not perspective: a perspective camera stretches objects that
+    // sit off the optical axis (the ~10% horizontal "fattening" when the jellyfish
+    // is on the left). Ortho has no perspective distortion anywhere, so it looks
+    // identical centered or off to the side.
+    const FRUSTUM_H = 3.4; // vertical world units the view spans
+    const halfH = FRUSTUM_H / 2;
+    const camera = new THREE.OrthographicCamera(-halfH * (W / H), halfH * (W / H), halfH, -halfH, 0.1, 100);
     camera.position.set(0, 0, 8.5);
 
     // image-based lighting so the glass material reflects/refracts something
@@ -151,7 +155,7 @@ export function FooterJellyfish({ className }: Props) {
       if (mixer) mixer.update(dt);
       // centered between the two columns by default; only a very wide container
       // has free room on the left, so move it there
-      const halfW = Math.tan(((camera.fov * Math.PI) / 180) / 2) * camera.position.z * (W / H);
+      const halfW = halfH * (W / H);
       // content is capped at 1280; when the viewport is wider there's free margin,
       // so let the jellyfish bleed out to the container's left edge. No margin
       // (narrow screens) → keep it centered between the columns.
@@ -197,7 +201,10 @@ export function FooterJellyfish({ className }: Props) {
       W = host.clientWidth || W;
       H = host.clientHeight || H;
       renderer.setSize(W, H, false);
-      camera.aspect = W / H;
+      camera.left = -halfH * (W / H);
+      camera.right = halfH * (W / H);
+      camera.top = halfH;
+      camera.bottom = -halfH;
       camera.updateProjectionMatrix();
       if (reduce || !running) renderFrame();
     });
