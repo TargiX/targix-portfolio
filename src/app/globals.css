@@ -150,6 +150,68 @@ a { color: inherit; text-decoration: none; }
   background: transparent;
 }
 
+/* contribution grid — cells flip in place (split-flap / scoreboard) as the
+   cursor trails over them; a styled tooltip shows the day's count. JS toggles
+   .flipped per cell; the trail is the staggered turn-back. */
+.contrib-cell {
+  position: relative;
+  width: 11px;
+  height: 11px;
+  perspective: 240px;
+}
+.contrib-flip {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.contrib-cell.flipped .contrib-flip {
+  transform: rotateX(180deg);
+}
+.contrib-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  backface-visibility: hidden;
+}
+.contrib-back {
+  transform: rotateX(180deg);
+}
+
+/* styled tooltip — acid green on near-black, brand glow */
+.contrib-tip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, calc(-100% - 7px));
+  pointer-events: none;
+  white-space: nowrap;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: #080a06;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 18px color-mix(in oklab, var(--accent) 22%, transparent);
+  opacity: 0;
+  transition: opacity 0.14s ease;
+  z-index: 50;
+}
+.contrib-tip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 6px;
+  height: 6px;
+  background: #080a06;
+  border-right: 1px solid var(--accent);
+  border-bottom: 1px solid var(--accent);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
 /* utility for accent-tinted spans */
 .hi { color: var(--fg); }
 .muted { color: var(--fg-dim); }

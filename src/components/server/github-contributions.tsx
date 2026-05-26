@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
+import { ContribGrid } from "@/components/contrib-grid";
 
 type Day = { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 };
 type Calendar = { total: number; weeks: Day[][] };
@@ -141,7 +142,6 @@ export async function GitHubContributions({ username }: { username: string }) {
 
   const weeks = cal.weeks;
   const gridW = weeks.length * STEP;
-  const gridH = 7 * STEP;
   const topPad = 16; // room for month labels
 
   // Month label positions: first week-column whose first day starts a new month.
@@ -170,47 +170,13 @@ export async function GitHubContributions({ username }: { username: string }) {
         </span>
       </figcaption>
 
-      <div className="overflow-x-auto">
-        <svg
-          width={gridW}
-          height={gridH + topPad}
-          viewBox={`0 0 ${gridW} ${gridH + topPad}`}
-          role="img"
-          aria-label={`${cal.total} GitHub contributions in the last year`}
-          className="block"
-        >
-          {monthLabels.map((m, i) => (
-            <text
-              key={i}
-              x={m.x}
-              y={10}
-              fontSize="9"
-              fontFamily="var(--font-mono)"
-              fill="var(--fg-dim)"
-            >
-              {m.label}
-            </text>
-          ))}
-          {weeks.map((week, wi) =>
-            week.map((day) => {
-              const dow = new Date(day.date + "T00:00:00Z").getUTCDay();
-              return (
-                <rect
-                  key={day.date}
-                  x={wi * STEP}
-                  y={topPad + dow * STEP}
-                  width={CELL}
-                  height={CELL}
-                  rx={2}
-                  fill={LEVEL_FILL[day.level]}
-                >
-                  <title>{`${day.count} contribution${day.count === 1 ? "" : "s"} · ${day.date}`}</title>
-                </rect>
-              );
-            }),
-          )}
-        </svg>
-      </div>
+      <ContribGrid
+        weeks={weeks}
+        gridW={gridW}
+        topPad={topPad}
+        monthLabels={monthLabels}
+        ariaLabel={`${cal.total} GitHub contributions in the last year`}
+      />
 
       {/* legend */}
       <div className="mt-3 flex items-center justify-end gap-1.5 text-[9px] lowercase tracking-[0.06em] text-fg-dim">
