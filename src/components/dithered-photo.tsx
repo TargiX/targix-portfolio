@@ -29,6 +29,8 @@ const BAYER_4X4 = [
   [15, 7, 13, 5],
 ].map((row) => row.map((v) => (v + 0.5) / 16));
 
+const ASSEMBLE_MS = 1300; // how long the "build from pixels" animation runs
+
 function hexToRgb(hex: string): [number, number, number] {
   const m = /^#?([a-f0-9]{6})$/i.exec(hex.trim());
   if (!m) return [255, 255, 255];
@@ -36,23 +38,37 @@ function hexToRgb(hex: string): [number, number, number] {
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
 
-/** Draw `img` into the canvas with 1-bit Bayer dither. Mutates the canvas in place. */
-function ditherIntoCanvas(
+// Precomputed dither for one image: the on/off mask + a per-pixel reveal order
+// (so the animation can pop pixels in over time) + the scratch canvas to scale from.
+type Prepared = {
+  sampleW: number;
+  sampleH: number;
+  on: Uint8Array; // 1 = accent pixel, 0 = background pixel
+  reveal: Float32Array; // 0..1 — pixel appears once progress passes this
+  off: HTMLCanvasElement;
+  offCtx: CanvasRenderingContext2D;
+  outW: number;
+  outH: number;
+  accentRgb: [number, number, number];
+  bgAlpha: number;
+};
+
+/** Sample + dither `img` once, returning the mask/reveal data the animation replays. */
+function prepare(
   canvas: HTMLCanvasElement,
   img: HTMLImageElement,
   opts: { width: number; height: number; accent: string; pixelSize: number; bgAlpha: number },
-) {
+): Prepared | null {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  // We sample the image at a lower resolution so the dither pattern reads.
+  // Sample the image at a lower resolution so the dither pattern reads.
   const sampleW = Math.max(8, Math.round(opts.width / opts.pixelSize));
   const sampleH = Math.max(8, Math.round(opts.height / opts.pixelSize));
 
-  // Offscreen canvas to downsample the source.
   const off = document.createElement("canvas");
   off.width = sampleW;
   off.height = sampleH;
   const offCtx = off.getContext("2d");
-  if (!offCtx) return;
+  if (!offCtx) return null;
 
   // Fit image inside the sample bounds preserving aspect ratio.
   const ar = img.naturalWidth / img.naturalHeight;
@@ -73,48 +89,58 @@ function ditherIntoCanvas(
   offCtx.imageSmoothingEnabled = true;
   offCtx.drawImage(img, drawX, drawY, drawW, drawH);
 
-  const imageData = offCtx.getImageData(0, 0, sampleW, sampleH);
-  const data = imageData.data;
-  const [aR, aG, aB] = hexToRgb(opts.accent);
+  const data = offCtx.getImageData(0, 0, sampleW, sampleH).data;
+  const on = new Uint8Array(sampleW * sampleH);
+  const reveal = new Float32Array(sampleW * sampleH);
 
-  // Apply Bayer dither pixel by pixel.
   for (let y = 0; y < sampleH; y++) {
     for (let x = 0; x < sampleW; x++) {
-      const i = (y * sampleW + x) * 4;
-      const r = data[i];
-      const g = data[i + 1];
-      const b = data[i + 2];
-      // Perceptual luma — Rec. 709.
-      const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+      const p = y * sampleW + x;
+      const i = p * 4;
+      const lum = (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255;
       // Slight contrast lift so the dither isn't muddy.
       const contrasted = Math.max(0, Math.min(1, (lum - 0.5) * 1.25 + 0.5));
-      const threshold = BAYER_4X4[y & 3][x & 3];
-      const on = contrasted > threshold;
-      if (on) {
-        data[i] = aR;
-        data[i + 1] = aG;
-        data[i + 2] = aB;
-        data[i + 3] = 255;
-      } else {
-        data[i] = 0;
-        data[i + 1] = 0;
-        data[i + 2] = 0;
-        data[i + 3] = Math.round(255 * opts.bgAlpha);
-      }
+      on[p] = contrasted > BAYER_4X4[y & 3][x & 3] ? 1 : 0;
+      // random per-pixel reveal order → scattered "materialise from pixels" dissolve
+      reveal[p] = Math.random();
     }
   }
-  offCtx.putImageData(imageData, 0, 0);
 
-  // Upsample the dithered low-res buffer to the canvas at devicePixelRatio resolution,
-  // using pixelated rendering to keep dots crisp.
   const outW = Math.round(opts.width * dpr);
   const outH = Math.round(opts.height * dpr);
   canvas.width = outW;
   canvas.height = outH;
   canvas.style.width = opts.width + "px";
   canvas.style.height = opts.height + "px";
+
+  return { sampleW, sampleH, on, reveal, off, offCtx, outW, outH, accentRgb: hexToRgb(opts.accent), bgAlpha: opts.bgAlpha };
+}
+
+/** Paint the dither at a given assemble progress (0 = empty, 1 = full image). */
+function renderAt(canvas: HTMLCanvasElement, p: Prepared, progress: number) {
+  const { sampleW, sampleH, on, reveal, off, offCtx, outW, outH, accentRgb, bgAlpha } = p;
+  const [aR, aG, aB] = accentRgb;
+  const offBg = Math.round(255 * bgAlpha);
+  const imageData = offCtx.createImageData(sampleW, sampleH);
+  const d = imageData.data;
+  for (let idx = 0; idx < sampleW * sampleH; idx++) {
+    const i = idx * 4;
+    if (progress >= reveal[idx]) {
+      if (on[idx]) {
+        d[i] = aR;
+        d[i + 1] = aG;
+        d[i + 2] = aB;
+        d[i + 3] = 255;
+      } else {
+        d[i + 3] = offBg; // rgb already 0
+      }
+    } // else: not yet assembled → stays fully transparent
+  }
+  offCtx.putImageData(imageData, 0, 0);
+
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
+  ctx.clearRect(0, 0, outW, outH);
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(off, 0, 0, outW, outH);
 }
@@ -130,30 +156,106 @@ export function DitheredPhoto({
   className,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const figureRef = useRef<HTMLElement>(null);
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const figure = figureRef.current;
+    if (!canvas || !figure) return;
+
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    let prepared: Prepared | null = null;
+    let visible = false;
+    let assembled = false;
+    let raf = 0;
+
+    // progress drives the dither: 1 = full dither (no photo), 0 = dither gone
+    // (color photo shows through). One tween handles both the scroll-in assemble
+    // and the hover dissolve, so they interrupt each other cleanly.
+    let current = 0;
+    let from = 0;
+    let to = 0;
+    let start = 0;
+    let dur = 1;
+    const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+
+    const tick = () => {
+      const t = dur <= 0 ? 1 : Math.min(1, (performance.now() - start) / dur);
+      current = from + (to - from) * easeOut(t);
+      if (prepared) renderAt(canvas, prepared, current);
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    const tweenTo = (target: number, ms: number) => {
+      from = current;
+      to = target;
+      start = performance.now();
+      dur = reduce ? 0 : ms;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(tick);
+    };
+    // re-randomise the per-pixel order so each hover scatters/reshuffles freshly
+    const reshuffle = () => {
+      if (!prepared) return;
+      for (let i = 0; i < prepared.reveal.length; i++) prepared.reveal[i] = Math.random();
+    };
+
+    const assemble = () => {
+      if (assembled || !prepared || !visible) return;
+      assembled = true;
+      tweenTo(1, ASSEMBLE_MS); // build up from pixels
+    };
 
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.onload = () => {
-      ditherIntoCanvas(canvas, img, { width, height, accent, pixelSize, bgAlpha });
+      prepared = prepare(canvas, img, { width, height, accent, pixelSize, bgAlpha });
       setLoaded(true);
+      if (prepared) renderAt(canvas, prepared, 0); // start empty, no flash
+      assemble();
     };
     img.onerror = () => setErrored(true);
     img.src = src;
 
+    // assemble when the photo scrolls into view (About is below the fold)
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          visible = true;
+          assemble();
+        }
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(figure);
+
+    // hover: run the dither out → reveal the real photo; reverse on leave
+    const onEnter = () => {
+      if (!prepared || !assembled) return;
+      reshuffle();
+      tweenTo(0, 600);
+    };
+    const onLeave = () => {
+      if (!prepared) return;
+      tweenTo(1, 750);
+    };
+    figure.addEventListener("pointerenter", onEnter);
+    figure.addEventListener("pointerleave", onLeave);
+
     return () => {
       img.onload = null;
       img.onerror = null;
+      cancelAnimationFrame(raf);
+      io.disconnect();
+      figure.removeEventListener("pointerenter", onEnter);
+      figure.removeEventListener("pointerleave", onLeave);
     };
   }, [src, width, height, accent, pixelSize, bgAlpha]);
 
   return (
     <figure
+      ref={figureRef}
       className={cn(
         "group/photo relative overflow-hidden rounded-md border border-line-soft bg-bg-2/40",
         className,
@@ -182,7 +284,8 @@ export function DitheredPhoto({
         ref={canvasRef}
         aria-hidden="true"
         className={cn(
-          "relative block size-full transition-opacity duration-700 ease-out group-hover/photo:opacity-0",
+          // hover dissolve is driven per-pixel in JS, not via opacity
+          "relative block size-full transition-opacity duration-700 ease-out",
           !loaded && "opacity-0",
         )}
         style={{ imageRendering: "pixelated" }}
