@@ -100,13 +100,18 @@ export default async function CasePage({ params }: { params: Params }) {
               <div className="flex flex-col items-start gap-2">
                 {c.links.map((l) => {
                   const ext = /^https?:\/\//.test(l.href);
+                  const isPrimaryLink = /live|demo|site|app/i.test(l.label);
                   return (
                     <a
                       key={l.label}
                       href={l.href}
                       target={ext ? "_blank" : undefined}
                       rel={ext ? "noreferrer" : undefined}
-                      className="group inline-flex w-fit items-center gap-1 border-b border-line pb-0.5 text-xs text-fg transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                      className={
+                        isPrimaryLink
+                          ? "group inline-flex w-full items-center justify-between gap-2 rounded-md border border-[color:color-mix(in_oklab,var(--accent)_42%,var(--line))] bg-[color:color-mix(in_oklab,var(--accent)_10%,transparent)] px-3 py-2 text-xs font-medium text-fg shadow-[0_0_24px_color-mix(in_oklab,var(--accent)_10%,transparent)] transition-colors hover:border-[var(--accent)] hover:bg-[color:color-mix(in_oklab,var(--accent)_16%,transparent)] hover:text-[var(--accent)]"
+                          : "group inline-flex w-fit items-center gap-1 border-b border-line pb-0.5 text-xs text-fg-muted transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                      }
                     >
                       {l.label}
                       <span className="inline-block transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
