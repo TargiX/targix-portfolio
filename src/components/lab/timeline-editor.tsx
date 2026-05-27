@@ -241,7 +241,7 @@ export function TimelineEditor() {
           {/* ruler */}
           <div
             ref={laneRef}
-            className="relative ml-16 h-6 cursor-ew-resize border-b border-line-soft outline-none focus-visible:border-[var(--accent)]"
+            className="relative ml-16 h-6 cursor-ew-resize touch-none border-b border-line-soft outline-none focus-visible:border-[var(--accent)]"
             style={{ width: TIMELINE_W }}
             onPointerDown={(e) => onPointerDown(e, "scrub")}
             onKeyDown={onRulerKeyDown}
@@ -278,7 +278,7 @@ export function TimelineEditor() {
                         key={c.id}
                         onPointerDown={(e) => onPointerDown(e, "move", c)}
                         className={cn(
-                          "group/clip absolute top-1.5 flex h-[34px] cursor-grab items-center overflow-hidden rounded-md border active:cursor-grabbing",
+                          "group/clip absolute top-1.5 flex h-[34px] cursor-grab touch-none items-center overflow-hidden rounded-md border active:cursor-grabbing",
                           activeId === c.id ? "z-10" : "z-0",
                         )}
                         style={{
@@ -292,11 +292,11 @@ export function TimelineEditor() {
                         {/* trim handles */}
                         <span
                           onPointerDown={(e) => onPointerDown(e, "trim-start", c)}
-                          className="absolute left-0 top-0 h-full w-1.5 cursor-ew-resize bg-white/0 hover:bg-white/20"
+                          className="absolute left-0 top-0 h-full w-1.5 cursor-ew-resize touch-none bg-white/0 hover:bg-white/20"
                         />
                         <span
                           onPointerDown={(e) => onPointerDown(e, "trim-end", c)}
-                          className="absolute right-0 top-0 h-full w-1.5 cursor-ew-resize bg-white/0 hover:bg-white/20"
+                          className="absolute right-0 top-0 h-full w-1.5 cursor-ew-resize touch-none bg-white/0 hover:bg-white/20"
                         />
                         <span
                           className="truncate px-2 text-[10px]"
