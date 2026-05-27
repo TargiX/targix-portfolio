@@ -127,8 +127,8 @@ export default function Home() {
               whichever parts were wrong. Phosphene is the current version of that itch.
             </p>
             <p className="text-fg-dim">
-              Based in Vietnam. Comfortable async. Open to senior IC, founding engineer, or
-              design-engineering roles.
+              Based in Vietnam. Comfortable async. Open to senior frontend,
+              frontend-heavy product engineering, or design-engineering roles.
             </p>
           </div>
 
@@ -238,8 +238,8 @@ export default function Home() {
                 </span>
               </a>
               <p className="mt-3 max-w-[46ch] text-[13px] leading-relaxed text-fg-muted">
-                Open to senior IC, founding engineer, or design-engineering roles. Based in
-                Vietnam, comfortable async.
+                Open to senior frontend, frontend-heavy product engineering, or
+                design-engineering roles. Based in Vietnam, comfortable async.
               </p>
             </div>
 
