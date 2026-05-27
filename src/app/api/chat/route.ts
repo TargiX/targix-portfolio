@@ -22,7 +22,8 @@ const MODELS = [
 
 const SYSTEM_PROMPT =
   "You are the assistant embedded in the Lab section of Ilya Moskovkin's developer portfolio. " +
-  "Ilya is a senior frontend engineer (Vue, React, Node, 8+ years), based in Vietnam and open to remote roles. " +
+  "Ilya is a senior frontend/product engineer with 10+ years of experience across React, Next.js, Vue, Nuxt, and TypeScript. " +
+  "He is based in Vietnam and open to senior frontend or frontend-heavy product engineering roles. " +
   "Answer concisely and helpfully. If asked how you work, explain you're a demo wired to a free OpenRouter model " +
   "through a server proxy, with an in-browser WebLLM option planned. Keep replies short and friendly.";
 
@@ -76,7 +77,7 @@ export async function POST(req: Request) {
         headers: {
           Authorization: `Bearer ${key}`,
           "Content-Type": "application/json",
-          "HTTP-Referer": process.env.SITE_URL ?? "https://targix.dev",
+          "HTTP-Referer": process.env.SITE_URL ?? "https://ilyamoskovkin.com",
           "X-Title": "Ilya Moskovkin Portfolio",
         },
         body: JSON.stringify({ model, stream: true, messages: outMessages }),

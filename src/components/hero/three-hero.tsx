@@ -2,8 +2,19 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
-import { Text } from "troika-three-text";
+
+import {
+  CUBE_AXES,
+  CUBE_EXPLODE,
+  CUBE_GAP,
+  CUBE_TWIST_DUR,
+  createCubeCluster,
+  easeInOut,
+  type HeroCube,
+} from "./three-hero-cubes";
+import { BG_FRAG, BG_VERT, COMPOSITE_FRAG, CUBE_FRAG, CUBE_VERT } from "./three-hero-shaders";
+import { createHeroTextObjects } from "./three-hero-text";
+import { C_GREEN, hexToRgb } from "./three-hero-utils";
 
 export type HeroLayout = {
   /** screen-space rect (CSS px, top-left origin) of the "open the lab" link */
@@ -21,151 +32,6 @@ type Props = {
   /** reports screen-space positions of interactive bits so the DOM can overlay them */
   onLayout?: (l: HeroLayout) => void;
 };
-
-const FONT_SANS = "/fonts/Geist-Medium.woff";
-const FONT_MONO = "/fonts/GeistMono-Regular.woff";
-
-const C_FG = 0xf2f3f4;
-const C_MUTED = 0x9499a1;
-const C_DIM = 0x6b7079;
-const C_GREEN = 0x9fe05a;
-
-// ── background shader (ported from the Pixi metaball hero, look unchanged) ──
-const BG_VERT = /* glsl */ `
-varying vec2 vUv;
-void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }
-`;
-
-const BG_FRAG = /* glsl */ `
-precision highp float;
-varying vec2 vUv;
-uniform vec2  uResolution;
-uniform vec2  uMouse;
-uniform float uMouseActive;
-uniform vec3  uAccent;
-uniform vec3  uAccent2;
-uniform float uTime;
-
-float hash21(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
-float vnoise(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.0-2.0*f);
-  float a=hash21(i),b=hash21(i+vec2(1,0)),c=hash21(i+vec2(0,1)),d=hash21(i+vec2(1,1));
-  return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);}
-float fbm(vec2 p){float s=0.0,a=0.5;mat2 r=mat2(0.8,-0.6,0.6,0.8);
-  for(int i=0;i<4;i++){s+=a*vnoise(p);p=r*p*2.0;a*=0.5;}return s;}
-float grain(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
-
-void main(){
-  vec2 p = vec2(vUv.x, 1.0 - vUv.y) * uResolution;
-  vec2 uv = p / max(uResolution.x, uResolution.y);
-  float t = uTime * 0.08;
-  vec2 q = vec2(fbm(uv*2.0+vec2(0.0,t)), fbm(uv*2.0+vec2(5.2,t*0.9)));
-  vec2 r = vec2(fbm(uv*2.0+3.0*q+vec2(1.7,9.2)+t), fbm(uv*2.0+3.0*q+vec2(8.3,2.8)+t*1.1));
-  float aurora = smoothstep(0.35, 0.85, fbm(uv*2.0+3.5*r));
-
-  float gridSize = 26.0;
-  vec2 g = fract(p/gridSize) - 0.5;
-  float gridDot = smoothstep(2.2, 0.6, length(g)*gridSize);
-  float dotBright = 0.18 + aurora*0.65;
-
-  float mDist = length(p - uMouse);
-  float mGlow = exp(-mDist*mDist/42000.0);
-  float mLocal = exp(-mDist*mDist/120000.0);
-
-  // the smoke/aurora drifts toward teal, but the blend is capped so lime
-  // always reads through — never a flat cold cyan
-  float hue = smoothstep(0.2, 0.9, aurora*0.6 + 0.25*fbm(uv*1.4 - vec2(t*1.3, t)));
-  vec3 accSmoke = mix(uAccent, uAccent2, hue*0.62);
-  // anything driven by the cursor stays the brand green
-  vec3 accHover = uAccent;
-  // base dots: green right under the cursor, teal-leaning out in the smoke
-  vec3 dotTint = mix(accSmoke, accHover, mLocal*uMouseActive);
-
-  vec3 baseDot = vec3(0.32,0.34,0.40);
-  vec3 dotColor = mix(baseDot, dotTint, 0.35 + mLocal*uMouseActive*0.85);
-  vec3 col = vec3(0.0);
-  col += gridDot * dotColor * dotBright * (0.55 + mLocal*uMouseActive*0.5);
-  col += accSmoke * aurora*aurora * 0.05;       // smoke glow → teal-leaning
-  col += accHover * mGlow * uMouseActive * 0.42; // cursor glow → green
-  col += (grain(p+uTime*13.0)-0.5) * 0.006;
-  vec2 vc = p/uResolution - 0.5;
-  col *= 0.45 + (1.0 - smoothstep(0.30,0.85,length(vc))) * 0.55;
-
-  vec3 pageBg = vec3(0.052,0.055,0.062);
-  gl_FragColor = vec4(pageBg + col, 1.0);
-}
-`;
-
-const COMPOSITE_FRAG = /* glsl */ `
-precision highp float;
-varying vec2 vUv;
-uniform sampler2D uScene;
-void main(){ gl_FragColor = texture2D(uScene, vUv); }
-`;
-
-// ── glass cubes: refraction + scene reflection, lit by face angle ──
-const CUBE_VERT = /* glsl */ `
-varying vec3 vN;   // view-space normal
-varying vec3 vP;   // view-space position
-void main(){
-  vN = normalize(normalMatrix * normal);
-  vec4 mv = modelViewMatrix * vec4(position, 1.0);
-  vP = mv.xyz;
-  gl_Position = projectionMatrix * mv;
-}
-`;
-
-const CUBE_FRAG = /* glsl */ `
-precision highp float;
-varying vec3 vN;
-varying vec3 vP;
-uniform sampler2D uScene;
-uniform vec2  uRes;
-uniform vec3  uAccent;
-uniform float uReveal;
-
-void main(){
-  vec3 N = normalize(vN);
-  vec3 V = normalize(-vP);                       // camera at origin in view space
-  float fres = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 2.4);
-
-  vec2 suv = gl_FragCoord.xy / uRes;
-  // refraction — peek at the scene shifted along the face normal
-  vec2 refrUV = clamp(suv + N.xy * 0.16, 0.002, 0.998);
-  vec3 refr = texture2D(uScene, refrUV).rgb;
-  // reflection — mirrored shift, so angled faces catch the typography
-  vec2 reflUV = clamp(suv - N.xy * 0.34, 0.002, 0.998);
-  vec3 refl = texture2D(uScene, reflUV).rgb;
-
-  vec3 col = mix(refr, refl, fres * 0.85);
-  col += uAccent * fres * 0.16;                  // accent on grazing edges
-  col += vec3(0.04, 0.045, 0.05);                // faint cool body
-  col *= 0.74 + 0.26 * clamp(N.z * 0.5 + 0.5, 0.0, 1.0);  // form shading
-  col += vec3(0.7, 0.74, 0.8) * pow(fres, 2.0) * 0.5;     // bright rim
-
-  float alpha = (0.85 + fres * 0.15) * uReveal;
-  gl_FragColor = vec4(col, alpha);
-}
-`;
-
-function hexToRgb(hex: string): [number, number, number] {
-  const m = /^#?([a-f0-9]{6})$/i.exec(hex.trim());
-  if (!m) return [1, 1, 1];
-  const n = parseInt(m[1], 16);
-  return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
-}
-
-function paintRange(
-  ranges: Record<number, number>,
-  haystack: string,
-  needle: string,
-  color: number,
-  back: number,
-) {
-  const i = haystack.indexOf(needle);
-  if (i < 0) return;
-  ranges[i] = color;
-  ranges[i + needle.length] = back;
-}
 
 export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, onStatus, time, onLayout }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -244,71 +110,16 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
     const ortho = new THREE.OrthographicCamera(-W / 2, W / 2, H / 2, -H / 2, -1000, 1000);
     ortho.position.z = 10;
 
-    // ── typography ──
-    const textScene = new THREE.Scene();
-    const mkText = (font: string, size: number, color: number, ls = 0) => {
-      const t = new Text();
-      t.font = font;
-      t.fontSize = size;
-      t.color = color;
-      t.letterSpacing = ls;
-      t.anchorX = "left";
-      t.anchorY = "top";
-      t.fillOpacity = 0;
-      textScene.add(t);
-      return t;
-    };
-
-    const PARA = "Senior frontend engineer with fullstack\nchops and UI/UX roots.\nBuilding products, not pages.";
-    const META = "based  vietnam → remote      years  12+      stack  vue · react · node      status  open to roles";
-
-    const status = mkText(FONT_MONO, 13, C_MUTED, 0.02);
-    const eyebrow = mkText(FONT_MONO, 12, C_DIM, 0.3);
-    eyebrow.text = "—   IM / portfolio · v1.0";
-    const h1 = mkText(FONT_SANS, 88, C_FG, -0.03);
-    h1.text = "Ilya Moskovkin";
-    h1.outlineColor = C_FG;
-    const para = mkText(FONT_MONO, 19, C_MUTED, 0);
-    para.text = PARA;
-    para.lineHeight = 1.5;
-    {
-      const ranges: Record<number, number> = { 0: C_MUTED };
-      paintRange(ranges, PARA, "frontend", C_FG, C_MUTED);
-      paintRange(ranges, PARA, "UI/UX", C_FG, C_MUTED);
-      // @ts-expect-error troika runtime prop
-      para.colorRanges = ranges;
-    }
-    const meta = mkText(FONT_MONO, 13, C_DIM, 0.04);
-    meta.text = META;
-    {
-      const ranges: Record<number, number> = { 0: C_DIM };
-      paintRange(ranges, META, "vietnam → remote", C_FG, C_DIM);
-      paintRange(ranges, META, "12+", C_FG, C_DIM);
-      paintRange(ranges, META, "vue · react · node", C_FG, C_DIM);
-      paintRange(ranges, META, "open to roles", C_GREEN, C_DIM);
-      // @ts-expect-error troika runtime prop
-      meta.colorRanges = ranges;
-    }
-    const LINK = "interactive experiments — open the lab →";
-    const link = mkText(FONT_MONO, 14, 0xc2c7cf, 0.04);
-    link.text = LINK;
-    {
-      const ranges: Record<number, number> = { 0: 0xc2c7cf };
-      paintRange(ranges, LINK, "open the lab →", C_GREEN, 0xc2c7cf);
-      // @ts-expect-error troika runtime prop
-      link.colorRanges = ranges;
-    }
-
-    const dot = new THREE.Mesh(
-      new THREE.CircleGeometry(4, 24),
-      new THREE.MeshBasicMaterial({ color: C_GREEN, transparent: true, opacity: 0 }),
-    );
-    textScene.add(dot);
-
-    // ── glass cube cluster (3×3×3) ──
-    const cubeScene = new THREE.Scene();
-    const cubeCam = new THREE.PerspectiveCamera(30, W / H, 0.1, 100);
-    cubeCam.position.set(0, 0, 6);
+    const {
+      scene: textScene,
+      status,
+      eyebrow,
+      h1,
+      para,
+      meta,
+      link,
+      dot,
+    } = createHeroTextObjects();
 
     const cubeMat = new THREE.ShaderMaterial({
       vertexShader: CUBE_VERT,
@@ -324,58 +135,21 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       },
     });
 
-    const cubeGroup = new THREE.Group();
-    const CUBE = 0.84;
-    const GAP = 0.92; // centre-to-centre spacing (small gap between cubes)
-    const cubeGeo = new RoundedBoxGeometry(CUBE, CUBE, CUBE, 5, 0.17);
-    // each cube tracks its logical grid coord (g) + baked orientation (q),
-    // so the occasional layer twist can permute a slice and stay consistent
-    type Cube = { mesh: THREE.Mesh; g: THREE.Vector3; q: THREE.Quaternion; dir: THREE.Vector3 };
-    const cubes: Cube[] = [];
-    let dirPick = 0;
-    for (let gx = -1; gx <= 1; gx++) {
-      for (let gy = -1; gy <= 1; gy++) {
-        for (let gz = -1; gz <= 1; gz++) {
-          const mesh = new THREE.Mesh(cubeGeo, cubeMat);
-          cubeGroup.add(mesh);
-          // explode straight along one of the cube's outward face normals
-          // (axis-aligned). Edge/corner cubes have 2–3 open faces → alternate
-          // which one. The centre cube has no open face, so it stays put.
-          const cands: THREE.Vector3[] = [];
-          if (gx !== 0) cands.push(new THREE.Vector3(Math.sign(gx), 0, 0));
-          if (gy !== 0) cands.push(new THREE.Vector3(0, Math.sign(gy), 0));
-          if (gz !== 0) cands.push(new THREE.Vector3(0, 0, Math.sign(gz)));
-          const dir = cands.length ? cands[dirPick++ % cands.length] : new THREE.Vector3();
-          cubes.push({ mesh, g: new THREE.Vector3(gx, gy, gz), q: new THREE.Quaternion(), dir });
-        }
-      }
-    }
-    cubeScene.add(cubeGroup);
-    const EXPLODE = 5.0; // cube-local units at full scroll
+    const {
+      scene: cubeScene,
+      camera: cubeCam,
+      group: cubeGroup,
+      cubes,
+      geometry: cubeGeo,
+      place: placeCluster,
+    } = createCubeCluster(cubeMat, W, H);
     let scrollSmooth = 0;
 
     // occasional, calm layer twist
-    const AXES = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1)];
     const _q = new THREE.Quaternion();
     const _p = new THREE.Vector3();
-    const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
-    const TWIST_DUR = 0.9;
     let twist: { axisIdx: number; layer: number; dir: number; t0: number; dur: number } | null = null;
     let nextTwistAt = 4.0;
-
-    function placeCluster() {
-      cubeCam.aspect = W / H;
-      cubeCam.updateProjectionMatrix();
-      const vFOV = (cubeCam.fov * Math.PI) / 180;
-      const visH = 2 * Math.tan(vFOV / 2) * cubeCam.position.z;
-      const visW = visH * (W / H);
-      const fracX = 0.73;
-      const fracY = 0.46;
-      cubeGroup.position.set((fracX - 0.5) * visW, (0.5 - fracY) * visH, 0);
-      const clusterScale = (Math.min(visH, visW) * 0.36) / 3.0;
-      cubeGroup.scale.setScalar(clusterScale);
-    }
-    placeCluster();
 
     // ── layout (typography column, vertically centred) ──
     const reportLayout = () => {
@@ -420,7 +194,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       meta.sync();
       link.sync();
 
-      placeCluster();
+      placeCluster(W, H);
       reportLayout();
     }
     layout();
@@ -482,7 +256,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
     const raycaster = new THREE.Raycaster();
     const _ndc = new THREE.Vector2();
     const _faceN = new THREE.Vector3();
-    const hitCube = (clientX: number, clientY: number): { c: Cube; faceN: THREE.Vector3 } | null => {
+    const hitCube = (clientX: number, clientY: number): { c: HeroCube; faceN: THREE.Vector3 } | null => {
       const rect = host.getBoundingClientRect();
       _ndc.set(((clientX - rect.left) / W) * 2 - 1, -(((clientY - rect.top) / H) * 2 - 1));
       raycaster.setFromCamera(_ndc, cubeCam);
@@ -503,7 +277,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
     const _dFace = new THREE.Vector3();
     const _anchor = new THREE.Vector3();
     const tangentDir = (anchor: THREE.Vector3, axisIdx: number, out: { x: number; y: number }) => {
-      _wa.copy(AXES[axisIdx]).applyQuaternion(cubeGroup.quaternion);
+      _wa.copy(CUBE_AXES[axisIdx]).applyQuaternion(cubeGroup.quaternion);
       _pa.copy(anchor).project(cubeCam);
       _pb.copy(anchor).addScaledVector(_wa, 0.3).project(cubeCam);
       const dx = (_pb.x - _pa.x) * (W / 2);
@@ -515,7 +289,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
 
     const DRAG_MIN = 7; // px before a swipe registers
     type Drag = {
-      c: Cube;
+      c: HeroCube;
       faceN: THREE.Vector3;
       t1: number; t2: number;          // the two cluster axes in the face plane
       s1: { x: number; y: number };    // their screen directions (y-down)
@@ -559,7 +333,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
           const c2 = dx * drag.s2.x + dy * drag.s2.y;
           const useT1 = Math.abs(c1) >= Math.abs(c2);
           const tAxis = useT1 ? drag.t1 : drag.t2;
-          _dFace.copy(AXES[tAxis]).multiplyScalar((useT1 ? c1 : c2) >= 0 ? 1 : -1);
+          _dFace.copy(CUBE_AXES[tAxis]).multiplyScalar((useT1 ? c1 : c2) >= 0 ? 1 : -1);
           // rotation axis ω = faceNormal × swipeDir → the grabbed sticker moves with the swipe
           _cross.crossVectors(drag.faceN, _dFace);
           const ax = Math.abs(_cross.x), ay = Math.abs(_cross.y), az = Math.abs(_cross.z);
@@ -567,8 +341,8 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
           const dir = _cross.getComponent(axisIdx) >= 0 ? 1 : -1;
           const layer = Math.round(drag.c.g.getComponent(axisIdx));
           const elapsed = (performance.now() - start) / 1000;
-          twist = { axisIdx, layer, dir, t0: elapsed, dur: TWIST_DUR };
-          nextTwistAt = elapsed + TWIST_DUR + 4.5 + Math.random() * 3.5; // hold off the next auto turn
+          twist = { axisIdx, layer, dir, t0: elapsed, dur: CUBE_TWIST_DUR };
+          nextTwistAt = elapsed + CUBE_TWIST_DUR + 4.5 + Math.random() * 3.5; // hold off the next auto turn
           drag = null;
         }
       }
@@ -655,7 +429,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       cubeGroup.rotation.x = Math.sin(elapsed * 0.4) * 0.22 + my * 0.5;
       cubeGroup.rotation.z = Math.sin(elapsed * 0.22) * 0.07;
 
-      const spread = GAP * (1.0 + 0.05 * Math.sin(elapsed * 1.1) + 0.12 * mActive);
+      const spread = CUBE_GAP * (1.0 + 0.05 * Math.sin(elapsed * 1.1) + 0.12 * mActive);
       const popIn = 0.6 + 0.4 * reveal;
 
       // scroll drives explode (down) / reassemble (up); 0 at top → 1 below
@@ -671,7 +445,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
           layer: [-1, 0, 1][(Math.random() * 3) | 0],
           dir: Math.random() < 0.5 ? 1 : -1,
           t0: elapsed,
-          dur: TWIST_DUR,
+          dur: CUBE_TWIST_DUR,
         };
       }
 
@@ -681,7 +455,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
         prog = Math.min(1, (elapsed - twist.t0) / twist.dur);
         angle = twist.dir * (Math.PI / 2) * easeInOut(prog);
       }
-      _q.setFromAxisAngle(twist ? AXES[twist.axisIdx] : AXES[0], angle);
+      _q.setFromAxisAngle(twist ? CUBE_AXES[twist.axisIdx] : CUBE_AXES[0], angle);
 
       for (const c of cubes) {
         _p.copy(c.g).multiplyScalar(spread);
@@ -693,7 +467,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
         }
         // scroll explode: slide straight out along the face normal, no spin
         if (scrollSmooth > 0.001) {
-          _p.addScaledVector(c.dir, EXPLODE * scrollSmooth);
+          _p.addScaledVector(c.dir, CUBE_EXPLODE * scrollSmooth);
         }
         c.mesh.position.copy(_p);
         c.mesh.scale.setScalar(popIn);
@@ -701,7 +475,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
 
       // bake the 90° permutation into grid coords + orientation, schedule next
       if (twist && prog >= 1) {
-        const R90 = new THREE.Quaternion().setFromAxisAngle(AXES[twist.axisIdx], twist.dir * (Math.PI / 2));
+        const R90 = new THREE.Quaternion().setFromAxisAngle(CUBE_AXES[twist.axisIdx], twist.dir * (Math.PI / 2));
         for (const c of cubes) {
           if (Math.round(c.g.getComponent(twist.axisIdx)) === twist.layer) {
             c.g.applyQuaternion(R90).round();
@@ -759,7 +533,6 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       renderer.dispose();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accent, accent2, onStatus, onLayout]);
 
   return (

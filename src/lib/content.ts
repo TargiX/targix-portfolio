@@ -5,6 +5,7 @@ import path from "node:path";
 import { cache } from "react";
 
 import matter from "gray-matter";
+import { z } from "zod";
 
 export type CaseLink = { label: string; href: string };
 
@@ -25,6 +26,19 @@ export type CaseDoc = CaseMeta & { content: string };
 
 const CONTENT_DIR = path.join(process.cwd(), "content/work");
 
+const CaseFrontmatterSchema = z.object({
+  slug: z.string().min(1).optional(),
+  title: z.string().min(1),
+  year: z.coerce.string().min(1),
+  role: z.string().min(1),
+  blurb: z.string().min(1),
+  tags: z.array(z.string().min(1)).default([]),
+  links: z.array(z.object({ label: z.string().min(1), href: z.string().min(1) })).default([]),
+  cover: z.string().min(1).optional(),
+  order: z.number().optional(),
+  featured: z.boolean().default(false),
+});
+
 /** Read and parse all case study MDX files. Memoized per render. */
 export const getAllCases = cache(async (): Promise<CaseDoc[]> => {
   let entries: string[];
@@ -41,8 +55,14 @@ export const getAllCases = cache(async (): Promise<CaseDoc[]> => {
         const fullPath = path.join(CONTENT_DIR, filename);
         const raw = await readFile(fullPath, "utf8");
         const { data, content } = matter(raw);
-        const slug = (data.slug as string | undefined) ?? filename.replace(/\.mdx$/, "");
-        return { ...(data as Omit<CaseMeta, "slug">), slug, content } satisfies CaseDoc;
+        const parsed = CaseFrontmatterSchema.safeParse(data);
+        if (!parsed.success) {
+          throw new Error(
+            `Invalid case study frontmatter in ${filename}: ${z.prettifyError(parsed.error)}`,
+          );
+        }
+        const slug = parsed.data.slug ?? filename.replace(/\.mdx$/, "");
+        return { ...parsed.data, slug, content } satisfies CaseDoc;
       }),
   );
 

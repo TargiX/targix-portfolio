@@ -44,6 +44,7 @@ export function ViewSwitcher({
   const accRef = useRef(0);
   const lastWheelRef = useRef(0);
   const touchYRef = useRef(0);
+  const cooldownTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const go = useCallback(
     (next: View, opts: { axis?: Axis; push?: boolean } = {}) => {
@@ -75,6 +76,14 @@ export function ViewSwitcher({
     return () => window.removeEventListener("hashchange", fromHash);
   }, [go]);
 
+  useEffect(() => {
+    return () => {
+      if (cooldownTimerRef.current) {
+        clearTimeout(cooldownTimerRef.current);
+      }
+    };
+  }, []);
+
   // overscroll-to-advance: at the bottom of a panel, keep scrolling to slide
   // to the next zone; at the top, scroll up to go back. Requires accumulated
   // intent + a cooldown so it never jumps on a casual arrival at the edge.
@@ -92,14 +101,16 @@ export function ViewSwitcher({
         lockRef.current = true;
         accRef.current = 0;
         go(ORDER[idx + 1], { axis: "y" });
-        setTimeout(() => (lockRef.current = false), COOLDOWN);
+        if (cooldownTimerRef.current) clearTimeout(cooldownTimerRef.current);
+        cooldownTimerRef.current = setTimeout(() => (lockRef.current = false), COOLDOWN);
         return true;
       }
       if (delta < 0 && atTop() && idx > 0) {
         lockRef.current = true;
         accRef.current = 0;
         go(ORDER[idx - 1], { axis: "y" });
-        setTimeout(() => (lockRef.current = false), COOLDOWN);
+        if (cooldownTimerRef.current) clearTimeout(cooldownTimerRef.current);
+        cooldownTimerRef.current = setTimeout(() => (lockRef.current = false), COOLDOWN);
         return true;
       }
       return false;

@@ -8,6 +8,7 @@ import remarkGfm from "remark-gfm";
 import { getAllSlugs, getCase } from "@/lib/content";
 import { mdxComponents } from "@/components/mdx-components";
 import { BackToWork } from "@/components/back-to-work";
+import { CaseMetaRail } from "@/components/case-meta-rail";
 
 type Params = Promise<{ slug: string }>;
 
@@ -85,60 +86,7 @@ export default async function CasePage({ params }: { params: Params }) {
           </p>
         </header>
 
-        <aside className="mt-12 font-mono text-[11px] text-fg-muted lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-1 lg:self-start lg:sticky lg:top-8">
-          <div className="pb-3.5">
-            <div className="mb-2 text-[10.5px] lowercase tracking-[0.08em] text-fg-dim">role</div>
-            <div className="text-xs leading-[1.5] text-fg">{c.role}</div>
-          </div>
-          <div className="border-t border-line-soft py-3.5">
-            <div className="mb-2 text-[10.5px] lowercase tracking-[0.08em] text-fg-dim">year</div>
-            <div className="text-xs leading-[1.5] text-fg">{c.year}</div>
-          </div>
-          {c.links.length > 0 && (
-            <div className="border-t border-line-soft py-3.5">
-              <div className="mb-2 text-[10.5px] lowercase tracking-[0.08em] text-fg-dim">links</div>
-              <div className="flex flex-col items-start gap-2">
-                {c.links.map((l) => {
-                  const ext = /^https?:\/\//.test(l.href);
-                  const isPrimaryLink = /live|demo|site|app/i.test(l.label);
-                  return (
-                    <a
-                      key={l.label}
-                      href={l.href}
-                      target={ext ? "_blank" : undefined}
-                      rel={ext ? "noreferrer" : undefined}
-                      className={
-                        isPrimaryLink
-                          ? "group inline-flex w-full items-center justify-between gap-2 rounded-md border border-[color:color-mix(in_oklab,var(--accent)_42%,var(--line))] bg-[color:color-mix(in_oklab,var(--accent)_10%,transparent)] px-3 py-2 text-xs font-medium text-fg shadow-[0_0_24px_color-mix(in_oklab,var(--accent)_10%,transparent)] transition-colors hover:border-[var(--accent)] hover:bg-[color:color-mix(in_oklab,var(--accent)_16%,transparent)] hover:text-[var(--accent)]"
-                          : "group inline-flex w-fit items-center gap-1 border-b border-line pb-0.5 text-xs text-fg-muted transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
-                      }
-                    >
-                      {l.label}
-                      <span className="inline-block transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
-                        {ext ? "↗" : "→"}
-                      </span>
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-          {c.tags.length > 0 && (
-            <div className="border-t border-line-soft py-3.5">
-              <div className="mb-2 text-[10.5px] lowercase tracking-[0.08em] text-fg-dim">stack</div>
-              <ul className="flex flex-wrap gap-1.5">
-                {c.tags.map((t) => (
-                  <li
-                    key={t}
-                    className="whitespace-nowrap rounded-full border border-line px-2 py-0.5 text-[10.5px] text-fg-muted"
-                  >
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </aside>
+        <CaseMetaRail role={c.role} year={c.year} links={c.links} tags={c.tags} />
 
         <div className="lg:col-start-1 lg:row-start-2">
           <div className="mt-10 mb-10 h-px bg-line-soft" />
