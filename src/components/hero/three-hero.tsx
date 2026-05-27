@@ -31,9 +31,15 @@ type Props = {
   time?: string;
   /** reports screen-space positions of interactive bits so the DOM can overlay them */
   onLayout?: (l: HeroLayout) => void;
+  /**
+   * narrow viewport: the SDF typography doesn't reflow, so on mobile the copy is
+   * rendered in the DOM instead. We skip drawing the in-canvas text and float the
+   * cube cluster lower-centre so it never lands on the headline.
+   */
+  mobile?: boolean;
 };
 
-export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, onStatus, time, onLayout }: Props) {
+export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, onStatus, time, onLayout, mobile = false }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const timeRef = useRef(time ?? "");
   timeRef.current = time ?? "";
@@ -43,6 +49,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
     if (!host) return;
 
     let disposed = false;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
     const accentRgb = hexToRgb(accent);
     const accent2Rgb = hexToRgb(accent2);
 
@@ -190,8 +197,11 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       meta.sync();
       link.sync();
 
-      placeCluster(W, H);
-      reportLayout();
+      // mobile: float the cluster lower-centre, a touch smaller, so it sits in the
+      // empty space below the DOM copy rather than colliding with the headline.
+      placeCluster(W, H, mobile ? { fracX: 0.5, fracY: 0.86, scaleK: 0.26 } : undefined);
+      // only the in-canvas link needs a DOM overlay; on mobile the copy is real DOM
+      if (!mobile) reportLayout();
     }
     layout();
 
@@ -238,12 +248,23 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       ortho.left = -W / 2; ortho.right = W / 2; ortho.top = H / 2; ortho.bottom = -H / 2;
       ortho.updateProjectionMatrix();
       layout();
+      // loop is frozen under reduced motion — repaint a short burst after a resize
+      if (reduce) {
+        reduceFrames = 0;
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(tick);
+      }
     });
     ro.observe(host);
 
     onStatus?.("ready");
 
-    const start = performance.now();
+    // reduced motion: pin time so the scene paints fully assembled + revealed, then
+    // stop the loop after a few frames (enough for troika's async glyph sync) so
+    // nothing animates. resize re-kicks a short burst to repaint.
+    const REDUCE_T = 3.0;
+    const start = performance.now() - (reduce ? REDUCE_T * 1000 : 0);
+    let reduceFrames = 0;
 
     // ── drag-to-rotate: grab a face and swipe; the slice turns in the swipe
     // direction, exactly like a 3D twisty-puzzle. Drag right on the bottom row →
@@ -362,8 +383,10 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
 
     const tick = () => {
       if (disposed) return;
-      raf = requestAnimationFrame(tick);
-      const elapsed = (performance.now() - start) / 1000;
+      // under reduced motion run only a short burst (let troika sync), then freeze
+      if (!reduce || reduceFrames < 8) raf = requestAnimationFrame(tick);
+      reduceFrames++;
+      const elapsed = reduce ? REDUCE_T : (performance.now() - start) / 1000;
       bgMat.uniforms.uTime.value = elapsed;
 
       if (items.length === 0) {
@@ -427,8 +450,9 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       const spread = CUBE_GAP * (1.0 + 0.05 * Math.sin(elapsed * 1.1) + 0.12 * mActive);
       const popIn = 0.6 + 0.4 * reveal;
 
-      // scroll drives explode (down) / reassemble (up); 0 at top → 1 below
-      const scrollTarget = Math.min(1, Math.max(0, (window.scrollY || 0) / Math.max(1, H * 0.85)));
+      // scroll drives explode (down) / reassemble (up); 0 at top → 1 below.
+      // reduced motion keeps the cluster assembled (no scroll-linked motion).
+      const scrollTarget = reduce ? 0 : Math.min(1, Math.max(0, (window.scrollY || 0) / Math.max(1, H * 0.85)));
       scrollSmooth += (scrollTarget - scrollSmooth) * 0.12;
       const atTop = scrollSmooth < 0.02;
 
@@ -490,7 +514,8 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       renderer.setRenderTarget(sceneRT);
       renderer.clear(true, true, true);
       renderer.render(bgScene, fsCamera);
-      renderer.render(textScene, ortho);
+      // mobile draws the copy in the DOM; skip the SDF text so it can't overflow
+      if (!mobile) renderer.render(textScene, ortho);
 
       renderer.setRenderTarget(null);
       renderer.clear(true, true, true);
@@ -528,7 +553,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       renderer.dispose();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
-  }, [accent, accent2, onStatus, onLayout]);
+  }, [accent, accent2, onStatus, onLayout, mobile]);
 
   return (
     <div

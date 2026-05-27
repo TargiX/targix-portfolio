@@ -21,6 +21,10 @@ export function FooterJellyfish({ className }: Props) {
     if (!host) return;
 
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    // narrow viewport: there's no free margin to bleed the jellyfish into, so it
+    // would otherwise sit bright and centred behind the contact copy. Dim it and
+    // float it lower so it reads as ambient texture, not a blob over the text.
+    const isNarrow = window.matchMedia?.("(max-width: 639px)").matches ?? false;
 
     let renderer: THREE.WebGLRenderer;
     try {
@@ -34,7 +38,7 @@ export function FooterJellyfish({ className }: Props) {
     renderer.setPixelRatio(pr);
     renderer.setClearColor(0x000000, 0);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.85; // overall brightness — lower = darker
+    renderer.toneMappingExposure = isNarrow ? 0.58 : 0.85; // overall brightness — lower = darker
     const canvas = renderer.domElement;
     canvas.style.cssText = "display:block;width:100%;height:100%";
     host.appendChild(canvas);
@@ -56,7 +60,7 @@ export function FooterJellyfish({ className }: Props) {
     // image-based lighting so the glass material reflects/refracts something
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-    scene.environmentIntensity = 0.5; // strength of glass reflections — lower = less white glare
+    scene.environmentIntensity = isNarrow ? 0.34 : 0.5; // strength of glass reflections — lower = less white glare
 
     const jelly = new THREE.Group(); // we drive placement + drift on this
     scene.add(jelly);
@@ -128,7 +132,9 @@ export function FooterJellyfish({ className }: Props) {
           model.position.sub(center);
           const wrap = new THREE.Group();
           wrap.add(model);
-          wrap.scale.setScalar(2.8 / (size.y || 1));
+          // mobile: ~3× smaller than desktop so it reads as a small accent in the
+          // right column rather than a full-bleed element
+          wrap.scale.setScalar((isNarrow ? 0.95 : 2.8) / (size.y || 1));
           jelly.add(wrap);
           if (gltf.animations.length) {
             mixer = new THREE.AnimationMixer(model);
@@ -160,11 +166,17 @@ export function FooterJellyfish({ className }: Props) {
       // so let the jellyfish bleed out to the container's left edge. No margin
       // (narrow screens) → keep it centered between the columns.
       const marginPx = (W - Math.min(1280, W)) / 2;
-      const baseX = marginPx > 120 ? (marginPx / W - 0.5) * 2 * halfW : 0;
+      // narrow: the copy fills the left ~55% column; tuck the (now 3× smaller)
+      // jellyfish into the empty right column, dropped down to where the email +
+      // github rows end, so it never sits over the text.
+      const baseX = isNarrow
+        ? halfW * 0.52
+        : marginPx > 120 ? (marginPx / W - 0.5) * 2 * halfW : 0;
+      const baseY = isNarrow ? -0.5 : 0.1;
       jelly.rotation.z = -TILT + Math.sin(t * 0.22) * 0.05;
       jelly.rotation.y = Math.sin(t * 0.15) * 0.2;
       jelly.position.x = baseX + Math.sin(t * 0.18) * 0.12;
-      jelly.position.y = 0.1 + Math.sin(t * 0.6) * 0.1;
+      jelly.position.y = baseY + Math.sin(t * 0.6) * 0.1;
       renderer.render(scene, camera);
     };
 

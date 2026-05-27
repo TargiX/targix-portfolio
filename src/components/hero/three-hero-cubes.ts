@@ -55,14 +55,22 @@ export function createCubeCluster(material: THREE.Material, width: number, heigh
 
   scene.add(group);
 
-  const place = (nextWidth: number, nextHeight: number) => {
+  // where the cluster sits + how big it is, as fractions of the visible frame.
+  // defaults place it top-right (desktop); the hero overrides these on mobile so
+  // the cubes float clear of the DOM copy instead of landing on the headline.
+  const place = (
+    nextWidth: number,
+    nextHeight: number,
+    opts?: { fracX?: number; fracY?: number; scaleK?: number },
+  ) => {
+    const { fracX = 0.73, fracY = 0.46, scaleK = 0.36 } = opts ?? {};
     camera.aspect = nextWidth / nextHeight;
     camera.updateProjectionMatrix();
     const vFOV = (camera.fov * Math.PI) / 180;
     const visH = 2 * Math.tan(vFOV / 2) * camera.position.z;
     const visW = visH * (nextWidth / nextHeight);
-    group.position.set((0.73 - 0.5) * visW, (0.5 - 0.46) * visH, 0);
-    group.scale.setScalar((Math.min(visH, visW) * 0.36) / 3.0);
+    group.position.set((fracX - 0.5) * visW, (0.5 - fracY) * visH, 0);
+    group.scale.setScalar((Math.min(visH, visW) * scaleK) / 3.0);
   };
 
   place(width, height);

@@ -230,7 +230,7 @@ export default function Home() {
               </div>
               <a
                 href={EMAIL.href}
-                className="group block font-sans text-[30px] font-medium tracking-[-0.02em] text-fg transition-colors hover:text-[var(--accent)] sm:text-[44px]"
+                className="group block break-words font-sans text-[clamp(22px,7vw,44px)] font-medium tracking-[-0.02em] text-fg transition-colors hover:text-[var(--accent)]"
               >
                 {EMAIL.label}
                 <span className="ml-2 inline-block text-[0.6em] align-middle transition-transform group-hover:-translate-y-1 group-hover:translate-x-1">
