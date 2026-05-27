@@ -132,15 +132,28 @@ export function ViewSwitcher({
       if (Math.abs(accRef.current) > THRESHOLD) advance(accRef.current);
     };
 
+    // touch mirrors the wheel: accumulate over-pull *while already at the edge*,
+    // not total finger travel. Measuring displacement from touchstart (the old
+    // behaviour) fired on a normal drag that happened to reach the bottom of a
+    // long panel; this only counts deliberate continued pulling past the edge
+    // and resets the moment you scroll back into content.
+    const TOUCH_THRESHOLD = 120;
     const onTouchStart = (e: TouchEvent) => {
       touchYRef.current = e.touches[0]?.clientY ?? 0;
+      accRef.current = 0;
     };
     const onTouchMove = (e: TouchEvent) => {
       if (lockRef.current) return;
       const y = e.touches[0]?.clientY ?? 0;
-      const dy = touchYRef.current - y; // +ve = swipe up = scroll-down intent
-      const atEdge = dy > 0 ? atBottom() : atTop();
-      if (atEdge && Math.abs(dy) > 70) advance(dy);
+      const delta = touchYRef.current - y; // +ve = pulling up = scroll-down intent
+      touchYRef.current = y; // incremental, per move
+      const atEdge = delta > 0 ? atBottom() : atTop();
+      if (!atEdge) {
+        accRef.current = 0;
+        return;
+      }
+      accRef.current += delta;
+      if (Math.abs(accRef.current) > TOUCH_THRESHOLD) advance(accRef.current);
     };
 
     window.addEventListener("wheel", onWheel, { passive: true });
