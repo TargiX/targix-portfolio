@@ -9,7 +9,19 @@ type Props = {
   tags: string[];
 };
 
+// repo links (github/gitlab) are always secondary; the "primary" highlight goes
+// to the first live external link — the site/app itself — so every case study
+// surfaces where the work is actually running, regardless of how the link is
+// labelled (a bare domain, "live demo", "the platform", …).
+const isRepoLink = (href: string) => /github\.com|gitlab\.com|bitbucket\.org/i.test(href);
+
+function primaryLinkIndex(links: CaseLink[]): number {
+  return links.findIndex((l) => /^https?:\/\//.test(l.href) && !isRepoLink(l.href));
+}
+
 export function CaseMetaRail({ role, year, links, tags }: Props) {
+  const primaryIndex = primaryLinkIndex(links);
+
   return (
     <aside className="mt-12 font-mono text-[11px] text-fg-muted lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-1 lg:self-start lg:sticky lg:top-8">
       <RailSection label="role">
@@ -23,8 +35,8 @@ export function CaseMetaRail({ role, year, links, tags }: Props) {
       {links.length > 0 && (
         <RailSection label="links" divided>
           <div className="flex flex-col items-start gap-2">
-            {links.map((link) => (
-              <CaseLinkButton key={link.label} link={link} />
+            {links.map((link, i) => (
+              <CaseLinkButton key={link.label} link={link} primary={i === primaryIndex} />
             ))}
           </div>
         </RailSection>
@@ -65,9 +77,8 @@ function RailSection({
   );
 }
 
-function CaseLinkButton({ link }: { link: CaseLink }) {
+function CaseLinkButton({ link, primary }: { link: CaseLink; primary: boolean }) {
   const external = /^https?:\/\//.test(link.href);
-  const primary = /live|demo|site|app/i.test(link.label);
 
   return (
     <a
