@@ -30,8 +30,6 @@ export function createHeroTextObjects() {
   };
 
   const status = mkText(FONT_MONO, 13, C_MUTED, 0.02);
-  const eyebrow = mkText(FONT_MONO, 12, C_DIM, 0.3);
-  eyebrow.text = "—   IM / portfolio · v1.0";
 
   const h1 = mkText(FONT_SANS, 88, C_FG, -0.03);
   h1.text = "Ilya Moskovkin";
@@ -72,5 +70,5 @@ export function createHeroTextObjects() {
   );
   scene.add(dot);
 
-  return { scene, status, eyebrow, h1, para, meta, link, dot };
+  return { scene, status, h1, para, meta, link, dot };
 }

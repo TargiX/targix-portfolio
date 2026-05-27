@@ -113,7 +113,6 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
     const {
       scene: textScene,
       status,
-      eyebrow,
       h1,
       para,
       meta,
@@ -167,11 +166,10 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       const paraSize = 19;
       const paraH = paraSize * 1.5 * 3;
       const gapStatus = 56;
-      const gapEyebrow = 24;
       const gapH1 = 28;
       const gapPara = 28;
       const gapMeta = 32;
-      const total = 15 + gapStatus + 14 + gapEyebrow + fontH1 + gapH1 + paraH + gapPara + 15 + gapMeta + 18;
+      const total = 15 + gapStatus + fontH1 + gapH1 + paraH + gapPara + 15 + gapMeta + 18;
 
       let y = total / 2;
       const place = (t: { position: THREE.Object3D["position"] }, h: number, gap: number) => {
@@ -181,14 +179,12 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       status.position.set(colLeft + 20, y, 0);
       dot.position.set(colLeft + 5, y - 8, 1);
       y -= 15 + gapStatus;
-      place(eyebrow, 14, gapEyebrow);
       place(h1, fontH1, gapH1);
       place(para, paraH, gapPara);
       place(meta, 15, gapMeta);
       place(link, 18, 0);
 
       status.sync();
-      eyebrow.sync();
       h1.sync();
       para.sync();
       meta.sync();
@@ -373,11 +369,10 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       if (items.length === 0) {
         items.push(
           { t: status, base: status.position.y, delay: 0 },
-          { t: eyebrow, base: eyebrow.position.y, delay: 0.06 },
-          { t: h1, base: h1.position.y, delay: 0.12 },
-          { t: para, base: para.position.y, delay: 0.22 },
-          { t: meta, base: meta.position.y, delay: 0.3 },
-          { t: link, base: link.position.y, delay: 0.36 },
+          { t: h1, base: h1.position.y, delay: 0.08 },
+          { t: para, base: para.position.y, delay: 0.18 },
+          { t: meta, base: meta.position.y, delay: 0.26 },
+          { t: link, base: link.position.y, delay: 0.32 },
         );
       }
 
@@ -521,7 +516,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
         window.removeEventListener("touchend", onTouchEnd);
       }
       ro.disconnect();
-      [status, eyebrow, h1, para, meta, link].forEach((t) => t.dispose());
+      [status, h1, para, meta, link].forEach((t) => t.dispose());
       dot.geometry.dispose();
       (dot.material as THREE.Material).dispose();
       fsGeo.dispose();

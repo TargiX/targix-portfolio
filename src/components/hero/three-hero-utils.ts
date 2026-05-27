@@ -1,9 +1,9 @@
 export const FONT_SANS = "/fonts/Geist-Medium.woff";
 export const FONT_MONO = "/fonts/GeistMono-Regular.woff";
 
-export const C_FG = 0xf2f3f4;
-export const C_MUTED = 0x9499a1;
-export const C_DIM = 0x6b7079;
+export const C_FG = 0xffffff;
+export const C_MUTED = 0xcbd1dc;
+export const C_DIM = 0x9aa3b2;
 export const C_GREEN = 0x9fe05a;
 
 export function hexToRgb(hex: string): [number, number, number] {
