@@ -40,8 +40,8 @@ export function createHeroTextObjects() {
   para.lineHeight = 1.5;
   {
     const ranges: Record<number, number> = { 0: C_MUTED };
-    paintRange(ranges, PARA, "frontend", C_FG, C_MUTED);
-    paintRange(ranges, PARA, "UI/UX", C_FG, C_MUTED);
+    paintRange(ranges, PARA, "frontend", C_GREEN, C_MUTED);
+    paintRange(ranges, PARA, "UI/UX", C_GREEN, C_MUTED);
     applyColorRanges(para, ranges);
   }
 
