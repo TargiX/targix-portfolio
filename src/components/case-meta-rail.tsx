@@ -76,7 +76,10 @@ function CaseLinkButton({ link }: { link: CaseLink }) {
       rel={external ? "noreferrer" : undefined}
       className={
         primary
-          ? "group inline-flex w-full items-center justify-between gap-2 rounded-md border border-[color:color-mix(in_oklab,var(--accent)_42%,var(--line))] bg-[color:color-mix(in_oklab,var(--accent)_10%,transparent)] px-3 py-2 text-xs font-medium text-fg shadow-[0_0_24px_color-mix(in_oklab,var(--accent)_10%,transparent)] transition-colors hover:border-[var(--accent)] hover:bg-[color:color-mix(in_oklab,var(--accent)_16%,transparent)] hover:text-[var(--accent)]"
+          ? // transparent text button, lifted by a thin gradient border. negative
+            // left margin pulls the label flush with the underline links above it
+            // so the column stays aligned despite the border padding.
+            "btn-gradient-border group -ml-2.5 inline-flex w-fit items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium text-fg transition-colors hover:text-[var(--accent)]"
           : "group inline-flex w-fit items-center gap-1 border-b border-line pb-0.5 text-xs text-fg-muted transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
       }
     >

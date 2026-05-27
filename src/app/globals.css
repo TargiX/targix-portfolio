@@ -272,6 +272,28 @@ a { color: inherit; text-decoration: none; }
   .group\/section:hover .section-title { animation: none; }
 }
 
+/* text button with a thin lime→teal gradient border — the same palette as the
+   headings. Used to lift the primary case-study link above the plain underline
+   links without a heavy filled pill. The body fills with the page bg so the
+   button reads as transparent; only the 1px border carries the gradient, which
+   shimmers on hover. */
+.btn-gradient-border {
+  border: 1px solid transparent;
+  background-image:
+    linear-gradient(var(--bg), var(--bg)),
+    linear-gradient(110deg, var(--accent), #5eead4 45%, #bef264 70%, var(--accent));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-size: 100% 100%, 200% 200%;
+  background-position: 0% 50%;
+}
+.btn-gradient-border:hover {
+  animation: heading-gradient-shift 6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-gradient-border:hover { animation: none; }
+}
+
 /* blinking caret */
 @keyframes blink { 50% { opacity: 0; } }
 .caret {
