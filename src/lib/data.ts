@@ -100,7 +100,20 @@ export const SECONDARY: Project[] = [
  * To bring it back: push Project objects into this array (same shape as
  * SECONDARY above) and the band appears automatically.
  */
-export const MINOR: Project[] = [];
+export const MINOR: Project[] = [
+  {
+    index: "⑤",
+    year: "2026",
+    role: "Solo · React systems demo",
+    title: "SignalOps",
+    blurb:
+      "A React operations cockpit for AI generation infrastructure: provider health, incident drill-down, virtualized job inspection, and routing-rule simulation.",
+    tags: ["Next.js 16", "React 19", "TanStack Table", "TanStack Virtual", "Recharts"],
+    links: [{ label: "case study", href: "/work/signalops" }],
+    caseSlug: "signalops",
+    thumb: "/work/signalops/incident.png",
+  },
+];
 
 export const STACK = [
   {

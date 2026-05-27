@@ -1,0 +1,41 @@
+---
+title: SignalOps
+slug: signalops
+year: 2026
+role: Solo · React systems demo
+order: 5
+blurb: "A React operations cockpit for AI generation infrastructure: provider health, incident drill-down, virtualized job inspection, and routing-rule simulation."
+tags:
+  - Next.js 16
+  - React 19
+  - TypeScript
+  - TanStack Query
+  - TanStack Table
+  - TanStack Virtual
+  - Recharts
+cover: "/work/signalops/cockpit.png"
+links:
+  - label: live demo
+    href: "https://signalops.ilyamoskovkin.com"
+---
+
+SignalOps is a focused data-product prototype: an internal operations cockpit for AI image-generation infrastructure. The point is not just to show charts. The point is to show how a frontend can help an operator notice provider risk, inspect affected jobs, and preview a routing decision.
+
+![SignalOps full dashboard](/work/signalops/cockpit.png)
+
+## The Workflow
+
+The main screen is intentionally not a decorative analytics wall. It is a decision surface: pick an incident, inspect the blast radius, compare model/provider behavior, then preview a routing rule before it touches production traffic.
+
+Opening an incident moves the operator out of the broad overview and into a narrower investigation route. The page keeps the same system language, but the layout changes from monitoring to review: timeline, affected job scope, rule draft, and audit trail.
+
+## What It Shows
+
+- **Route-level product flow:** overview → incident detail → affected jobs → routing rule preview.
+- **TanStack Table + TanStack Virtual:** a custom grid surface rather than a dropped-in enterprise table.
+- **Operational state:** saved views, provider focus, selected generation state, and simulated routing impact.
+- **Design-system discipline:** dense UI, restrained color, consistent tokens, and readable data hierarchy.
+
+## Why This Exists
+
+Phosphene is the product. SignalOps is the kind of internal surface that product would eventually need: provider latency, retry clusters, generation cost, and user-facing credit impact all in one place. It is intentionally small, but it is shaped like a real tool rather than a dashboard wallpaper.

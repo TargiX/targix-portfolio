@@ -104,6 +104,16 @@ export const mdxComponents: MDXComponents = {
       {...props}
     />
   ),
+  img: ({ className, alt, ...props }) => (
+    <img
+      alt={alt ?? ""}
+      className={cn(
+        "my-8 w-full rounded-md border border-line-soft bg-bg-2/70",
+        className,
+      )}
+      {...props}
+    />
+  ),
   code: ({ className, ...props }) => (
     <code
       className={cn(
