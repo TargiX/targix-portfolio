@@ -5,7 +5,7 @@ import { C_DIM, C_FG, C_GREEN, C_MUTED, FONT_MONO, FONT_SANS, paintRange } from 
 
 type TextWithColorRanges = Text & { colorRanges?: Record<number, number> };
 
-const PARA = "Senior frontend engineer with fullstack\nchops and UI/UX roots.\nBuilding products, not pages.";
+const PARA = "Senior frontend engineer with fullstack\nchops and UI/UX roots.\nBuilding experiences that matter.";
 const META = "based  vietnam → remote      years  12+      stack  vue · react · node      status  open to roles";
 const LINK = "interactive experiments — open the lab →";
 
@@ -40,8 +40,9 @@ export function createHeroTextObjects() {
   para.lineHeight = 1.5;
   {
     const ranges: Record<number, number> = { 0: C_MUTED };
-    paintRange(ranges, PARA, "frontend", C_GREEN, C_MUTED);
-    paintRange(ranges, PARA, "UI/UX", C_GREEN, C_MUTED);
+    // keywords get a soft-white lift (not green) against the greyish body
+    paintRange(ranges, PARA, "frontend", C_FG, C_MUTED);
+    paintRange(ranges, PARA, "UI/UX", C_FG, C_MUTED);
     applyColorRanges(para, ranges);
   }
 
