@@ -1,0 +1,51 @@
+---
+slug: flux-sanity-site
+title: Flux Sanity Site
+year: 2026
+role: Solo · CMS marketing build
+order: 6
+blurb: "A recruiter-facing marketing-site case study: Next.js App Router, Sanity schemas, reusable sections, draft preview wiring, SEO, and Vercel deployment."
+tags:
+  - Next.js 16
+  - React 19
+  - TypeScript
+  - Sanity
+  - Headless CMS
+  - Technical SEO
+  - Vercel
+cover: "/work/flux-sanity/homepage.png"
+links:
+  - label: live site
+    href: "https://sanity.ilyamoskovkin.com"
+  - label: github
+    href: "https://github.com/TargiX/flux-sanity-site"
+---
+
+Flux Sanity Site is a deliberately small marketing-site build aimed at one specific hiring signal: can I turn polished comps into a CMS-driven landing-page system that non-engineers can extend?
+
+![Flux Sanity Site homepage](/work/flux-sanity/homepage.png)
+
+## The brief
+
+The role asked for Next.js, React, TypeScript, Tailwind, Sanity, Vercel, reusable landing-page templates, and ongoing technical SEO. I built the case around those exact points instead of making another generic SaaS homepage.
+
+The public site is a fictional Flux Graph marketing surface. The repo is the proof: a typed content model, Sanity Studio route, reusable section renderer, fallback content, preview wiring, generated metadata, sitemap, robots, and JSON-LD.
+
+## What I built
+
+- **CMS page model:** pages own title, slug, SEO fields, and an ordered array of reusable sections.
+- **Reusable sections:** hero, logo strip, feature grid, split visual, testimonials, pricing, FAQ, and CTA.
+- **Sanity integration:** embedded Studio at `/studio`, App Router data layer, Draft Mode route, Visual Editing wiring, and TypeGen output.
+- **Fallback content:** the site still builds and renders without Sanity credentials, which makes portfolio review reliable.
+- **SEO surface:** per-page metadata, canonical URLs, Open Graph/Twitter fields, sitemap, robots, FAQ schema, and product/organization JSON-LD.
+
+## Product and design pass
+
+The first version proved the integration but felt too much like a template. I tightened the hero copy, gave the product mockup more weight, added a CMS section rail inside the visual, and made the lower page rhythm less card-heavy.
+
+The point is not just "I can connect Sanity." The point is that a marketer could assemble new pages while the frontend still feels authored, responsive, and brand-consistent.
+
+## Links
+
+- [Live site](https://sanity.ilyamoskovkin.com)
+- [GitHub repo](https://github.com/TargiX/flux-sanity-site)

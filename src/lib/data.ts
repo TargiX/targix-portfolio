@@ -113,6 +113,21 @@ export const MINOR: Project[] = [
     caseSlug: "signalops",
     thumb: "/work/signalops/incident.png",
   },
+  {
+    index: "⑥",
+    year: "2026",
+    role: "Solo · CMS marketing build",
+    title: "Flux Sanity Site",
+    blurb:
+      "A recruiter-facing marketing-site case study: Next.js App Router, Sanity schemas, reusable sections, draft preview wiring, SEO, and Vercel deployment.",
+    tags: ["Next.js 16", "Sanity", "Headless CMS", "Technical SEO", "Vercel"],
+    links: [
+      { label: "live site", href: "https://sanity.ilyamoskovkin.com" },
+      { label: "case study", href: "/work/flux-sanity-site" },
+    ],
+    caseSlug: "flux-sanity-site",
+    thumb: "/work/flux-sanity/homepage.png",
+  },
 ];
 
 export const STACK = [
