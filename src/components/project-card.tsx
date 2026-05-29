@@ -163,12 +163,13 @@ export function ProjectCard({
           <div className="relative z-20 mt-auto flex flex-wrap gap-x-4 gap-y-2 self-start pt-1 text-xs">
             {links.map((l) => {
               const isExternal = /^https?:\/\//.test(l.href);
+              const label = !isExternal && l.href.startsWith("/work/") ? `${title} case study` : l.label;
               const arrow = isExternal ? "↗" : "→";
               const cls =
                 "group/link whitespace-nowrap border-b border-line pb-0.5 text-fg transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]";
               const inner = (
                 <>
-                  {l.label}
+                  {label}
                   <span className="ml-1 inline-block transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5">
                     {arrow}
                   </span>

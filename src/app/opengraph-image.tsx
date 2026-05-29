@@ -1,6 +1,8 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Ilya Moskovkin — Portfolio";
+import { SITE } from "@/lib/seo";
+
+export const alt = SITE.title;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -71,8 +73,8 @@ export default function Image() {
               fontFamily: "Geist Mono, ui-monospace, monospace",
             }}
           >
-            Senior frontend engineer with fullstack chops and UI/UX roots.
-            Building products, not pages.
+            Senior frontend/product engineer for React, Next.js, Vue, Nuxt,
+            AI workflows, dashboards, and visual editors.
           </div>
         </div>
 
@@ -89,7 +91,7 @@ export default function Image() {
             color: "rgba(255,255,255,0.55)",
           }}
         >
-          <span>vietnam → remote · 8+ yrs</span>
+          <span>vietnam → remote · 10+ yrs</span>
           <span style={{ color: "#a3e635" }}>● open to roles</span>
         </div>
       </div>

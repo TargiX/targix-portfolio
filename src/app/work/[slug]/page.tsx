@@ -9,6 +9,7 @@ import { getAllSlugs, getCase } from "@/lib/content";
 import { mdxComponents } from "@/components/mdx-components";
 import { BackToWork } from "@/components/back-to-work";
 import { CaseMetaRail } from "@/components/case-meta-rail";
+import { SITE, absoluteUrl, getCaseJsonLd, getProjectImageUrl } from "@/lib/seo";
 
 type Params = Promise<{ slug: string }>;
 
@@ -21,17 +22,25 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { slug } = await params;
   const c = await getCase(slug);
   if (!c) return {};
-  const title = `${c.title} — Ilya Moskovkin`;
-  const ogImage = `/work/${c.slug}/opengraph-image`;
+  const title = c.title;
+  const ogTitle = `${c.title} — Ilya Moskovkin`;
+  const url = absoluteUrl(`/work/${c.slug}`);
+  const ogImage = getProjectImageUrl(c.cover);
 
   return {
     title,
     description: c.blurb,
+    alternates: {
+      canonical: `/work/${c.slug}`,
+    },
+    keywords: [...c.tags, SITE.author, "case study", "frontend engineering"],
     openGraph: {
-      title,
+      title: ogTitle,
       description: c.blurb,
+      url,
+      siteName: SITE.name,
       type: "article",
-      images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: ogTitle }],
     },
     twitter: {
       card: "summary_large_image",
@@ -46,9 +55,16 @@ export default async function CasePage({ params }: { params: Params }) {
   const { slug } = await params;
   const c = await getCase(slug);
   if (!c) notFound();
+  const caseJsonLd = getCaseJsonLd(c);
 
   return (
     <main className="relative mx-auto max-w-[1080px] px-5 pb-24 pt-12 sm:px-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(caseJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <BackToWork />
 
       {/* Cover is a full-width band above the article grid — the wide "hero". */}

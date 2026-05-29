@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { PostHogProvider } from "@/components/posthog-provider";
+import { SITE, absoluteUrl } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,14 +15,51 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ilya Moskovkin — Portfolio",
-  description:
-    "Senior frontend engineer with fullstack chops and UI/UX roots. Building products, not pages.",
-  metadataBase: new URL("https://ilyamoskovkin.com"),
+  title: {
+    default: SITE.title,
+    template: "%s — Ilya Moskovkin",
+  },
+  description: SITE.description,
+  metadataBase: new URL(SITE.url),
+  alternates: {
+    canonical: "/",
+  },
+  keywords: [...SITE.keywords],
+  creator: SITE.author,
+  publisher: SITE.author,
+  authors: [{ name: SITE.author, url: SITE.url }],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
-    title: "Ilya Moskovkin — Portfolio",
-    description: "Senior frontend engineer · UI/UX roots · building products.",
+    title: SITE.title,
+    description: SITE.description,
+    url: SITE.url,
+    siteName: SITE.name,
+    locale: SITE.locale,
     type: "website",
+    images: [
+      {
+        url: absoluteUrl("/opengraph-image"),
+        width: 1200,
+        height: 630,
+        alt: SITE.title,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE.title,
+    description: SITE.description,
+    images: [absoluteUrl("/opengraph-image")],
   },
 };
 

@@ -65,8 +65,8 @@ export function Hero() {
       <div className="sr-only">
         <h1>Ilya Moskovkin — Senior frontend engineer</h1>
         <p>
-          Senior frontend engineer with fullstack chops and UI/UX roots. Building products, not
-          pages. Based in Vietnam, open to remote roles. Stack: Vue, React, Node.
+          Senior frontend engineer with fullstack chops and UI/UX roots. Building experiences
+          that matter. Based in Vietnam, open to remote roles. Stack: Vue, React, Node.
         </p>
       </div>
 
@@ -125,7 +125,7 @@ function HeroCopy() {
           Senior <span className="text-fg">frontend</span> engineer with fullstack chops and{" "}
           <span className="text-fg">UI/UX</span> roots.
           <br />
-          Building products, not pages.
+          Building experiences that matter.
         </p>
 
         <div className="flex flex-wrap gap-x-5 gap-y-4 text-[11px] lowercase tracking-[0.04em] text-fg-dim">

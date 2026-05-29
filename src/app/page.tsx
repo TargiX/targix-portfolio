@@ -14,6 +14,7 @@ import { ViewSwitcher } from "@/components/view-switcher";
 import { PromptCompilerArtifact } from "@/components/prompt-compiler-artifact";
 import { AiChat } from "@/components/lab/ai-chat";
 import { CONTACT, FEATURED, MINOR, SECONDARY, STACK } from "@/lib/data";
+import { getHomeJsonLd } from "@/lib/seo";
 
 // Narrow measure for text-heavy sections (readability ~70ch).
 const CONTAINER = "relative mx-auto max-w-[880px] px-5 pb-24 pt-6 sm:px-8";
@@ -23,12 +24,33 @@ const WORK_CONTAINER = "relative mx-auto max-w-[1280px] px-5 pb-24 pt-6 sm:px-8"
 export default function Home() {
   const isContactConfigured = Boolean(process.env.RESEND_API_KEY);
   const EMAIL = CONTACT.find((c) => c.key === "email") ?? CONTACT[0];
+  const homeJsonLd = getHomeJsonLd();
 
   // ── WORK ───────────────────────────────────────────────
   const work = (
     <>
       <Hero />
       <main className={WORK_CONTAINER}>
+        <section
+          aria-label="Frontend engineering proof points"
+          className="mb-14 rounded-md border border-line-soft bg-bg-2/30 px-4 py-3"
+        >
+          <ul className="grid gap-2 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-muted sm:grid-cols-5">
+            {[
+              "React / Next.js systems",
+              "Vue / Nuxt product apps",
+              "AI workflows",
+              "Data-heavy dashboards",
+              "Visual editors",
+            ].map((item) => (
+              <li key={item} className="flex items-center gap-2">
+                <span className="size-1.5 rounded-full bg-[var(--accent)]" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         <Section id="work" n="01" title="Selected Work" kicker={`${1 + SECONDARY.length} projects`}>
           <div className="grid grid-cols-1 gap-5 [perspective:1200px] sm:grid-cols-2">
             {[FEATURED, ...SECONDARY].map((p, i) => (
@@ -213,6 +235,12 @@ export default function Home() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(homeJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <ViewSwitcher work={work} lab={lab} about={about} />
 
       <footer className="relative mt-10 overflow-hidden border-t border-line-soft">
