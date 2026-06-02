@@ -33,9 +33,9 @@ export default function Home() {
       <main className={WORK_CONTAINER}>
         <section
           aria-label="Frontend engineering proof points"
-          className="mb-14 rounded-md border border-line-soft bg-bg-2/30 px-4 py-3"
+          className="mb-14 rounded-md border border-line-soft bg-bg-2/30 px-4 py-3 sm:px-6"
         >
-          <ul className="grid gap-2 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-muted sm:grid-cols-5">
+          <ul className="flex flex-wrap justify-center gap-x-6 gap-y-3 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-muted sm:justify-between sm:gap-x-4">
             {[
               "React / Next.js systems",
               "Vue / Nuxt product apps",
