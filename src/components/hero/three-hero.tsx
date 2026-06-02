@@ -381,6 +381,12 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
     let lastTime = "";
     const items: Array<{ t: { fillOpacity: number; position: { y: number } }; base: number; delay: number }> = [];
 
+    const _plane = new THREE.Plane();
+    const _cameraForward = new THREE.Vector3();
+    const _intersectPoint = new THREE.Vector3();
+    const _localIntersectPoint = new THREE.Vector3();
+    const _pushVec = new THREE.Vector3();
+
     const tick = () => {
       if (disposed) return;
       // under reduced motion run only a short burst (let troika sync), then freeze
@@ -476,6 +482,17 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       }
       _q.setFromAxisAngle(twist ? CUBE_AXES[twist.axisIdx] : CUBE_AXES[0], angle);
 
+      // hover bulge effect: raycast to a plane at the cluster's position
+      _cameraForward.set(0, 0, 1).transformDirection(cubeCam.matrixWorld);
+      _plane.setFromNormalAndCoplanarPoint(_cameraForward, cubeGroup.position);
+      _ndc.set((mouse.x / W) * 2 - 1, -(mouse.y / H) * 2 + 1);
+      raycaster.setFromCamera(_ndc, cubeCam);
+      const hitPlane = raycaster.ray.intersectPlane(_plane, _intersectPoint);
+      if (hitPlane) {
+        _localIntersectPoint.copy(_intersectPoint);
+        cubeGroup.worldToLocal(_localIntersectPoint);
+      }
+
       for (const c of cubes) {
         _p.copy(c.g).multiplyScalar(spread);
         if (twist && Math.round(c.g.getComponent(twist.axisIdx)) === twist.layer) {
@@ -484,6 +501,18 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
         } else {
           c.mesh.quaternion.copy(c.q);
         }
+
+        // Apply hover bulge
+        if (hitPlane && mActive > 0) {
+          const dist = _p.distanceTo(_localIntersectPoint);
+          const radius = 2.4; // effective radius in local coordinates
+          if (dist < radius) {
+            const force = Math.pow(1 - dist / radius, 2) * 0.9 * mActive * popIn;
+            _pushVec.subVectors(_p, _localIntersectPoint).normalize().multiplyScalar(force);
+            _p.add(_pushVec);
+          }
+        }
+
         // scroll explode: slide straight out along the face normal, no spin
         if (scrollSmooth > 0.001) {
           _p.addScaledVector(c.dir, CUBE_EXPLODE * scrollSmooth);
