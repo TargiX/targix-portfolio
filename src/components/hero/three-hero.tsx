@@ -12,7 +12,7 @@ import {
   easeInOut,
   type HeroCube,
 } from "./three-hero-cubes";
-import { BG_FRAG, BG_VERT, COMPOSITE_FRAG, CUBE_FRAG, CUBE_VERT } from "./three-hero-shaders";
+import { BG_FRAG, BG_VERT, COMPOSITE_FRAG, CUBE_FRAG, CUBE_VERT, GLOW_FRAG, GLOW_VERT } from "./three-hero-shaders";
 import { createHeroTextObjects } from "./three-hero-text";
 import { C_GREEN, hexToRgb } from "./three-hero-utils";
 
@@ -149,6 +149,29 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       geometry: cubeGeo,
       place: placeCluster,
     } = createCubeCluster(cubeMat, W, H);
+
+    const glowMat = new THREE.ShaderMaterial({
+      vertexShader: GLOW_VERT,
+      fragmentShader: GLOW_FRAG,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      depthTest: true,
+      uniforms: {
+        uColor: { value: new THREE.Vector3(...accentRgb) },
+        uIntensity: { value: 0.0 },
+        uTime: { value: 0.0 },
+      },
+    });
+
+    const glowGeo = new THREE.PlaneGeometry(16, 16);
+    const glowM1 = new THREE.Mesh(glowGeo, glowMat);
+    const glowM2 = new THREE.Mesh(glowGeo, glowMat);
+    glowM2.rotation.y = Math.PI / 2;
+    const glowM3 = new THREE.Mesh(glowGeo, glowMat);
+    glowM3.rotation.x = Math.PI / 2;
+    cubeGroup.add(glowM1, glowM2, glowM3);
+
     let scrollSmooth = 0;
 
     // occasional, calm layer twist
@@ -493,6 +516,8 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
         cubeGroup.worldToLocal(_localIntersectPoint);
       }
 
+      let maxBulge = 0;
+
       for (const c of cubes) {
         _p.copy(c.g).multiplyScalar(spread);
         if (twist && Math.round(c.g.getComponent(twist.axisIdx)) === twist.layer) {
@@ -525,6 +550,8 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
           _p.add(_pushVec);
         }
 
+        if (c.bulge > maxBulge) maxBulge = c.bulge;
+
         // scroll explode: slide straight out along the face normal, no spin
         if (scrollSmooth > 0.001) {
           _p.addScaledVector(c.dir, CUBE_EXPLODE * scrollSmooth);
@@ -550,6 +577,9 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
         nextTwistAt = elapsed + 4.5 + Math.random() * 3.5; // rare + calm
         twist = null;
       }
+
+      glowMat.uniforms.uIntensity.value = maxBulge * 1.8;
+      glowMat.uniforms.uTime.value = elapsed;
 
       // ── render: scene (bg+text) → RT, composite → screen, cubes on top ──
       renderer.setRenderTarget(sceneRT);
@@ -587,9 +617,11 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       (dot.material as THREE.Material).dispose();
       fsGeo.dispose();
       cubeGeo.dispose();
+      glowGeo.dispose();
       bgMat.dispose();
       compMat.dispose();
       cubeMat.dispose();
+      glowMat.dispose();
       sceneRT.dispose();
       renderer.dispose();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);

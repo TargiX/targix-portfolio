@@ -107,3 +107,37 @@ void main(){
   gl_FragColor = vec4(col, alpha);
 }
 `;
+
+export const GLOW_VERT = /* glsl */ `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`;
+
+export const GLOW_FRAG = /* glsl */ `
+precision highp float;
+varying vec2 vUv;
+uniform vec3 uColor;
+uniform float uIntensity;
+uniform float uTime;
+
+void main() {
+  vec2 uv = vUv * 2.0 - 1.0;
+  float dist = length(uv);
+  if (dist > 1.0) discard;
+  
+  float angle = atan(uv.y, uv.x);
+  
+  // Ray pattern
+  float rays = sin(angle * 5.0 + uTime * 1.5) * sin(angle * 8.0 - uTime * 1.1) * 0.5 + 0.5;
+  rays = pow(rays, 2.0);
+  
+  float alpha = smoothstep(1.0, 0.0, dist);
+  float core = pow(alpha, 4.0) * 0.8;
+  float glow = core + (rays * alpha * 0.6);
+  
+  gl_FragColor = vec4(uColor * glow * uIntensity, glow * uIntensity);
+}
+`;
