@@ -13,7 +13,7 @@ import {
   type HeroCube,
 } from "./three-hero-cubes";
 import { BG_FRAG, BG_VERT, COMPOSITE_FRAG, CUBE_FRAG, CUBE_VERT, GLOW_FRAG, GLOW_VERT } from "./three-hero-shaders";
-import { createHeroTextObjects } from "./three-hero-text";
+import { createHeroTextObjects, textUniforms } from "./three-hero-text";
 import { C_GREEN, hexToRgb } from "./three-hero-utils";
 
 export type HeroLayout = {
@@ -447,6 +447,9 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       bgMat.uniforms.uMouse.value.set(mouse.x, mouse.y);
       const cur = bgMat.uniforms.uMouseActive.value as number;
       bgMat.uniforms.uMouseActive.value = cur + (targetActive - cur) * 0.06;
+      
+      textUniforms.uMouse.value.set(mouse.x, mouse.y);
+      textUniforms.uResolution.value.set(W * pr, H * pr);
 
       // staggered reveal of text
       for (const it of items) {
@@ -455,10 +458,9 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
         it.t.fillOpacity = e;
         it.t.position.y = it.base + (1 - e) * 10;
       }
-      const h1e = Math.min(1, Math.max(0, (elapsed - 0.12) / 0.6));
-      const h1ease = 1 - Math.pow(1 - h1e, 3);
-      h1.outlineBlur = (1 - h1ease) * (h1.fontSize as number) * 0.18;
-      h1.outlineOpacity = (1 - h1ease) * 0.9;
+      
+      // Calculate h1ease for the dot animation that depends on it
+      const h1ease = 1 - Math.pow(1 - Math.min(1, Math.max(0, (elapsed - 0.12) / 0.6)), 3);
       const dotMat = dot.material as THREE.MeshBasicMaterial;
       dotMat.opacity = h1ease * (0.6 + 0.4 * Math.sin(elapsed * 3.0));
 
