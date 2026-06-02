@@ -84,7 +84,7 @@ export function ContactForm({ disabled = false }: { disabled?: boolean }) {
           type="submit"
           disabled={disabled || isPending}
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-sm border px-3 py-1.5 font-mono text-[11px] tracking-[0.04em] transition-all",
+            "inline-flex items-center gap-1.5 rounded-sm border px-3 py-1.5 font-mono text-[11px] tracking-[0.04em] transition-[background-color,border-color,color,transform]",
             disabled || isPending
               ? "border-line text-fg-dim"
               : "border-line bg-bg-2 text-fg hover:border-[var(--accent)] hover:text-[var(--accent)] active:translate-y-px",

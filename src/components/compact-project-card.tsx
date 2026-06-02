@@ -72,7 +72,7 @@ export function CompactProjectCard({ project }: { project: Project }) {
           aria-hidden
           className="mt-3 inline-block font-mono text-[10px] lowercase tracking-[0.06em] text-fg-dim transition-colors group-hover/card:text-[color:var(--accent)]"
         >
-          {caseSlug ? `${title} case study →` : isExternal ? "open ↗" : "view →"}
+          {caseSlug ? `${title} case study →` : isExternal ? "open ↗" : "sample build"}
         </span>
       </div>
 

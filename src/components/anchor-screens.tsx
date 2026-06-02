@@ -122,7 +122,7 @@ export function AnchorScrollytell() {
               onClick={() =>
                 beatRefs.current[i]?.scrollIntoView({ behavior: "smooth", block: "center" })
               }
-              className={`h-[3px] rounded-full transition-all duration-300 ${
+              className={`h-[3px] rounded-full transition-[background-color,width] duration-300 ${
                 i === activeIndex ? "w-5 bg-[var(--accent)]" : "w-[3px] bg-fg-dim/40"
               }`}
             />

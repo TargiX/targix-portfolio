@@ -146,7 +146,7 @@ export function AnchorDemo() {
               <span
                 key={v.id}
                 className={
-                  "h-1 rounded-full transition-all duration-300 " +
+                  "h-1 rounded-full transition-[background-color,width] duration-300 " +
                   (i === index ? "w-4 bg-[var(--accent)]" : "w-1 bg-white/40")
                 }
               />

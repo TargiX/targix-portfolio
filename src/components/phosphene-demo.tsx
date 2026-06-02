@@ -200,7 +200,7 @@ export function PhospheneDemo() {
         onClick={run}
         disabled={isRunning}
         className={cn(
-          "group/run absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-[11px] tracking-[0.04em] transition-all",
+          "group/run absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-[11px] tracking-[0.04em] transition-[background-color,border-color,color,transform]",
           isRunning
             ? "border-[var(--line)] text-[var(--fg-dim)]"
             : "border-[var(--line)] bg-[var(--bg-2)]/80 text-[var(--fg)] hover:border-[var(--accent)] hover:text-[var(--accent)] active:translate-y-px",

@@ -54,7 +54,7 @@ export function YouTubeEmbed({ id, start = 0, title = "Video", poster }: Props) 
               className="size-full object-cover opacity-90 transition-opacity group-hover/yt:opacity-100"
             />
             <span className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(0,0,0,0.45))]" />
-            <span className="absolute left-1/2 top-1/2 flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[color:color-mix(in_oklab,var(--accent)_50%,white)] bg-bg/70 backdrop-blur-sm transition-all group-hover/yt:scale-110 group-hover/yt:border-[var(--accent)]">
+            <span className="absolute left-1/2 top-1/2 flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[color:color-mix(in_oklab,var(--accent)_50%,white)] bg-bg/70 backdrop-blur-sm transition-[border-color,transform] group-hover/yt:scale-110 group-hover/yt:border-[var(--accent)]">
               <Play className="size-6 translate-x-0.5 text-[var(--accent)]" fill="currentColor" />
             </span>
           </button>

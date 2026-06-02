@@ -119,6 +119,10 @@ body {
 
 a { color: inherit; text-decoration: none; }
 
+button:not(:disabled) {
+  cursor: pointer;
+}
+
 /* ─── custom scrollbar — thin, neutral, floating ─── */
 /* Firefox */
 * {

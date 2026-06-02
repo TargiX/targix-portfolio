@@ -128,6 +128,17 @@ export const MINOR: Project[] = [
     caseSlug: "flux-sanity-site",
     thumb: "/work/flux-sanity/homepage.png",
   },
+  {
+    index: "⑦",
+    year: "2026",
+    role: "Solo · Astro SSG sample",
+    title: "HelixCare Pulse",
+    blurb:
+      "A dark premium healthcare marketing rebuild sample in Astro: static output, section data, reusable components, and tiny vanilla-JS interactions.",
+    tags: ["Astro", "SSG", "Vanilla JS", "Netlify"],
+    links: [{ label: "live demo", href: "https://helixcare-pulse.vercel.app" }],
+    thumb: "/work/helixcare-pulse/hero-device.png",
+  },
 ];
 
 export const STACK = [

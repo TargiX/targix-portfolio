@@ -11,10 +11,14 @@ const EXAMPLES = [
 ];
 
 type CloudState = "checking" | "online" | "offline";
+type UiChatMessage = ChatMessage & { id: string };
+
+const toChatMessages = (messages: UiChatMessage[]): ChatMessage[] =>
+  messages.map(({ role, content }) => ({ role, content }));
 
 export function AiChat() {
   const [cloud, setCloud] = useState<CloudState>("checking");
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<UiChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,9 +56,10 @@ export function AiChat() {
     if (!content || busy || cloud !== "online") return;
 
     setError(null);
-    const next: ChatMessage[] = [...messages, { role: "user", content }];
+    const idBase = crypto.randomUUID();
+    const next: UiChatMessage[] = [...messages, { id: `${idBase}:user`, role: "user", content }];
     // optimistic: user message + empty assistant slot we stream into
-    setMessages([...next, { role: "assistant", content: "" }]);
+    setMessages([...next, { id: `${idBase}:assistant`, role: "assistant", content: "" }]);
     setInput("");
     setBusy(true);
 
@@ -63,7 +68,7 @@ export function AiChat() {
 
     try {
       await streamCloud(
-        next,
+        toChatMessages(next),
         (token) => {
           setMessages((prev) => {
             const copy = prev.slice();
@@ -142,7 +147,7 @@ export function AiChat() {
         )}
 
         {messages.map((m, i) => (
-          <div key={i} className={m.role === "user" ? "flex justify-end" : "flex justify-start"}>
+          <div key={m.id} className={m.role === "user" ? "flex justify-end" : "flex justify-start"}>
             <div
               className={`max-w-[80%] whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-sm leading-relaxed ${
                 m.role === "user"
