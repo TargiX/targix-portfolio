@@ -503,14 +503,26 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
         }
 
         // Apply hover bulge
+        let targetBulge = 0;
         if (hitPlane && mActive > 0) {
           const dist = _p.distanceTo(_localIntersectPoint);
-          const radius = 2.4; // effective radius in local coordinates
+          const radius = 3.2; // effective radius in local coordinates
           if (dist < radius) {
-            const force = Math.pow(1 - dist / radius, 2) * 0.9 * mActive * popIn;
-            _pushVec.subVectors(_p, _localIntersectPoint).normalize().multiplyScalar(force);
-            _p.add(_pushVec);
+            targetBulge = Math.pow(1 - dist / radius, 2) * 1.2 * mActive * popIn;
           }
+        }
+
+        // Smoothly interpolate the bulge to prevent jerkiness
+        c.bulge += (targetBulge - c.bulge) * 0.12;
+
+        if (c.bulge > 0.001) {
+          if (_p.lengthSq() > 0.01) {
+            _pushVec.copy(_p).normalize().multiplyScalar(c.bulge);
+          } else {
+            // center cube expands directly forward
+            _pushVec.set(0, 0, 1).multiplyScalar(c.bulge);
+          }
+          _p.add(_pushVec);
         }
 
         // scroll explode: slide straight out along the face normal, no spin

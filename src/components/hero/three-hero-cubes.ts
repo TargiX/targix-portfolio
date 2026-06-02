@@ -6,6 +6,7 @@ export type HeroCube = {
   g: THREE.Vector3;
   q: THREE.Quaternion;
   dir: THREE.Vector3;
+  bulge: number;
 };
 
 export const CUBE_AXES = [
@@ -48,6 +49,7 @@ export function createCubeCluster(material: THREE.Material, width: number, heigh
           g: new THREE.Vector3(gx, gy, gz),
           q: new THREE.Quaternion(),
           dir,
+          bulge: 0,
         });
       }
     }
