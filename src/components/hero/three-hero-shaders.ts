@@ -128,15 +128,13 @@ void main() {
   float dist = length(uv);
   if (dist > 1.0) discard;
   
-  float angle = atan(uv.y, uv.x);
+  // Natural volumetric light falloff (inverse square-like)
+  // No separated rays, just a pure, smooth glowing orb.
+  // The glass cubes will naturally break this light into complex patterns.
+  float alpha = 1.0 - smoothstep(0.0, 1.0, dist);
   
-  // Ray pattern
-  float rays = sin(angle * 5.0 + uTime * 1.5) * sin(angle * 8.0 - uTime * 1.1) * 0.5 + 0.5;
-  rays = pow(rays, 2.0);
-  
-  float alpha = smoothstep(1.0, 0.0, dist);
-  float core = pow(alpha, 4.0) * 0.8;
-  float glow = core + (rays * alpha * 0.6);
+  // Bright soft core that fades out smoothly
+  float glow = pow(alpha, 1.8) * 0.85;
   
   gl_FragColor = vec4(uColor * glow * uIntensity, glow * uIntensity);
 }

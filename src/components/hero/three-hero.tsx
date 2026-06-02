@@ -164,13 +164,10 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       },
     });
 
-    const glowGeo = new THREE.PlaneGeometry(16, 16);
-    const glowM1 = new THREE.Mesh(glowGeo, glowMat);
-    const glowM2 = new THREE.Mesh(glowGeo, glowMat);
-    glowM2.rotation.y = Math.PI / 2;
-    const glowM3 = new THREE.Mesh(glowGeo, glowMat);
-    glowM3.rotation.x = Math.PI / 2;
-    cubeGroup.add(glowM1, glowM2, glowM3);
+    const glowGeo = new THREE.PlaneGeometry(8, 8);
+    const glowMesh = new THREE.Mesh(glowGeo, glowMat);
+    const glowScene = new THREE.Scene();
+    glowScene.add(glowMesh);
 
     let scrollSmooth = 0;
 
@@ -516,7 +513,14 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
         cubeGroup.worldToLocal(_localIntersectPoint);
       }
 
+      // Billboarding for the single glow mesh to face the camera properly
+      glowMesh.position.copy(cubeGroup.position);
+      glowMesh.scale.copy(cubeGroup.scale);
+      glowMesh.quaternion.copy(cubeCam.quaternion);
+
       let maxBulge = 0;
+      // Only trigger hover physics if the mouse is actually physically near the cluster's center
+      const isHovering = (mouse.active > 0 || mouse.touching > 0) && _localIntersectPoint.lengthSq() < 16.0;
 
       for (const c of cubes) {
         _p.copy(c.g).multiplyScalar(spread);
@@ -529,11 +533,11 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
 
         // Apply hover bulge
         let targetBulge = 0;
-        if (hitPlane && mActive > 0) {
+        if (hitPlane && isHovering) {
           const dist = _p.distanceTo(_localIntersectPoint);
           const radius = 3.2; // effective radius in local coordinates
           if (dist < radius) {
-            targetBulge = Math.pow(1 - dist / radius, 2) * 1.2 * mActive * popIn;
+            targetBulge = Math.pow(1 - dist / radius, 2) * 1.2 * popIn;
           }
         }
 
@@ -578,7 +582,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
         twist = null;
       }
 
-      glowMat.uniforms.uIntensity.value = maxBulge * 1.8;
+      glowMat.uniforms.uIntensity.value = maxBulge * 0.75;
       glowMat.uniforms.uTime.value = elapsed;
 
       // ── render: scene (bg+text) → RT, composite → screen, cubes on top ──
@@ -587,6 +591,9 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       renderer.render(bgScene, fsCamera);
       // mobile draws the copy in the DOM; skip the SDF text so it can't overflow
       if (!mobile) renderer.render(textScene, ortho);
+      
+      // Render the core glow into the scene texture so the glass cubes can refract it!
+      renderer.render(glowScene, cubeCam);
 
       renderer.setRenderTarget(null);
       renderer.clear(true, true, true);
