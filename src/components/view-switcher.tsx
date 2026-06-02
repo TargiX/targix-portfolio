@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useVietnamTime } from "@/lib/use-vietnam-time";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,9 @@ const TABS: { id: View; label: string }[] = [
   { id: "lab", label: "Lab" },
   { id: "about", label: "About" },
 ];
+
+const tabId = (view: View) => `portfolio-tab-${view}`;
+const panelId = (view: View) => `portfolio-panel-${view}`;
 
 type Axis = "x" | "y";
 type Custom = { dir: number; axis: Axis };
@@ -171,6 +174,22 @@ export function ViewSwitcher({
   const nextView = idx < ORDER.length - 1 ? ORDER[idx + 1] : null;
   const nextLabel = nextView ? TABS.find((t) => t.id === nextView)?.label : null;
 
+  const onTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    const currentIndex = ORDER.indexOf(view);
+    let next: View | null = null;
+
+    if (event.key === "ArrowRight") next = ORDER[(currentIndex + 1) % ORDER.length];
+    if (event.key === "ArrowLeft") next = ORDER[(currentIndex - 1 + ORDER.length) % ORDER.length];
+    if (event.key === "Home") next = ORDER[0];
+    if (event.key === "End") next = ORDER[ORDER.length - 1];
+
+    if (!next) return;
+
+    event.preventDefault();
+    go(next);
+    requestAnimationFrame(() => document.getElementById(tabId(next))?.focus());
+  };
+
   return (
     <>
       {/* sticky nav */}
@@ -184,12 +203,18 @@ export function ViewSwitcher({
             IM<span className="text-fg"> / </span>portfolio
           </button>
 
-          <div className="flex items-center gap-1">
+          <div aria-label="Portfolio sections" role="tablist" className="flex items-center gap-1">
             {TABS.map((t) => (
               <button
                 key={t.id}
+                id={tabId(t.id)}
                 type="button"
+                role="tab"
+                aria-selected={view === t.id}
+                aria-controls={view === t.id ? panelId(t.id) : undefined}
+                tabIndex={view === t.id ? 0 : -1}
                 onClick={() => go(t.id)}
+                onKeyDown={onTabKeyDown}
                 className={cn(
                   "relative rounded-md px-3 py-1 font-mono text-[12px] tracking-[0.02em] transition-colors",
                   view === t.id ? "text-fg" : "text-fg-dim hover:text-fg-muted",
@@ -230,6 +255,10 @@ export function ViewSwitcher({
             animate="center"
             exit="exit"
             transition={{ duration: axis === "y" ? 0.4 : 0.32, ease: [0.22, 1, 0.36, 1] }}
+            id={panelId(view)}
+            role="tabpanel"
+            aria-labelledby={tabId(view)}
+            tabIndex={-1}
           >
             {panels[view]}
           </motion.div>
