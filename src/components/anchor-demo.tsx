@@ -3,20 +3,19 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { ANCHOR_DEPLOYED, ANCHOR_REPO_URL, ANCHOR_URL } from "@/lib/project-links";
+
 /**
  * Live, interactive embed of the Anchor app inside a phone frame, with a
  * screenshot fallback, an auto-rotating view switcher, and 404-safe links.
  *
  * ── To go live ──────────────────────────────────────────────────────────
- *  1. Deploy Anchor, set ANCHOR_URL to the real https://…vercel.app.
+ *  1. Deploy Anchor, set the shared ANCHOR_URL to the real https://…vercel.app.
  *  2. Flip ANCHOR_DEPLOYED to true.
  * Until then it shows captured screenshots (no failed requests, no dead links —
  * the "open" link points at the repo). Once live it embeds the real app and
  * still falls back to a screenshot if the iframe is blocked or slow.
  */
-const ANCHOR_URL = "https://anchor.ilyamoskovkin.com"; // live deployment (Vercel, web build)
-const ANCHOR_DEPLOYED = true; // live URL embeds cleanly (no X-Frame-Options)
-const ANCHOR_REPO = "https://github.com/TargiX/Next.js-Tether";
 const LOAD_TIMEOUT_MS = 4500;
 const ROTATE_MS = 4000;
 
@@ -38,7 +37,7 @@ export function AnchorDemo() {
   const loadTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const active = VIEWS[index];
-  const liveHref = ANCHOR_DEPLOYED ? `${ANCHOR_URL}${active.path}` : ANCHOR_REPO;
+  const liveHref = ANCHOR_DEPLOYED ? `${ANCHOR_URL}${active.path}` : ANCHOR_REPO_URL;
   // Pause on hover (so people can read), stop for good once they pick a tab,
   // and never thrash a live iframe.
   const canRotate = !hovering && !locked && (!ANCHOR_DEPLOYED || status !== "live");
