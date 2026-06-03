@@ -139,6 +139,20 @@ export const MINOR: Project[] = [
     links: [{ label: "live demo", href: "https://helixcare-pulse.vercel.app" }],
     thumb: "/work/helixcare-pulse/hero-device.png",
   },
+  {
+    index: "⑧",
+    year: "2026",
+    role: "Solo · Web3 / Cosmos demo",
+    title: "Injective Testnet dApp",
+    blurb:
+      "A small Nuxt/TypeScript dApp on the Injective (Cosmos) testnet: wallet connect (Keplr/Leap), on-chain balances, and a live spot order book with hand-rolled price and depth charts — all read over the injective-ts gRPC-web SDK.",
+    tags: ["Nuxt 3", "TypeScript", "Injective / Cosmos", "gRPC-web", "Keplr"],
+    links: [
+      { label: "live demo", href: "https://injective.ilyamoskovkin.com" },
+      { label: "github", href: "https://github.com/TargiX/injective-testnet-dapp" },
+    ],
+    thumb: "/work/injective/dashboard.png",
+  },
 ];
 
 export const STACK = [
