@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Check } from "lucide-react";
 
@@ -12,6 +12,10 @@ const INITIAL_STATE: ContactFormState = { ok: false, version: 0 };
 export function ContactForm({ disabled = false }: { disabled?: boolean }) {
   const [state, formAction, isPending] = useActionState(sendContact, INITIAL_STATE);
   const formRef = useRef<HTMLFormElement>(null);
+  const messageId = useId();
+  const messageErrorId = `${messageId}-error`;
+  const websiteId = useId();
+  const formErrorId = useId();
   const [showSuccess, setShowSuccess] = useState(false);
   const hasFieldErrors = !!state.fieldErrors && Object.keys(state.fieldErrors).length > 0;
 
@@ -30,6 +34,7 @@ export function ContactForm({ disabled = false }: { disabled?: boolean }) {
       action={formAction}
       className="grid gap-3 sm:grid-cols-2"
       aria-label="Contact form"
+      aria-describedby={state.error && !hasFieldErrors ? formErrorId : undefined}
     >
       <Field
         label="name"
@@ -50,10 +55,14 @@ export function ContactForm({ disabled = false }: { disabled?: boolean }) {
       />
 
       <div className="sm:col-span-2">
-        <label className="mb-1 block text-[10px] lowercase tracking-[0.1em] text-fg-dim">
+        <label
+          htmlFor={messageId}
+          className="mb-1 block text-[10px] lowercase tracking-[0.1em] text-fg-dim"
+        >
           message
         </label>
         <textarea
+          id={messageId}
           name="message"
           required
           rows={5}
@@ -62,9 +71,12 @@ export function ContactForm({ disabled = false }: { disabled?: boolean }) {
           placeholder="what you're building, what you need, what you'd want me to do…"
           className="w-full resize-none rounded-sm border border-line bg-bg-2/40 px-2.5 py-2 font-mono text-[12px] text-fg outline-none transition-colors placeholder:text-fg-dim focus:border-[var(--accent)]"
           aria-invalid={!!state.fieldErrors?.message}
+          aria-describedby={state.fieldErrors?.message ? messageErrorId : undefined}
         />
         {state.fieldErrors?.message && (
-          <div className="mt-1 text-[10px] text-red-400">{state.fieldErrors.message}</div>
+          <div id={messageErrorId} role="alert" className="mt-1 text-[10px] text-red-400">
+            {state.fieldErrors.message}
+          </div>
         )}
       </div>
 
@@ -73,9 +85,16 @@ export function ContactForm({ disabled = false }: { disabled?: boolean }) {
         aria-hidden="true"
         style={{ position: "absolute", left: -9999, width: 1, height: 1, overflow: "hidden" }}
       >
-        <label>
+        <label htmlFor={websiteId}>
           website
-          <input name="website" type="text" tabIndex={-1} autoComplete="off" />
+          <input
+            id={websiteId}
+            name="website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+          />
         </label>
       </div>
 
@@ -113,7 +132,9 @@ export function ContactForm({ disabled = false }: { disabled?: boolean }) {
       </AnimatePresence>
 
       {state.error && !hasFieldErrors && (
-        <div className="sm:col-span-2 text-[10px] text-red-400">{state.error}</div>
+        <div id={formErrorId} role="alert" className="sm:col-span-2 text-[10px] text-red-400">
+          {state.error}
+        </div>
       )}
     </form>
   );
@@ -131,19 +152,31 @@ function Field({
   type?: string;
   error?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>) {
+  const inputId = useId();
+  const errorId = `${inputId}-error`;
+
   return (
     <div>
-      <label className="mb-1 block text-[10px] lowercase tracking-[0.1em] text-fg-dim">
+      <label
+        htmlFor={inputId}
+        className="mb-1 block text-[10px] lowercase tracking-[0.1em] text-fg-dim"
+      >
         {label}
       </label>
       <input
+        id={inputId}
         type={type}
         name={name}
         className="w-full rounded-sm border border-line bg-bg-2/40 px-2.5 py-1.5 font-mono text-[12px] text-fg outline-none transition-colors placeholder:text-fg-dim focus:border-[var(--accent)]"
         aria-invalid={!!error}
+        aria-describedby={error ? errorId : undefined}
         {...rest}
       />
-      {error && <div className="mt-1 text-[10px] text-red-400">{error}</div>}
+      {error && (
+        <div id={errorId} role="alert" className="mt-1 text-[10px] text-red-400">
+          {error}
+        </div>
+      )}
     </div>
   );
 }
