@@ -193,7 +193,7 @@ export function ViewSwitcher({
   return (
     <>
       {/* sticky nav */}
-      <nav className="sticky top-0 z-50 border-b border-line-soft/70 bg-bg/70 backdrop-blur-md">
+      <nav className="sticky top-0 z-50 border-b border-line-soft/70 bg-bg/95">
         <div className="mx-auto flex max-w-[1280px] items-center gap-4 px-5 py-3 sm:px-8">
           <button
             type="button"
