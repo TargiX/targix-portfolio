@@ -1,3 +1,5 @@
+import { ANCHOR_DEPLOYED, ANCHOR_REPO_URL, ANCHOR_URL } from "@/lib/project-links";
+
 export type CaseLink = { label: string; href: string };
 
 export type Project = {
@@ -61,8 +63,8 @@ export const SECONDARY: Project[] = [
       "A calm daily-ritual app — mood, sleep, intention, journaling. One Next.js codebase shipping to web, iOS/Android (Capacitor), and desktop (Electron).",
     tags: ["Next.js 16", "React 19", "Capacitor", "Electron", "Framer Motion"],
     links: [
-      // TODO: once Anchor is deployed, swap this to { label: "live app", href: ANCHOR_URL }
-      { label: "github", href: "https://github.com/TargiX/Next.js-Tether" },
+      ...(ANCHOR_DEPLOYED ? [{ label: "live app", href: ANCHOR_URL }] : []),
+      { label: "github", href: ANCHOR_REPO_URL },
       { label: "case study", href: "/work/anchor" },
     ],
     caseSlug: "anchor",
