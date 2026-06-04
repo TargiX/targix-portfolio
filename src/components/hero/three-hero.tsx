@@ -642,7 +642,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       ref={hostRef}
       className={className}
       aria-hidden="true"
-      style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0 }}
+      style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, transform: "translateZ(0)" }}
     />
   );
 }
