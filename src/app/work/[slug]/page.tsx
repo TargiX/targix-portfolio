@@ -9,7 +9,13 @@ import { getAllSlugs, getCase } from "@/lib/content";
 import { mdxComponents } from "@/components/mdx-components";
 import { BackToWork } from "@/components/back-to-work";
 import { CaseMetaRail } from "@/components/case-meta-rail";
-import { SITE, absoluteUrl, getCaseJsonLd, getProjectImageUrl } from "@/lib/seo";
+import {
+  SITE,
+  absoluteUrl,
+  getCaseBreadcrumbJsonLd,
+  getCaseJsonLd,
+  getProjectImageUrl,
+} from "@/lib/seo";
 
 type Params = Promise<{ slug: string }>;
 
@@ -56,13 +62,14 @@ export default async function CasePage({ params }: { params: Params }) {
   const c = await getCase(slug);
   if (!c) notFound();
   const caseJsonLd = getCaseJsonLd(c);
+  const breadcrumbJsonLd = getCaseBreadcrumbJsonLd(c);
 
   return (
     <main className="relative mx-auto max-w-[1080px] px-5 pb-24 pt-12 sm:px-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(caseJsonLd).replace(/</g, "\\u003c"),
+          __html: JSON.stringify([caseJsonLd, breadcrumbJsonLd]).replace(/</g, "\\u003c"),
         }}
       />
       <BackToWork />

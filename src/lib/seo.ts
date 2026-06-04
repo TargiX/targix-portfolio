@@ -108,3 +108,33 @@ export function getCaseJsonLd(caseStudy: CaseDoc) {
     inLanguage: "en",
   };
 }
+
+export function getCaseBreadcrumbJsonLd(caseStudy: CaseDoc) {
+  const caseUrl = absoluteUrl(`/work/${caseStudy.slug}`);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "@id": `${caseUrl}#breadcrumb`,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: SITE.url,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Work",
+        item: absoluteUrl("/#work"),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: caseStudy.title,
+        item: caseUrl,
+      },
+    ],
+  };
+}
