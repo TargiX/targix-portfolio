@@ -15,6 +15,7 @@ import { PromptCompilerArtifact } from "@/components/prompt-compiler-artifact";
 import { AiChat } from "@/components/lab/ai-chat";
 import { CONTACT, FEATURED, MINOR, SECONDARY, STACK } from "@/lib/data";
 import { getHomeJsonLd } from "@/lib/seo";
+import { InteractiveSkills } from "@/components/interactive-skills";
 
 // Narrow measure for text-heavy sections (readability ~70ch).
 const CONTAINER = "relative mx-auto max-w-[880px] px-5 pb-24 pt-6 sm:px-8";
@@ -31,25 +32,7 @@ export default function Home() {
     <>
       <Hero />
       <main className={WORK_CONTAINER}>
-        <section
-          aria-label="Frontend engineering proof points"
-          className="mb-14 rounded-md border border-line-soft bg-bg-2/30 px-4 py-3 sm:px-6"
-        >
-          <ul className="flex flex-wrap justify-center gap-x-6 gap-y-3 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-muted sm:justify-between sm:gap-x-4">
-            {[
-              "React / Next.js systems",
-              "Vue / Nuxt product apps",
-              "AI workflows",
-              "Data-heavy dashboards",
-              "Visual editors",
-            ].map((item) => (
-              <li key={item} className="flex items-center gap-2">
-                <span className="size-1.5 rounded-full bg-[var(--accent)]" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <InteractiveSkills />
 
         <Section id="work" n="01" title="Selected Work" kicker={`${1 + SECONDARY.length} projects`}>
           <div className="grid grid-cols-1 gap-5 [perspective:1200px] sm:grid-cols-2">
