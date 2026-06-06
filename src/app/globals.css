@@ -1,32 +1,33 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 /* ───────────────────────────────────────────────
-   Base tokens (dark by default — this is the identity)
+   Base tokens follow the OS color scheme.
+   Light is the default; dark overrides via prefers-color-scheme.
    ─────────────────────────────────────────────── */
 :root {
+  color-scheme: light dark;
+
   /* surfaces */
-  --bg:         oklch(0.135 0.005 250);
-  --bg-2:       oklch(0.165 0.006 250);
-  --bg-3:       oklch(0.19  0.007 250);
+  --bg:         oklch(0.985 0.003 250);
+  --bg-2:       oklch(0.955 0.004 250);
+  --bg-3:       oklch(0.925 0.006 250);
 
   /* text */
-  --fg:         oklch(0.96  0.005 250);
-  --fg-muted:   oklch(0.62  0.005 250);
-  --fg-dim:     oklch(0.45  0.005 250);
+  --fg:         oklch(0.18  0.006 250);
+  --fg-muted:   oklch(0.43  0.006 250);
+  --fg-dim:     oklch(0.62  0.006 250);
 
   /* lines */
-  --line:       oklch(0.26  0.005 250);
-  --line-soft:  oklch(0.22  0.005 250);
+  --line:       oklch(0.78  0.006 250);
+  --line-soft:  oklch(0.86  0.005 250);
 
   /* accent (overridable) */
-  --accent:     #a3e635;
-  --accent-rgb: 163 230 53;
+  --accent:     #65a30d;
+  --accent-rgb: 101 163 13;
   /* teal companion — blends with --accent for the blue-green flow */
-  --accent-2:     #2dd4bf;
-  --accent-2-rgb: 45 212 191;
+  --accent-2:     #0f766e;
+  --accent-2-rgb: 15 118 110;
 
   /* shadcn-compat tokens (mapped) */
   --background: var(--bg);
@@ -43,12 +44,39 @@
   --muted-foreground: var(--fg-muted);
   --accent-bg: var(--bg-3);
   --accent-foreground: var(--fg);
-  --destructive: oklch(0.6 0.2 25);
-  --destructive-foreground: var(--fg);
+  --destructive: oklch(0.58 0.2 25);
+  --destructive-foreground: var(--bg);
   --border: var(--line);
   --input: var(--line);
   --ring: var(--accent);
   --radius: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* surfaces */
+    --bg:         oklch(0.135 0.005 250);
+    --bg-2:       oklch(0.165 0.006 250);
+    --bg-3:       oklch(0.19  0.007 250);
+
+    /* text */
+    --fg:         oklch(0.96  0.005 250);
+    --fg-muted:   oklch(0.62  0.005 250);
+    --fg-dim:     oklch(0.45  0.005 250);
+
+    /* lines */
+    --line:       oklch(0.26  0.005 250);
+    --line-soft:  oklch(0.22  0.005 250);
+
+    /* accent */
+    --accent:     #a3e635;
+    --accent-rgb: 163 230 53;
+    --accent-2:     #2dd4bf;
+    --accent-2-rgb: 45 212 191;
+
+    --destructive: oklch(0.6 0.2 25);
+    --destructive-foreground: var(--fg);
+  }
 }
 
 @theme inline {
@@ -112,7 +140,7 @@ body {
   text-rendering: optimizeLegibility;
   min-height: 100svh;
   background-image:
-    radial-gradient(1200px 600px at 50% -200px, oklch(0.2 0.01 250 / .8), transparent 60%);
+    radial-gradient(1200px 600px at 50% -200px, color-mix(in oklab, var(--bg-3) 78%, transparent), transparent 60%);
 }
 
 ::selection { background: var(--accent); color: var(--bg); }
