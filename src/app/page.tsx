@@ -6,14 +6,12 @@ import { ProjectCard } from "@/components/project-card";
 import { CompactProjectCard } from "@/components/compact-project-card";
 import { FooterJellyfish } from "@/components/footer-jellyfish";
 import { DitheredPhoto } from "@/components/dithered-photo";
-import { TimelineEditor } from "@/components/lab/timeline-editor";
 import { GitHubActivity } from "@/components/server/github-activity";
 import { GitHubContributions } from "@/components/server/github-contributions";
 import { ContactForm } from "@/components/forms/contact-form";
 import { ViewSwitcher } from "@/components/view-switcher";
-import { PromptCompilerArtifact } from "@/components/prompt-compiler-artifact";
-import { AiChat } from "@/components/lab/ai-chat";
-import { ReactFlowDemo } from "@/components/lab/react-flow-demo";
+import { ProductLaunchSimulator } from "@/components/lab/product-launch-simulator";
+import { ExperimentGallery } from "@/components/lab/experiment-gallery";
 import { CONTACT, FEATURED, MINOR, SECONDARY, STACK } from "@/lib/data";
 import { getHomeJsonLd } from "@/lib/seo";
 import { InteractiveSkills } from "@/components/interactive-skills";
@@ -64,65 +62,22 @@ export default function Home() {
   // ── LAB ────────────────────────────────────────────────
   const lab = (
     <main className={WORK_CONTAINER}>
-      <Section id="lab" n="01" title="Flow Lab" kicker="React · forms · quiz" accent>
-        <p className="mb-6 max-w-[62ch] text-fg-muted">
-          A focused React sample for the work that rarely photographs well: multi-step product
-          flows, branching form state, scoring, result summaries, and clean handoffs into the
-          next system.
+      <Section id="lab" n="01" title="Product Launch Simulator" kicker="wizard · scroll reveal · handoff" accent>
+        <p className="mb-6 max-w-[66ch] text-fg-muted">
+          A cinematic product-engineering demo: pick a messy product shape, watch the interface
+          assemble itself, and leave with a generated build packet. It&apos;s built to show the work
+          that usually hides between Figma, state machines, and implementation plans.
         </p>
-        <ReactFlowDemo />
-        <p className="mt-4 max-w-[60ch] text-[11px] lowercase tracking-[0.06em] text-fg-dim">
-          built as a portfolio demo, not a fake client case study — the point is the interaction
-          model, state handling, and product polish.
-        </p>
+        <ProductLaunchSimulator />
       </Section>
 
-      <Section id="timeline" n="02" title="Timeline Editor" kicker="canvas · timelines · drag & drop" accent>
-        {/* intro text stays a readable measure; the editor spans the full stage */}
-        <p className="mb-6 max-w-[60ch] text-fg-muted">
-          The rest of this site is restrained on purpose. This part isn&apos;t — it&apos;s the
-          other half of what I do. A working mini video-timeline: real drag-and-drop, trimmable
-          clips, a scrubbing playhead, and a live preview of what&apos;s on screen. No library
-          doing the heavy lifting — just pointer math, state, and{" "}
-          <code className="rounded bg-bg-2 px-1 py-0.5 text-[0.85em] text-fg">requestAnimationFrame</code>.
+      <Section id="experiments" n="02" title="Experiment Gallery" kicker="editors · AI · interaction studies" accent>
+        <p className="mb-6 max-w-[66ch] text-fg-muted">
+          Smaller demos live behind a selector instead of stacking into a noisy wall. Pick one
+          surface at a time: editor mechanics, prompt compilation, streaming chat, or the compact
+          flow wizard prototype.
         </p>
-        <TimelineEditor />
-        <p className="mt-4 max-w-[60ch] text-[11px] lowercase tracking-[0.06em] text-fg-dim">
-          this is the kind of surface I like building — editors, timelines, creative tools.
-          more demos landing here over time.
-        </p>
-      </Section>
-
-      <Section
-        id="artifact"
-        n="03"
-        title="Mini Artifact"
-        kicker="graph state · prompt compiler · run plan"
-        accent
-      >
-        <div>
-          <p className="mb-6 text-fg-muted">
-            A small interactive compiler surface that shows the actual product idea. Toggle nodes,
-            watch the prompt rebuild, and see how the generation run would be routed.
-          </p>
-          <PromptCompilerArtifact />
-        </div>
-      </Section>
-
-      <Section
-        id="ai"
-        n="04"
-        title="AI Chat"
-        kicker="streaming · provider-agnostic · openrouter"
-        accent
-      >
-        <p className="mb-6 max-w-[60ch] text-fg-muted">
-          A provider-agnostic chat surface. Today it streams tokens from a free model via a server
-          proxy (the API key never touches the browser); the interface is built around a swappable
-          provider, so an in-browser <code className="rounded bg-bg-2 px-1 py-0.5 text-[0.85em] text-fg">WebLLM</code> backend
-          drops in next behind the same toggle.
-        </p>
-        <AiChat />
+        <ExperimentGallery />
       </Section>
     </main>
   );
