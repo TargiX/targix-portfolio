@@ -141,12 +141,12 @@ export function ProductLaunchSimulator() {
       />
       <div aria-hidden className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.04)_1px,transparent_1px)] [background-size:48px_48px]" />
 
-      <div className="relative grid gap-px bg-line-soft/70 xl:grid-cols-[280px_minmax(0,1fr)_360px]">
-        <aside className="bg-bg/88 p-5 backdrop-blur xl:sticky xl:top-20 xl:min-h-[720px]">
+      <div className="relative grid gap-px bg-line-soft/70 xl:grid-cols-[260px_minmax(0,1fr)]">
+        <aside className="bg-bg/88 p-5 backdrop-blur xl:sticky xl:top-20 xl:min-h-[640px]">
           <Header icon={<Zap className="size-4" />} label="product launch simulator" value={`${completion}%`} />
           <p className="mt-4 text-[13px] leading-relaxed text-fg-muted">
-            Turn a fuzzy product idea into a recruiter-readable build packet: flow, UI states,
-            risk, timeline, and handoff.
+            Pick the constraints, then watch the fuzzy idea compile into a concrete launch blueprint:
+            preview, risks, timeline, and build packet.
           </p>
 
           <ol className="mt-8 space-y-2">
@@ -192,16 +192,19 @@ export function ProductLaunchSimulator() {
           </ol>
         </aside>
 
-        <main className="min-w-0 bg-bg/72 p-4 backdrop-blur sm:p-6 xl:min-h-[720px]">
+        <main className="min-w-0 bg-bg/72 p-4 backdrop-blur sm:p-6 xl:min-h-[640px]">
           <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
-            <div className="max-w-[720px]">
+            <div className="max-w-[780px]">
               <div className="inline-flex items-center gap-2 rounded-full border border-line-soft bg-bg-2/45 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">
                 <span className="text-[var(--accent)]">0{active + 1}</span>
                 {current.eyebrow}
               </div>
-              <h3 className="mt-4 max-w-[680px] font-sans text-[clamp(28px,5vw,56px)] font-medium leading-[0.95] tracking-[-0.045em] text-fg">
-                {current.prompt}
+              <h3 className="mt-4 max-w-[760px] font-sans text-[clamp(28px,5vw,56px)] font-medium leading-[0.95] tracking-[-0.045em] text-fg">
+                Tune the launch brief. The blueprint updates live.
               </h3>
+              <p className="mt-3 max-w-[620px] text-[14px] leading-relaxed text-fg-muted">
+                {current.prompt}
+              </p>
             </div>
             <div className="rounded-2xl border border-line-soft bg-bg-2/35 px-4 py-3 font-mono text-[10px] lowercase text-fg-dim">
               complexity <span className="text-fg">{score}</span> / 23
@@ -219,7 +222,7 @@ export function ProductLaunchSimulator() {
                   className={cn(
                     "group relative overflow-hidden rounded-2xl border p-4 text-left transition duration-300",
                     checked
-                      ? "border-[var(--accent)] bg-[var(--accent)]/12 shadow-[0_0_50px_color-mix(in_oklab,var(--accent)_16%,transparent)]"
+                      ? "border-[var(--accent)] bg-[var(--accent)]/[0.055] ring-1 ring-[color-mix(in_oklab,var(--accent)_28%,transparent)]"
                       : "border-line-soft bg-bg-2/24 hover:border-line hover:bg-bg-2/42",
                   )}
                 >
@@ -234,7 +237,7 @@ export function ProductLaunchSimulator() {
                       className={cn(
                         "flex size-7 shrink-0 items-center justify-center rounded-full border transition",
                         checked
-                          ? "border-[var(--accent)] bg-[var(--accent)] text-bg"
+                          ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
                           : "border-line text-transparent group-hover:text-fg-dim",
                       )}
                     >
@@ -249,6 +252,8 @@ export function ProductLaunchSimulator() {
           <div className="mt-5 overflow-hidden rounded-[24px] border border-line-soft bg-[oklch(0.13_0.006_250)]">
             <LivePreview active={active} selected={selected} build={build} />
           </div>
+
+          <HandoffPanel selected={selected} build={build} />
 
           <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
             <div className="h-1.5 min-w-[180px] flex-1 overflow-hidden rounded-full bg-bg-2">
@@ -269,45 +274,57 @@ export function ProductLaunchSimulator() {
           </div>
         </main>
 
-        <aside className="bg-bg/88 p-5 backdrop-blur xl:sticky xl:top-20 xl:min-h-[720px]">
-          <Header icon={<ClipboardList className="size-4" />} label="generated handoff" value="live" />
+      </div>
+    </div>
+  );
+}
 
-          <div className="mt-5 rounded-3xl border border-line-soft bg-bg-2/35 p-5">
-            <div className="flex items-center gap-2 text-[var(--accent)]">
-              <Sparkles className="size-4" />
-              <span className="font-mono text-[10px] uppercase tracking-[0.14em]">{build.label}</span>
-            </div>
-            <div className="mt-3 font-sans text-[32px] font-medium tracking-[-0.04em] text-fg">
-              {build.timeline}
-            </div>
-            <p className="mt-2 text-[12px] leading-relaxed text-fg-muted">{build.summary}</p>
+function HandoffPanel({
+  selected,
+  build,
+}: {
+  selected: Array<{ step: Step; choice: Choice }>;
+  build: ReturnType<typeof getBuildShape>;
+}) {
+  return (
+    <section className="mt-5 rounded-[24px] border border-line-soft bg-bg-2/24 p-4 sm:p-5">
+      <Header icon={<ClipboardList className="size-4" />} label="generated blueprint" value="updates live" />
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(220px,0.9fr)_minmax(0,1.4fr)]">
+        <div className="rounded-3xl border border-line-soft bg-bg/45 p-5">
+          <div className="flex items-center gap-2 text-[var(--accent)]">
+            <Sparkles className="size-4" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em]">{build.label}</span>
           </div>
-
+          <div className="mt-3 font-sans text-[34px] font-medium tracking-[-0.04em] text-fg">
+            {build.timeline}
+          </div>
+          <p className="mt-2 text-[13px] leading-relaxed text-fg-muted">{build.summary}</p>
           <div className="mt-4 grid grid-cols-2 gap-2">
             <Metric label="surface" value={selected[0].choice.label} />
             <Metric label="user" value={selected[1].choice.label} />
             <Metric label="flow" value={selected[2].choice.label} />
             <Metric label="handoff" value={selected[3].choice.label} />
           </div>
+        </div>
 
-          <div className="mt-4 rounded-3xl border border-line-soft bg-bg-2/24 p-4">
-            <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">
-              build packet
-            </div>
-            <ul className="space-y-3">
-              {build.packet.map((item, index) => (
-                <li key={item} className="grid grid-cols-[24px_minmax(0,1fr)] gap-3 text-[12px] leading-relaxed text-fg-muted">
-                  <span className="flex size-6 items-center justify-center rounded-full border border-line-soft font-mono text-[10px] text-[var(--accent)]">
-                    {index + 1}
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
+        <div className="rounded-3xl border border-line-soft bg-bg/35 p-4">
+          <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">
+            build packet generated from your choices
           </div>
-        </aside>
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {build.packet.map((item, index) => (
+              <li key={item} className="grid grid-cols-[28px_minmax(0,1fr)] gap-3 rounded-2xl border border-line-soft bg-bg-2/22 p-3 text-[12px] leading-relaxed text-fg-muted">
+                <span className="flex size-7 items-center justify-center rounded-full border border-[var(--accent)]/45 font-mono text-[10px] text-[var(--accent)]">
+                  {index + 1}
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -322,9 +339,9 @@ function LivePreview({
 }) {
   const visible = active + 1;
   return (
-    <div className="relative min-h-[360px] p-4 sm:p-5">
-      <div aria-hidden className="absolute inset-0 [background:radial-gradient(500px_260px_at_50%_0%,rgba(255,255,255,.08),transparent_62%)]" />
-      <div className="relative mx-auto max-w-[780px] rounded-[22px] border border-white/10 bg-black/28 p-3 shadow-2xl backdrop-blur">
+    <div className="relative min-h-[320px] p-4 sm:p-6">
+      <div aria-hidden className="absolute inset-0 [background:radial-gradient(640px_300px_at_50%_0%,rgba(255,255,255,.08),transparent_62%)]" />
+      <div className="relative mx-auto max-w-[980px] rounded-[22px] border border-white/10 bg-black/28 p-3 shadow-2xl backdrop-blur">
         <div className="mb-3 flex items-center justify-between gap-3 border-b border-white/10 pb-3">
           <div className="flex items-center gap-1.5">
             <span className="size-2.5 rounded-full bg-red-400/70" />
@@ -334,7 +351,7 @@ function LivePreview({
           <div className="font-mono text-[10px] lowercase tracking-[0.1em] text-white/45">launch-room.app / handoff</div>
         </div>
 
-        <div className="grid gap-3 lg:grid-cols-[1fr_220px]">
+        <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_280px]">
           <div className="space-y-3">
             <PreviewPanel show={visible >= 1} title="Product brief" icon={<Layers3 className="size-4" />}>
               <div className="text-[13px] leading-relaxed text-white/72">
