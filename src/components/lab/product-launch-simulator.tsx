@@ -203,19 +203,14 @@ export function ProductLaunchSimulator() {
                 {current.prompt}
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="rounded-full border border-line-soft bg-bg-2/25 px-3 py-2 font-mono text-[10px] lowercase text-fg-dim">
-                complexity <span className="text-fg">{score}</span> / 23
-              </div>
-              <button
-                type="button"
-                onClick={() => setActive((next) => (next + 1) % STEPS.length)}
-                className="inline-flex h-9 items-center gap-2 rounded-full border border-[var(--accent)]/70 bg-[var(--accent)]/10 px-3 font-mono text-[11px] lowercase tracking-[0.06em] text-[var(--accent)] transition hover:bg-[var(--accent)]/16"
-              >
-                {active === STEPS.length - 1 ? "replay" : "next"}
-                <ArrowRight className="size-3.5" />
-              </button>
+            <div className="rounded-full border border-line-soft bg-bg-2/25 px-3 py-2 font-mono text-[10px] lowercase text-fg-dim">
+              complexity <span className="text-fg">{score}</span> / 23
             </div>
+          </div>
+
+          <div className="mb-2 flex items-center justify-between gap-3 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">
+            <span>configure this step</span>
+            <span>choose one</span>
           </div>
 
           <div className="overflow-hidden rounded-2xl border border-line-soft bg-bg-2/16">
@@ -254,6 +249,17 @@ export function ProductLaunchSimulator() {
             })}
           </div>
 
+          <div className="mt-3 flex items-center justify-end">
+            <button
+              type="button"
+              onClick={() => setActive((next) => (next + 1) % STEPS.length)}
+              className="inline-flex h-11 items-center gap-2 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-5 font-mono text-[12px] lowercase tracking-[0.06em] text-bg transition hover:brightness-110"
+            >
+              {active === STEPS.length - 1 ? "replay simulator" : "next step"}
+              <ArrowRight className="size-4" />
+            </button>
+          </div>
+
           <div className="mt-3 h-1 min-w-[180px] overflow-hidden rounded-full bg-bg-2/60">
             <motion.div
               className="h-full rounded-full bg-[linear-gradient(90deg,var(--accent),var(--accent-2))]"
@@ -262,7 +268,11 @@ export function ProductLaunchSimulator() {
             />
           </div>
 
-          <div className="mt-4">
+          <div className="mt-4 border-t border-line-soft/70 pt-4">
+            <div className="mb-2 flex items-center justify-between gap-3 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">
+              <span>live preview</span>
+              <span>updates from the selections above</span>
+            </div>
             <LivePreview active={active} selected={selected} build={build} />
           </div>
 
@@ -284,7 +294,7 @@ function HandoffPanel({
 }) {
   return (
     <section className="mt-4 border-t border-line-soft/70 pt-4">
-      <Header icon={<ClipboardList className="size-4" />} label="generated blueprint" value="updates live" />
+      <Header icon={<ClipboardList className="size-4" />} label="draft blueprint" value="live draft" />
 
       <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(220px,0.9fr)_minmax(0,1.4fr)]">
         <div className="p-1">
