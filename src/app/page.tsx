@@ -13,6 +13,7 @@ import { ContactForm } from "@/components/forms/contact-form";
 import { ViewSwitcher } from "@/components/view-switcher";
 import { PromptCompilerArtifact } from "@/components/prompt-compiler-artifact";
 import { AiChat } from "@/components/lab/ai-chat";
+import { ReactFlowDemo } from "@/components/lab/react-flow-demo";
 import { CONTACT, FEATURED, MINOR, SECONDARY, STACK } from "@/lib/data";
 import { getHomeJsonLd } from "@/lib/seo";
 import { InteractiveSkills } from "@/components/interactive-skills";
@@ -63,7 +64,20 @@ export default function Home() {
   // ── LAB ────────────────────────────────────────────────
   const lab = (
     <main className={WORK_CONTAINER}>
-      <Section id="lab" n="01" title="Lab" kicker="canvas · timelines · drag & drop" accent>
+      <Section id="lab" n="01" title="Flow Lab" kicker="React · forms · quiz" accent>
+        <p className="mb-6 max-w-[62ch] text-fg-muted">
+          A focused React sample for the work that rarely photographs well: multi-step product
+          flows, branching form state, scoring, result summaries, and clean handoffs into the
+          next system.
+        </p>
+        <ReactFlowDemo />
+        <p className="mt-4 max-w-[60ch] text-[11px] lowercase tracking-[0.06em] text-fg-dim">
+          built as a portfolio demo, not a fake client case study — the point is the interaction
+          model, state handling, and product polish.
+        </p>
+      </Section>
+
+      <Section id="timeline" n="02" title="Timeline Editor" kicker="canvas · timelines · drag & drop" accent>
         {/* intro text stays a readable measure; the editor spans the full stage */}
         <p className="mb-6 max-w-[60ch] text-fg-muted">
           The rest of this site is restrained on purpose. This part isn&apos;t — it&apos;s the
@@ -81,7 +95,7 @@ export default function Home() {
 
       <Section
         id="artifact"
-        n="02"
+        n="03"
         title="Mini Artifact"
         kicker="graph state · prompt compiler · run plan"
         accent
@@ -97,7 +111,7 @@ export default function Home() {
 
       <Section
         id="ai"
-        n="03"
+        n="04"
         title="AI Chat"
         kicker="streaming · provider-agnostic · openrouter"
         accent

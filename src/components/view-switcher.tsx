@@ -41,6 +41,7 @@ export function ViewSwitcher({
   const [view, setView] = useState<View>("work");
   const [dir, setDir] = useState(1);
   const [axis, setAxis] = useState<Axis>("x");
+  const [instant, setInstant] = useState(false);
   const time = useVietnamTime();
 
   const lockRef = useRef(false);
@@ -50,10 +51,11 @@ export function ViewSwitcher({
   const cooldownTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const go = useCallback(
-    (next: View, opts: { axis?: Axis; push?: boolean } = {}) => {
-      const { axis: nextAxis = "x", push = true } = opts;
+    (next: View, opts: { axis?: Axis; push?: boolean; instant?: boolean } = {}) => {
+      const { axis: nextAxis = "x", push = true, instant: instantNext = false } = opts;
       setView((cur) => {
         if (cur === next) return cur;
+        if (instantNext) setInstant(true);
         setDir(ORDER.indexOf(next) > ORDER.indexOf(cur) ? 1 : -1);
         setAxis(nextAxis);
         return next;
@@ -72,7 +74,9 @@ export function ViewSwitcher({
   useEffect(() => {
     const fromHash = () => {
       const h = window.location.hash.replace("#", "") as View;
-      if (ORDER.includes(h)) go(h, { push: false });
+      if (ORDER.includes(h)) {
+        go(h, { push: false, instant: true });
+      }
     };
     fromHash();
     window.addEventListener("hashchange", fromHash);
@@ -86,6 +90,15 @@ export function ViewSwitcher({
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (!instant) return;
+
+    window.scrollTo({ top: 0, behavior: "auto" });
+    const id = window.setTimeout(() => setInstant(false), 80);
+
+    return () => window.clearTimeout(id);
+  }, [instant, view]);
 
   // overscroll-to-advance: at the bottom of a panel, keep scrolling to slide
   // to the next zone; at the top, scroll up to go back. Requires accumulated
@@ -244,28 +257,34 @@ export function ViewSwitcher({
 
       {/* sliding panels */}
       <div className="overflow-x-hidden">
-        <AnimatePresence
-          mode="wait"
-          custom={{ dir, axis }}
-          initial={false}
-          onExitComplete={() => window.scrollTo({ top: 0, behavior: "auto" })}
-        >
-          <motion.div
-            key={view}
-            custom={{ dir, axis }}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: axis === "y" ? 0.4 : 0.32, ease: [0.22, 1, 0.36, 1] }}
-            id={panelId(view)}
-            role="tabpanel"
-            aria-labelledby={tabId(view)}
-            tabIndex={-1}
-          >
+        {instant ? (
+          <div id={panelId(view)} role="tabpanel" aria-labelledby={tabId(view)} tabIndex={-1}>
             {panels[view]}
-          </motion.div>
-        </AnimatePresence>
+          </div>
+        ) : (
+          <AnimatePresence
+            mode="wait"
+            custom={{ dir, axis }}
+            initial={false}
+            onExitComplete={() => window.scrollTo({ top: 0, behavior: "auto" })}
+          >
+            <motion.div
+              key={view}
+              custom={{ dir, axis }}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: axis === "y" ? 0.4 : 0.32, ease: [0.22, 1, 0.36, 1] }}
+              id={panelId(view)}
+              role="tabpanel"
+              aria-labelledby={tabId(view)}
+              tabIndex={-1}
+            >
+              {panels[view]}
+            </motion.div>
+          </AnimatePresence>
+        )}
       </div>
 
       {/* next-zone affordance — clickable, and signals the scroll-to-advance */}
