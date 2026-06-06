@@ -134,15 +134,14 @@ export function ProductLaunchSimulator() {
   }
 
   return (
-    <div className="relative overflow-hidden rounded-[28px] border border-line-soft bg-[oklch(0.115_0.006_250)] shadow-[0_40px_160px_rgba(0,0,0,0.45)]">
+    <div className="relative overflow-hidden rounded-[22px] border border-line-soft/70 bg-bg/35">
       <div
         aria-hidden
-        className="absolute inset-0 [background:radial-gradient(900px_420px_at_18%_0%,color-mix(in_oklab,var(--accent)_26%,transparent),transparent_62%),radial-gradient(700px_420px_at_92%_18%,color-mix(in_oklab,var(--accent-2)_18%,transparent),transparent_58%),linear-gradient(180deg,rgba(255,255,255,0.035),transparent)]"
+        className="absolute inset-0 opacity-70 [background:radial-gradient(900px_420px_at_18%_0%,color-mix(in_oklab,var(--accent)_14%,transparent),transparent_62%),linear-gradient(180deg,rgba(255,255,255,0.025),transparent)]"
       />
-      <div aria-hidden className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.04)_1px,transparent_1px)] [background-size:48px_48px]" />
 
-      <div className="relative grid gap-px bg-line-soft/70 xl:grid-cols-[260px_minmax(0,1fr)]">
-        <aside className="bg-bg/88 p-5 backdrop-blur xl:sticky xl:top-20 xl:min-h-[640px]">
+      <div className="relative grid xl:grid-cols-[248px_minmax(0,1fr)]">
+        <aside className="border-b border-line-soft/70 bg-bg/55 p-4 backdrop-blur xl:sticky xl:top-20 xl:border-b-0 xl:border-r xl:min-h-[560px]">
           <Header icon={<Zap className="size-4" />} label="product launch simulator" value={`${completion}%`} />
           <p className="mt-4 text-[13px] leading-relaxed text-fg-muted">
             Pick the constraints, then watch the fuzzy idea compile into a concrete launch blueprint:
@@ -160,28 +159,26 @@ export function ProductLaunchSimulator() {
                     type="button"
                     onClick={() => setActive(index)}
                     className={cn(
-                      "group grid w-full grid-cols-[32px_minmax(0,1fr)] gap-3 rounded-2xl border p-3 text-left transition",
+                      "group grid w-full grid-cols-[26px_minmax(0,1fr)] gap-3 border-l px-2 py-3 text-left transition",
                       isActive
-                        ? "border-[var(--accent)] bg-[var(--accent)]/12 text-fg shadow-[0_0_40px_color-mix(in_oklab,var(--accent)_18%,transparent)]"
-                        : "border-line-soft bg-bg-2/20 text-fg-muted hover:border-line hover:bg-bg-2/40 hover:text-fg",
+                        ? "border-[var(--accent)] bg-[var(--accent)]/[0.035] text-fg"
+                        : "border-line-soft/60 text-fg-muted hover:border-line hover:bg-bg-2/20 hover:text-fg",
                     )}
                   >
                     <span
                       className={cn(
-                        "flex size-8 items-center justify-center rounded-xl border",
-                        isActive || isDone
-                          ? "border-[var(--accent)] text-[var(--accent)]"
-                          : "border-line text-fg-dim",
+                        "mt-0.5 flex size-5 items-center justify-center font-mono text-[10px] transition",
+                        isActive || isDone ? "text-[var(--accent)]" : "text-fg-dim",
                       )}
                     >
-                      {isDone ? <Check className="size-4" /> : step.icon}
+                      {isDone ? <Check className="size-3.5" /> : `0${index + 1}`}
                     </span>
                     <span className="min-w-0">
                       <span className="block font-mono text-[10px] uppercase tracking-[0.12em] text-fg-dim">
-                        0{index + 1} · {step.eyebrow}
+                        {step.eyebrow}
                       </span>
-                      <span className="mt-1 block truncate text-[13px] font-medium">{step.title}</span>
-                      <span className="mt-0.5 block truncate text-[11px] text-fg-dim">
+                      <span className="mt-1 block text-[13px] font-medium leading-snug">{step.title}</span>
+                      <span className="mt-0.5 block text-[11px] leading-snug text-fg-dim">
                         {item.choice.label}
                       </span>
                     </span>
@@ -192,7 +189,7 @@ export function ProductLaunchSimulator() {
           </ol>
         </aside>
 
-        <main className="min-w-0 bg-bg/72 p-4 backdrop-blur sm:p-6 xl:min-h-[640px]">
+        <main className="min-w-0 bg-bg/35 p-4 backdrop-blur sm:p-5 xl:min-h-[560px]">
           <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
             <div className="max-w-[780px]">
               <div className="inline-flex items-center gap-2 rounded-full border border-line-soft bg-bg-2/45 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">
@@ -206,12 +203,22 @@ export function ProductLaunchSimulator() {
                 {current.prompt}
               </p>
             </div>
-            <div className="rounded-2xl border border-line-soft bg-bg-2/35 px-4 py-3 font-mono text-[10px] lowercase text-fg-dim">
-              complexity <span className="text-fg">{score}</span> / 23
+            <div className="flex items-center gap-2">
+              <div className="rounded-full border border-line-soft bg-bg-2/25 px-3 py-2 font-mono text-[10px] lowercase text-fg-dim">
+                complexity <span className="text-fg">{score}</span> / 23
+              </div>
+              <button
+                type="button"
+                onClick={() => setActive((next) => (next + 1) % STEPS.length)}
+                className="inline-flex h-9 items-center gap-2 rounded-full border border-[var(--accent)]/70 bg-[var(--accent)]/10 px-3 font-mono text-[11px] lowercase tracking-[0.06em] text-[var(--accent)] transition hover:bg-[var(--accent)]/16"
+              >
+                {active === STEPS.length - 1 ? "replay" : "next"}
+                <ArrowRight className="size-3.5" />
+              </button>
             </div>
           </div>
 
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="overflow-hidden rounded-2xl border border-line-soft bg-bg-2/16">
             {current.choices.map((choice) => {
               const checked = answers[current.id] === choice.id;
               return (
@@ -220,10 +227,10 @@ export function ProductLaunchSimulator() {
                   type="button"
                   onClick={() => choose(choice.id)}
                   className={cn(
-                    "group relative overflow-hidden rounded-2xl border p-4 text-left transition duration-300",
+                    "group relative w-full border-t border-line-soft/70 px-4 py-3 text-left transition first:border-t-0",
                     checked
-                      ? "border-[var(--accent)] bg-[var(--accent)]/[0.055] ring-1 ring-[color-mix(in_oklab,var(--accent)_28%,transparent)]"
-                      : "border-line-soft bg-bg-2/24 hover:border-line hover:bg-bg-2/42",
+                      ? "bg-[var(--accent)]/[0.035] shadow-[inset_3px_0_0_var(--accent)]"
+                      : "hover:bg-bg-2/32",
                   )}
                 >
                   <span className="relative z-10 flex items-start justify-between gap-4">
@@ -235,10 +242,8 @@ export function ProductLaunchSimulator() {
                     </span>
                     <span
                       className={cn(
-                        "flex size-7 shrink-0 items-center justify-center rounded-full border transition",
-                        checked
-                          ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
-                          : "border-line text-transparent group-hover:text-fg-dim",
+                        "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full text-[var(--accent)] transition",
+                        checked ? "opacity-100" : "opacity-0 group-hover:opacity-35",
                       )}
                     >
                       <Check className="size-4" />
@@ -249,29 +254,20 @@ export function ProductLaunchSimulator() {
             })}
           </div>
 
-          <div className="mt-5 overflow-hidden rounded-[24px] border border-line-soft bg-[oklch(0.13_0.006_250)]">
+          <div className="mt-3 h-1 min-w-[180px] overflow-hidden rounded-full bg-bg-2/60">
+            <motion.div
+              className="h-full rounded-full bg-[linear-gradient(90deg,var(--accent),var(--accent-2))]"
+              animate={{ width: `${completion}%` }}
+              transition={{ type: "spring", stiffness: 120, damping: 24 }}
+            />
+          </div>
+
+          <div className="mt-4">
             <LivePreview active={active} selected={selected} build={build} />
           </div>
 
           <HandoffPanel selected={selected} build={build} />
 
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-            <div className="h-1.5 min-w-[180px] flex-1 overflow-hidden rounded-full bg-bg-2">
-              <motion.div
-                className="h-full rounded-full bg-[linear-gradient(90deg,var(--accent),var(--accent-2))]"
-                animate={{ width: `${completion}%` }}
-                transition={{ type: "spring", stiffness: 120, damping: 24 }}
-              />
-            </div>
-            <button
-              type="button"
-              onClick={() => setActive((next) => (next + 1) % STEPS.length)}
-              className="inline-flex h-10 items-center gap-2 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-4 font-mono text-[11px] lowercase tracking-[0.06em] text-bg transition hover:brightness-110"
-            >
-              {active === STEPS.length - 1 ? "replay" : "next layer"}
-              <ArrowRight className="size-4" />
-            </button>
-          </div>
         </main>
 
       </div>
@@ -287,11 +283,11 @@ function HandoffPanel({
   build: ReturnType<typeof getBuildShape>;
 }) {
   return (
-    <section className="mt-5 rounded-[24px] border border-line-soft bg-bg-2/24 p-4 sm:p-5">
+    <section className="mt-4 border-t border-line-soft/70 pt-4">
       <Header icon={<ClipboardList className="size-4" />} label="generated blueprint" value="updates live" />
 
       <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(220px,0.9fr)_minmax(0,1.4fr)]">
-        <div className="rounded-3xl border border-line-soft bg-bg/45 p-5">
+        <div className="p-1">
           <div className="flex items-center gap-2 text-[var(--accent)]">
             <Sparkles className="size-4" />
             <span className="font-mono text-[10px] uppercase tracking-[0.14em]">{build.label}</span>
@@ -308,13 +304,13 @@ function HandoffPanel({
           </div>
         </div>
 
-        <div className="rounded-3xl border border-line-soft bg-bg/35 p-4">
+        <div className="border-l border-line-soft/70 pl-4">
           <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">
             build packet generated from your choices
           </div>
           <ul className="grid gap-3 sm:grid-cols-2">
             {build.packet.map((item, index) => (
-              <li key={item} className="grid grid-cols-[28px_minmax(0,1fr)] gap-3 rounded-2xl border border-line-soft bg-bg-2/22 p-3 text-[12px] leading-relaxed text-fg-muted">
+              <li key={item} className="grid grid-cols-[22px_minmax(0,1fr)] gap-3 border-t border-line-soft/70 py-2 text-[12px] leading-relaxed text-fg-muted first:border-t-0 first:pt-0">
                 <span className="flex size-7 items-center justify-center rounded-full border border-[var(--accent)]/45 font-mono text-[10px] text-[var(--accent)]">
                   {index + 1}
                 </span>
@@ -339,9 +335,9 @@ function LivePreview({
 }) {
   const visible = active + 1;
   return (
-    <div className="relative min-h-[320px] p-4 sm:p-6">
-      <div aria-hidden className="absolute inset-0 [background:radial-gradient(640px_300px_at_50%_0%,rgba(255,255,255,.08),transparent_62%)]" />
-      <div className="relative mx-auto max-w-[980px] rounded-[22px] border border-white/10 bg-black/28 p-3 shadow-2xl backdrop-blur">
+    <div className="relative overflow-hidden rounded-[20px] border border-line-soft/70 bg-[oklch(0.13_0.006_250)] p-3 sm:p-4">
+      <div aria-hidden className="absolute inset-0 [background:radial-gradient(640px_300px_at_50%_0%,rgba(255,255,255,.055),transparent_62%)]" />
+      <div className="relative">
         <div className="mb-3 flex items-center justify-between gap-3 border-b border-white/10 pb-3">
           <div className="flex items-center gap-1.5">
             <span className="size-2.5 rounded-full bg-red-400/70" />
