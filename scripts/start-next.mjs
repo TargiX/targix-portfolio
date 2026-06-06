@@ -36,9 +36,15 @@ async function findOpenPort(startPort) {
   return null;
 }
 
-const port = await findOpenPort(requestedPort);
+const isProductionStart = mode === "start" || process.env.NODE_ENV === "production";
+const port = isProductionStart ? (await canListen(requestedPort) ? requestedPort : null) : await findOpenPort(requestedPort);
 
 if (!port) {
+  if (isProductionStart) {
+    console.error(`[portfolio] requested production port ${requestedPort} is unavailable.`);
+    process.exit(1);
+  }
+
   console.error(`[portfolio] no open port found from ${requestedPort} to ${Math.min(requestedPort + 50, 65535)}`);
   process.exit(1);
 }
@@ -50,6 +56,11 @@ if (port !== requestedPort) {
 const child = spawn("next", [mode, "--port", String(port)], {
   stdio: "inherit",
   shell: process.platform === "win32",
+});
+
+child.on("error", (error) => {
+  console.error(`[portfolio] failed to start Next.js: ${error.stack || error.message}`);
+  process.exit(1);
 });
 
 child.on("exit", (code, signal) => {

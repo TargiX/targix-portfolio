@@ -142,12 +142,7 @@ const EXAMPLES = [
 
 export function ReactFlowDemo() {
   const [activeStep, setActiveStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<StepId, string>>({
-    goal: "lead",
-    audience: "founder",
-    inputs: "branching",
-    handoff: "crm",
-  });
+  const [answers, setAnswers] = useState<Partial<Record<StepId, string>>>({});
 
   const current = STEPS[activeStep];
   const selected = useMemo(
@@ -192,12 +187,7 @@ export function ReactFlowDemo() {
 
   function reset() {
     setActiveStep(0);
-    setAnswers({
-      goal: "lead",
-      audience: "founder",
-      inputs: "branching",
-      handoff: "crm",
-    });
+    setAnswers({});
   }
 
   return (
@@ -371,7 +361,7 @@ export function ReactFlowDemo() {
 
           <div className="mt-3 grid grid-cols-2 gap-2">
             <Metric label="state" value={`${completed}/${STEPS.length} steps`} />
-            <Metric label="handoff" value={answers.handoff} />
+            <Metric label="handoff" value={answers.handoff ?? "not set"} />
           </div>
 
           <div className="mt-4 rounded-md border border-line-soft bg-bg-2/20 p-3">
