@@ -249,6 +249,14 @@ export function ProductLaunchSimulator() {
             })}
           </div>
 
+          <div className="mt-3 h-1 min-w-[180px] overflow-hidden rounded-full bg-bg-2/60">
+            <motion.div
+              className="h-full rounded-full bg-[linear-gradient(90deg,var(--accent),var(--accent-2))]"
+              animate={{ width: `${completion}%` }}
+              transition={{ type: "spring", stiffness: 120, damping: 24 }}
+            />
+          </div>
+
           <div className="mt-3 flex items-center justify-end">
             <button
               type="button"
@@ -258,14 +266,6 @@ export function ProductLaunchSimulator() {
               {active === STEPS.length - 1 ? "replay simulator" : "next step"}
               <ArrowRight className="size-4" />
             </button>
-          </div>
-
-          <div className="mt-3 h-1 min-w-[180px] overflow-hidden rounded-full bg-bg-2/60">
-            <motion.div
-              className="h-full rounded-full bg-[linear-gradient(90deg,var(--accent),var(--accent-2))]"
-              animate={{ width: `${completion}%` }}
-              transition={{ type: "spring", stiffness: 120, damping: 24 }}
-            />
           </div>
 
           <div className="mt-4 border-t border-line-soft/70 pt-4">
