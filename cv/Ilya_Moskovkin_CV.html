@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ilya Moskovkin — Senior Frontend Engineer</title>
+<style>
+  /* ---- Editable source for public/Ilya_Moskovkin_CV.pdf ----
+     Edit this file, then run:  node cv/build.mjs
+     Single-column, ATS-friendly, print-optimized. ---- */
+
+  :root {
+    --ink:    #16181d;   /* body text */
+    --muted:  #51565f;   /* secondary text */
+    --dim:    #7b818b;   /* labels / dates */
+    --accent: #15803d;   /* deep green — readable on white, echoes the site lime */
+    --rule:   #d9dce1;
+  }
+
+  * { box-sizing: border-box; }
+
+  @page {
+    size: A4;
+    margin: 13mm 15mm;
+  }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    font-size: 10pt;
+    line-height: 1.42;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono {
+    font-family: ui-monospace, "SF Mono", "Menlo", monospace;
+  }
+
+  /* ---------- header ---------- */
+  header { margin-bottom: 12px; }
+
+  h1 {
+    margin: 0;
+    font-size: 23pt;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .role {
+    margin: 3px 0 9px;
+    font-size: 11pt;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .contact {
+    font-size: 8.6pt;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 0;
+  }
+  .contact a { color: var(--muted); text-decoration: none; }
+  .contact a.l { color: var(--accent); font-weight: 600; }
+  .contact .sep { color: var(--dim); margin: 0 8px; }
+
+  .rule-accent {
+    height: 2px;
+    background: var(--accent);
+    width: 46px;
+    margin: 11px 0 0;
+    border-radius: 2px;
+  }
+
+  /* ---------- sections ---------- */
+  section { margin-top: 15px; }
+
+  h2 {
+    margin: 0 0 8px;
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    /* never leave a section heading orphaned at the bottom of a page */
+    break-after: avoid;
+    -webkit-column-break-after: avoid;
+  }
+  /* keep a heading glued to the first block that follows it */
+  h2 + * { break-before: avoid; }
+  h2::before {
+    content: "";
+    display: inline-block;
+    width: 5px; height: 5px;
+    background: var(--accent);
+    transform: rotate(45deg);
+    border-radius: 1px;
+  }
+
+  p { margin: 0 0 6px; }
+  .profile { color: var(--muted); margin: 0; }
+
+  /* strengths / definition rows */
+  .rows { display: grid; gap: 6px; }
+  .row { break-inside: avoid; }
+  .row .k { font-weight: 700; color: var(--ink); }
+  .row .v { color: var(--muted); }
+
+  /* experience */
+  .job { break-inside: avoid; margin-bottom: 11px; }
+  .job:last-child { margin-bottom: 0; }
+  .job-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .job-title { font-weight: 700; }
+  .job-title .co { color: var(--accent); }
+  .job-dates {
+    font-size: 8.2pt;
+    color: var(--dim);
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+  .job-sub {
+    color: var(--muted);
+    font-style: italic;
+    font-size: 9pt;
+    margin: 1px 0 5px;
+  }
+
+  ul { margin: 4px 0 0; padding-left: 0; list-style: none; }
+  li {
+    position: relative;
+    padding-left: 14px;
+    margin-bottom: 3px;
+    color: var(--muted);
+  }
+  li::before {
+    content: "";
+    position: absolute;
+    left: 2px; top: 0.52em;
+    width: 4px; height: 4px;
+    background: var(--accent);
+    transform: rotate(45deg);
+    border-radius: 1px;
+    opacity: 0.85;
+  }
+  li b, .row .k { color: var(--ink); }
+
+  a.link { color: var(--accent); text-decoration: none; font-weight: 600; }
+
+  /* technical stack — two-column grid so a wrapped value aligns under the value
+     column (not under the label) and the label never touches the value */
+  .stack { break-inside: avoid; }
+  .stack .rows { gap: 6px; }
+  .stack .row {
+    display: grid;
+    grid-template-columns: 104px 1fr;
+    gap: 2px 14px;
+    align-items: baseline;
+  }
+  .stack .k {
+    color: var(--dim);
+    font-weight: 600;
+    font-size: 9pt;
+    letter-spacing: 0.01em;
+  }
+  .stack .v { color: var(--ink); }
+
+  .keep { break-inside: avoid; }
+</style>
+</head>
+<body>
+
+  <header>
+    <h1>Ilya Moskovkin</h1>
+    <div class="role">Senior Frontend Engineer · Product-minded UI Engineer</div>
+    <div class="contact mono">
+      <span>Vietnam / Remote</span><span class="sep">·</span>
+      <a href="mailto:hello@ilyamoskovkin.com">hello@ilyamoskovkin.com</a><span class="sep">·</span>
+      <span>+84 92 407 78 20</span><span class="sep">·</span>
+      <a class="l" href="https://github.com/TargiX">GitHub</a><span class="sep">·</span>
+      <a class="l" href="https://www.linkedin.com/in/ilya-moskovkin-963ab85b/">LinkedIn</a><span class="sep">·</span>
+      <a class="l" href="https://ilyamoskovkin.com">Portfolio</a>
+    </div>
+    <div class="rule-accent"></div>
+  </header>
+
+  <section>
+    <h2>Profile</h2>
+    <p class="profile">
+      Senior frontend engineer with 10+ years spanning UI/UX design and production web-app development.
+      I build and lead the frontend for data-heavy SaaS products — dashboards, complex multi-step flows,
+      data visualization, and AI-powered features — in React/TypeScript and Vue. Most recently I led the
+      frontend of a B2B energy-brokerage platform through a full Vue → React micro-frontend migration.
+      Originally trained as a UI designer, I bring a design-side instinct to dense interfaces and work
+      closely with product, design and backend stakeholders to turn complex requirements into usable,
+      maintainable UI.
+    </p>
+  </section>
+
+  <section>
+    <h2>Core Strengths</h2>
+    <div class="rows">
+      <div class="row"><span class="k">React in production:</span>
+        <span class="v">React, TypeScript, Mantine UI, Zustand, Context API, hooks-based architecture,
+        module federation — in a large enterprise React codebase.</span></div>
+      <div class="row"><span class="k">Dashboards &amp; data viz:</span>
+        <span class="v">production dashboards, DevExtreme grids/charts, interactive SVG maps, custom
+        visualization components — dense data made readable.</span></div>
+      <div class="row"><span class="k">AI integration:</span>
+        <span class="v">led frontend integration of an AI Bill-Scan feature on Google Vertex AI / Gemini —
+        prompt design, response handling, failure states, logging, cost monitoring, field mapping.</span></div>
+      <div class="row"><span class="k">Vue &amp; broader frontend:</span>
+        <span class="v">Vue 2/3, Nuxt, Vuex/Pinia from 3+ years leading a Vue SPA before the React
+        migration; comfortable across modern JS ecosystems.</span></div>
+      <div class="row"><span class="k">Testing:</span>
+        <span class="v">Vitest unit/integration coverage, Cypress E2E architecture; led coverage and
+        reliability improvements at module scale.</span></div>
+      <div class="row"><span class="k">Design-to-code:</span>
+        <span class="v">originally a UI designer; Figma / Adobe XD, design-system contributions, polished
+        responsive implementation.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Selected Projects</h2>
+    <div class="rows">
+      <div class="row"><span class="k">Phosphene</span>
+        <a class="link" href="https://phosphene.cc">phosphene.cc</a>
+        <span class="v">— a graph-based visual prompt workspace for AI image generation; solo design + build.
+        Nuxt 4, Vue 3, tRPC, Prisma/Postgres, Vue Flow, fal.ai + Gemini, Paddle billing.</span></div>
+      <div class="row"><span class="k">Broker Online Exchange</span>
+        <a class="link" href="https://www.brokeronlinexchange.com/">brokeronlinexchange.com</a>
+        <span class="v">— the B2B energy-brokerage platform (MyServiceCloud) I led: Vue → React micro-frontend
+        migration, production dashboards, and an AI Bill-Scan → Quote feature. The app is behind login;
+        the company site is public.</span></div>
+      <div class="row"><span class="k">Roomboard</span>
+        <a class="link" href="https://roomboard.online">roomboard.online</a>
+        <span class="v">— a realtime visual collaboration room for moodboards and reviews. Next.js, Pixi.js
+        canvas, Elixir/Phoenix + Supabase realtime.</span></div>
+      <div class="row"><span class="v"><b>Earlier:</b> BrewOptix (brewery dashboard, Figma → Vue), upRive
+        (Laravel/Vue/Tailwind marketing app), DashCaster (remote-controlled dashboard builder), Difdash
+        (responsive dashboard from design assets).</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Professional Experience</h2>
+
+    <div class="job">
+      <div class="job-head">
+        <div class="job-title">Lead Frontend Developer — <span class="co">Broker Online Exchange</span> (later acquired by AppDirect)</div>
+        <div class="job-dates">Aug 2021 – Present · Remote</div>
+      </div>
+      <div class="job-sub">My Service Cloud — B2B SaaS for energy-brokerage workflows (CRM, pricing, contracts, commissions, renewals, dashboards)</div>
+      <ul>
+        <li>Led the frontend across the platform through two stack phases: a Vue 2/3 SPA, then a migration to
+          React/TypeScript micro-frontends (Mantine, Zustand, module federation). Set patterns, owned review, mentored juniors.</li>
+        <li>Built production dashboards and data-viz — DevExtreme charts/grids, interactive SVG maps of US
+          energy-distribution data, dense filterable tables that stay readable.</li>
+        <li>Led the frontend of an AI Bill-Scan → Contract feature (Vertex AI / Gemini): prompt design,
+          response handling, AI failure states, logging, cost monitoring, field mapping to product entities.</li>
+        <li>Vue phase (3 yrs): multi-step contract/quote/proposal wizards, dynamic forms, Vuex/Pinia,
+          REST/GraphQL across ~40 Vue apps in a mixed codebase with legacy PHP/Yii modules.</li>
+        <li>Drove test coverage on a core module from 0 → ~80% (Vitest) and coordinated a cross-team
+          Cypress E2E effort (auth isolation, shared architecture).</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <div class="job-title">Frontend Developer — <span class="co">Ecor Rouge</span></div>
+        <div class="job-dates">Oct 2019 – Aug 2021 · Part-time / Remote</div>
+      </div>
+      <ul>
+        <li>Implemented responsive dashboard interfaces from design files into Laravel/Vue.js apps; built and
+          refined Vue components, layouts and styles in close work with backend devs.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <div class="job-title">UX/UI Designer · Frontend Developer — <span class="co">Couture Lane</span></div>
+        <div class="job-dates">Jul 2015 – Oct 2019 · SF Bay Area / Remote</div>
+      </div>
+      <ul>
+        <li>Designed and implemented customer-facing web interfaces, gradually expanding from UI/UX design into
+          frontend development; built a strong design-to-code workflow.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <div class="job-title">UI Designer — <span class="co">Soventa</span></div>
+        <div class="job-dates">Mar 2013 – Jul 2014 · Almaty, KZ</div>
+      </div>
+      <ul>
+        <li>Designed UI screens and visual assets for web interfaces; early experience collaborating with
+          development teams on implementation-ready designs.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="stack">
+    <h2>Technical Stack</h2>
+    <div class="rows">
+      <div class="row"><span class="k">Languages</span><span class="v">TypeScript, JavaScript ES6+, HTML5, CSS3</span></div>
+      <div class="row"><span class="k">React</span><span class="v">React 19, hooks, Next.js (App Router), TanStack Query, Zustand, Mantine UI, module federation, TypeScript</span></div>
+      <div class="row"><span class="k">Vue</span><span class="v">Vue 2/3, Nuxt, Vuex, Pinia, composables</span></div>
+      <div class="row"><span class="k">Data viz</span><span class="v">DevExtreme, D3.js, SVG, interactive maps, dashboards</span></div>
+      <div class="row"><span class="k">AI</span><span class="v">Vertex AI, Gemini, prompt design, LLM response handling, cost monitoring</span></div>
+      <div class="row"><span class="k">APIs</span><span class="v">REST, GraphQL, SPA architecture, state management</span></div>
+      <div class="row"><span class="k">Styling</span><span class="v">Tailwind, SASS/LESS, Material UI, shadcn</span></div>
+      <div class="row"><span class="k">Testing</span><span class="v">Cypress, Vitest, Jest, Git/GitHub, Jira, async remote</span></div>
+    </div>
+  </section>
+
+  <section class="keep">
+    <h2>Working Style</h2>
+    <ul>
+      <li>Product-minded: I care about the actual user flow, not just the component or ticket in isolation.</li>
+      <li>Comfortable in imperfect legacy systems — ship useful improvements while gradually reducing complexity.</li>
+      <li>Strong remote habit: concrete demos, clear PR notes, visible progress, small shippable slices.</li>
+    </ul>
+  </section>
+
+</body>
+</html>
