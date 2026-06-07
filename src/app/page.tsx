@@ -5,7 +5,6 @@ import { Section } from "@/components/section";
 import { ProjectCard } from "@/components/project-card";
 import { CompactProjectCard } from "@/components/compact-project-card";
 import { FooterJellyfish } from "@/components/footer-jellyfish";
-import { DitheredPhoto } from "@/components/dithered-photo";
 import { GitHubActivity } from "@/components/server/github-activity";
 import { GitHubContributions } from "@/components/server/github-contributions";
 import { ContactForm } from "@/components/forms/contact-form";
@@ -19,7 +18,8 @@ import { InteractiveSkills } from "@/components/interactive-skills";
 // Narrow measure for text-heavy sections (readability ~70ch).
 const CONTAINER = "relative mx-auto max-w-[880px] px-5 pb-24 pt-6 sm:px-8";
 // Wider stage for the visual work showcase — lets cards breathe on big screens.
-const WORK_CONTAINER = "relative mx-auto max-w-[1280px] px-5 pb-24 pt-6 sm:px-8";
+const WORK_CONTAINER =
+  "relative mx-auto max-w-[1280px] px-5 pb-24 pt-6 sm:px-8";
 
 export default function Home() {
   const isContactConfigured = Boolean(process.env.RESEND_API_KEY);
@@ -33,7 +33,12 @@ export default function Home() {
       <main className={WORK_CONTAINER}>
         <InteractiveSkills />
 
-        <Section id="work" n="01" title="Selected Work" kicker={`${1 + SECONDARY.length} projects`}>
+        <Section
+          id="work"
+          n="01"
+          title="Selected Work"
+          kicker={`${1 + SECONDARY.length} projects`}
+        >
           <div className="grid grid-cols-1 gap-5 [perspective:1200px] sm:grid-cols-2">
             {[FEATURED, ...SECONDARY].map((p, i) => (
               <ProjectCard key={p.title} project={p} order={i} />
@@ -62,20 +67,33 @@ export default function Home() {
   // ── LAB ────────────────────────────────────────────────
   const lab = (
     <main className={WORK_CONTAINER}>
-      <Section id="lab" n="01" title="Product Launch Simulator" kicker="wizard · scroll reveal · handoff" accent>
+      <Section
+        id="lab"
+        n="01"
+        title="Product Launch Simulator"
+        kicker="wizard · scroll reveal · handoff"
+        accent
+      >
         <p className="mb-6 max-w-[66ch] text-fg-muted">
-          A cinematic product-engineering demo: pick a messy product shape, watch the interface
-          assemble itself, and leave with a generated build packet. It&apos;s built to show the work
-          that usually hides between Figma, state machines, and implementation plans.
+          A cinematic product-engineering demo: pick a messy product shape,
+          watch the interface assemble itself, and leave with a generated build
+          packet. It&apos;s built to show the work that usually hides between
+          Figma, state machines, and implementation plans.
         </p>
         <ProductLaunchSimulator />
       </Section>
 
-      <Section id="experiments" n="02" title="Experiment Gallery" kicker="editors · AI · interaction studies" accent>
+      <Section
+        id="experiments"
+        n="02"
+        title="Experiment Gallery"
+        kicker="editors · AI · interaction studies"
+        accent
+      >
         <p className="mb-6 max-w-[66ch] text-fg-muted">
-          Smaller demos live behind a selector instead of stacking into a noisy wall. Pick one
-          surface at a time: editor mechanics, prompt compilation, streaming chat, or the compact
-          flow wizard prototype.
+          Smaller demos live behind a selector instead of stacking into a noisy
+          wall. Pick one surface at a time: editor mechanics, prompt
+          compilation, streaming chat, or the compact flow wizard prototype.
         </p>
         <ExperimentGallery />
       </Section>
@@ -87,33 +105,97 @@ export default function Home() {
     <main className={CONTAINER}>
       <Section id="about" n="01" title="About">
         <div className="grid gap-8 sm:grid-cols-[1fr_auto] sm:items-start">
-          <div className="[&>p]:mb-4 [&>p]:text-fg-muted [&>p:last-child]:mb-0">
+          <section className="[&>p]:mb-4 [&>p]:text-fg-muted [&>p:last-child]:mb-0">
             <p>
-              ~12 years building for the web, the last several as a frontend engineer and
-              lead. I came up through UI/UX design, and that&apos;s the crossover I sell — not
-              a separate track: I can sit with a PM, sketch the interaction, then build it
-              through to the database without a handoff.
+              Senior frontend engineer, 10+ years building production web apps.
+              I spent the last 5+ years leading the frontend of a B2B SaaS
+              platform: dashboards, complex forms, data grids, the kind of app
+              real businesses run their day on.
             </p>
-            <p>
-              Lately I&apos;m happiest in the messy middle of{" "}
-              <span className="text-fg">products that don&apos;t exist yet</span> — picking the
-              stack, drawing the first screens, shipping the v0 to real users, and rewriting
-              whichever parts were wrong. Phosphene is the current version of that itch.
-            </p>
-            <p className="text-fg-dim">
-              Based in Vietnam. Comfortable async. Open to senior frontend,
-              frontend-heavy product engineering, or design-engineering roles.
-            </p>
-          </div>
 
-          <DitheredPhoto
-            src="/about/ilya.jpg"
-            alt="ilya at the rig · saigon"
-            width={260}
-            height={340}
-            pixelSize={2}
-            className="justify-self-end"
-          />
+            <p>
+              What I do best is turn design into interfaces that genuinely feel
+              good to use. Pixel-perfect implementation, smooth interactions,
+              fast load times, the small details users feel even when they don't
+              notice them. I came into engineering from a UI design background,
+              so I read Figma the way a designer does.
+            </p>
+
+            <p>
+              I work in both Vue (Vue 2/3, Nuxt) and React (Next.js) at
+              production level. I'm also fullstack when a project needs it, I
+              build and run my own product,{" "}
+              <a href="https://phosphene.cc">phosphene.cc</a>, end to end,
+              including the backend, database and deployment. So I can take a
+              project from design all the way to shipped.
+            </p>
+
+            <p>A few things I bring:</p>
+
+            <ul className="my-5 flex flex-col gap-3">
+              {[
+                {
+                  label: "Complex SaaS interfaces:",
+                  body: "dashboards, multi-step wizards, dynamic forms, data grids, filtering",
+                },
+                {
+                  label: "Strong performance work:",
+                  body: "virtualized lists, load-time optimization, smooth UI under heavy data",
+                },
+                {
+                  label: "AI-augmented workflow:",
+                  body: "Claude Code + Codex are part of my daily process — faster scaffolding, refactors, and test generation, more ground covered per hour. Architecture and quality calls stay mine.",
+                },
+                {
+                  label: "AI integration in production:",
+                  body: "shipped AI-powered features including a document-scanning feature and an AI image generation product",
+                },
+                {
+                  label: "Testing:",
+                  body: "Cypress, Playwright, Vitest.",
+                },
+                {
+                  label: "Clear remote communication:",
+                  body: "concrete demos, clean PRs, early flagging of risk. Remote async has been my default for 10+ years",
+                },
+              ].map((item) => (
+                <li key={item.label} className="flex gap-3 text-fg-muted">
+                  <span
+                    aria-hidden
+                    className="mt-[0.55em] size-1.5 shrink-0 rotate-45 rounded-[1px] bg-[color-mix(in_oklab,var(--accent)_75%,transparent)]"
+                  />
+                  <span>
+                    <strong className="font-medium text-fg">{item.label}</strong>{" "}
+                    {item.body}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <p>
+              Comfortable jumping into a messy codebase and shipping real
+              improvements — full stack listed below.
+            </p>
+
+            <p>
+              Available now — open to senior frontend or design-engineering
+              roles, contract or full-time. I work remote from Vietnam (UTC+7),
+              with comfortable overlap into European and US-morning hours. Let's
+              talk.
+            </p>
+          </section>
+
+          <figure className="relative w-[260px] justify-self-end overflow-hidden rounded-md border border-line-soft bg-bg-2/40">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/about/ilya.jpg"
+              alt="Ilya Moskovkin"
+              width={260}
+              height={340}
+              loading="lazy"
+              className="block h-[340px] w-full select-none object-cover"
+            />
+          </figure>
         </div>
       </Section>
 
@@ -146,19 +228,21 @@ export default function Home() {
       </Section>
 
       <Section id="contact" n="03" title="Contact">
-        <p className="mb-6 text-fg-muted">
-          The form goes through a Server Action and lands in my inbox via Resend. The mailto and
-          direct links below work too — pick whichever feels less formal.
-        </p>
-
-        {!isContactConfigured && (
-          <div className="mb-3 flex items-center gap-2 rounded-sm border border-dashed border-line bg-bg-2/30 px-3 py-1.5 font-mono text-[10px] lowercase tracking-[0.06em] text-fg-dim">
-            <span className="inline-block size-1.5 rounded-full bg-amber-400/70" />
-            contact form not configured here — use the direct email link below
-          </div>
+        {isContactConfigured ? (
+          <>
+            <p className="mb-6 text-fg-muted">
+              The form goes through a Server Action and lands in my inbox via
+              Resend. The mailto and direct links below work too — pick whichever
+              feels less formal.
+            </p>
+            <ContactForm disabled={false} />
+          </>
+        ) : (
+          <p className="mb-6 text-fg-muted">
+            Fastest way to reach me is email — links below. I usually reply
+            within a day.
+          </p>
         )}
-
-        <ContactForm disabled={!isContactConfigured} />
 
         <ul className="mt-10 flex flex-col gap-2.5">
           {CONTACT.map((c) => (
@@ -166,7 +250,9 @@ export default function Home() {
               key={c.key}
               className="grid grid-cols-[80px_1fr] items-center gap-4 border-b border-line-soft pb-2.5 sm:grid-cols-[100px_1fr]"
             >
-              <span className="text-[11px] lowercase tracking-[0.06em] text-fg-dim">{c.key}</span>
+              <span className="text-[11px] lowercase tracking-[0.06em] text-fg-dim">
+                {c.key}
+              </span>
               <a
                 href={c.href}
                 target={c.href.startsWith("mailto:") ? undefined : "_blank"}
@@ -236,7 +322,9 @@ export default function Home() {
                   <span className="font-mono text-[10px] lowercase tracking-[0.08em] text-fg-dim">
                     {c.key}
                   </span>
-                  <span className="text-fg group-hover:text-[var(--accent)]">{c.label}</span>
+                  <span className="text-fg group-hover:text-[var(--accent)]">
+                    {c.label}
+                  </span>
                 </a>
               ))}
             </nav>
@@ -246,9 +334,13 @@ export default function Home() {
           <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-line-soft/60 pt-6 text-[10px] lowercase tracking-[0.06em] text-fg-dim">
             <span>im / portfolio / v1.0</span>
             <span className="size-[3px] rounded-full bg-fg-dim" />
-            <span>built with next 16 · react 19 · tailwind v4 · three.js · framer</span>
+            <span>
+              built with next 16 · react 19 · tailwind v4 · three.js · framer
+            </span>
             <span className="size-[3px] rounded-full bg-fg-dim" />
-            <span className="ml-auto">© {new Date().getFullYear()} ilya moskovkin</span>
+            <span className="ml-auto">
+              © {new Date().getFullYear()} ilya moskovkin
+            </span>
           </div>
         </div>
       </footer>

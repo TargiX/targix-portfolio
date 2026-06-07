@@ -6,12 +6,12 @@ import { useVietnamTime } from "@/lib/use-vietnam-time";
 import { cn } from "@/lib/utils";
 
 type View = "work" | "lab" | "about";
-const ORDER: View[] = ["work", "lab", "about"];
+const ORDER: View[] = ["work", "about", "lab"];
 
 const TABS: { id: View; label: string }[] = [
   { id: "work", label: "Work" },
-  { id: "lab", label: "Lab" },
   { id: "about", label: "About" },
+  { id: "lab", label: "Lab" },
 ];
 
 const tabId = (view: View) => `portfolio-tab-${view}`;
@@ -252,9 +252,25 @@ export function ViewSwitcher({
             ))}
           </div>
 
-          <div className="ml-auto hidden items-center gap-2 font-mono text-[10px] lowercase tracking-[0.04em] text-fg-dim sm:flex">
-            <span className="status-dot" />
-            <span>ict {time}</span>
+          <div className="ml-auto flex items-center gap-3 font-mono text-[11px] tracking-[0.04em] sm:gap-4">
+            <a
+              href="mailto:hello@ilyamoskovkin.com"
+              className="hidden text-fg-dim transition-colors hover:text-fg sm:inline"
+            >
+              Email
+            </a>
+            <a
+              href="/Ilya_Moskovkin_CV.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-md border border-line bg-bg-2 px-2.5 py-1 text-fg-muted transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+            >
+              Résumé ↗
+            </a>
+            <div className="hidden items-center gap-2 text-[10px] lowercase text-fg-dim sm:flex">
+              <span className="status-dot" />
+              <span>ict {time}</span>
+            </div>
           </div>
         </div>
       </nav>
@@ -297,9 +313,9 @@ export function ViewSwitcher({
           <button
             type="button"
             onClick={() => go(nextView, { axis: "y" })}
-            className="group flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-line-soft py-3 font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+            className="group flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-line-soft py-3 font-mono text-[11px] tracking-[0.08em] text-fg-dim transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
           >
-            keep scrolling — or click — to open {nextLabel}
+            Keep scrolling — or click — to open {nextLabel}
             <span className="inline-block transition-transform group-hover:translate-y-0.5">↓</span>
           </button>
         </div>

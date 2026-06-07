@@ -98,8 +98,9 @@ function prepare(
       const p = y * sampleW + x;
       const i = p * 4;
       const lum = (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255;
-      // Slight contrast lift so the dither isn't muddy.
-      const contrasted = Math.max(0, Math.min(1, (lum - 0.5) * 1.25 + 0.5));
+      // Gentle contrast lift so the dither isn't muddy — kept soft so the
+      // pattern reads as texture rather than a harsh two-tone stamp.
+      const contrasted = Math.max(0, Math.min(1, (lum - 0.5) * 1.05 + 0.5));
       on[p] = contrasted > BAYER_4X4[y & 3][x & 3] ? 1 : 0;
       // random per-pixel reveal order → scattered "materialise from pixels" dissolve
       reveal[p] = Math.random();

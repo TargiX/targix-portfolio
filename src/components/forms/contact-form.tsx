@@ -109,7 +109,7 @@ export function ContactForm({ disabled = false }: { disabled?: boolean }) {
               : "border-line bg-bg-2 text-fg hover:border-[var(--accent)] hover:text-[var(--accent)] active:translate-y-px",
           )}
         >
-          {disabled ? "email directly" : isPending ? "sending…" : "send message"}
+          {disabled ? "Email directly" : isPending ? "Sending…" : "Send message"}
         </button>
 
         <div className="text-[10px] lowercase tracking-[0.08em] text-fg-dim">

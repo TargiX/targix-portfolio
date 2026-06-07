@@ -6,7 +6,7 @@ import { C_DIM, C_FG, C_GREEN, C_MUTED, FONT_MONO, FONT_SANS, paintRange } from 
 type TextWithColorRanges = Text & { colorRanges?: Record<number, number> };
 
 const PARA = "Senior frontend engineer with fullstack\nchops and UI/UX roots.\nBuilding experiences that matter.";
-const META = "based  vietnam → remote      years  12+      stack  vue · react · node      status  open to roles";
+const META = "based  vietnam → remote      years  10+      stack  vue · react · node      status  open to roles";
 const LINK = "interactive experiments — open the lab →";
 
 const applyColorRanges = (text: Text, ranges: Record<number, number>) => {
@@ -94,7 +94,7 @@ export function createHeroTextObjects() {
   {
     const ranges: Record<number, number> = { 0: C_DIM };
     paintRange(ranges, META, "vietnam → remote", C_FG, C_DIM);
-    paintRange(ranges, META, "12+", C_FG, C_DIM);
+    paintRange(ranges, META, "10+", C_FG, C_DIM);
     paintRange(ranges, META, "vue · react · node", C_FG, C_DIM);
     paintRange(ranges, META, "open to roles", C_GREEN, C_DIM);
     applyColorRanges(meta, ranges);

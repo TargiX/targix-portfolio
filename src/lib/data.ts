@@ -45,7 +45,7 @@ export const SECONDARY: Project[] = [
     role: "Lead Frontend · Broker Online Exchange",
     title: "Broker Online Exchange",
     blurb:
-      "Nearly five years leading the frontend team at Broker Online Exchange (acquired by AppDirect along the way). Mentored juniors and built MyServiceCloud, a telecom-quoting platform, then led the migration from Vue 3 to React micro-frontends (Mantine, Zustand). Flagship: Bill Scan → Quote — scanned bills turned into structured quotes via Gemini Vision OCR.",
+      "Nearly five years leading the frontend team at Broker Online Exchange (acquired by AppDirect along the way). Mentored juniors and built MyServiceCloud, a B2B energy-brokerage platform, then led the migration from Vue 3 to React micro-frontends (Mantine, Zustand). Flagship: Bill Scan → Quote — scanned bills turned into structured quotes via Gemini Vision OCR.",
     tags: ["React", "Vue 3", "TypeScript", "Micro-frontends", "Mantine", "Zustand", "Laravel", "Team lead"],
     links: [
       { label: "brokeronlinexchange.com", href: "https://www.brokeronlinexchange.com/" },
@@ -56,11 +56,11 @@ export const SECONDARY: Project[] = [
   },
   {
     index: "③",
-    year: "2026",
+    year: "2026 — now",
     role: "Solo · Design + Eng",
     title: "Anchor",
     blurb:
-      "A calm daily-ritual app — mood, sleep, intention, journaling. One Next.js codebase shipping to web, iOS/Android (Capacitor), and desktop (Electron).",
+      "A calm daily-ritual app — mood, sleep, intention, journaling. A real hybrid app launching now: one Next.js codebase shipping to web, iOS/Android (Capacitor), and desktop (Electron).",
     tags: ["Next.js 16", "React 19", "Capacitor", "Electron", "Framer Motion"],
     links: [
       ...(ANCHOR_DEPLOYED ? [{ label: "live app", href: ANCHOR_URL }] : []),
@@ -78,11 +78,11 @@ export const SECONDARY: Project[] = [
   },
   {
     index: "④",
-    year: "2026",
-    role: "Solo · Design + Eng",
+    year: "2025",
+    role: "Solo · Product Design + Eng",
     title: "Roomboard",
     blurb:
-      "A realtime visual collaboration room for moodboards, landing-page reviews, and creative decisions. Drop images, write notes, add comments, link cards, and share one lockable room URL.",
+      "A live realtime collaboration room for moodboards, landing-page reviews, and creative decisions — open at roomboard.online. Drop images, write notes, add comments, link cards, and share one lockable room URL.",
     tags: ["Next.js 16", "React 19", "Pixi.js", "Elixir/Phoenix", "Supabase", "Realtime", "Canvas UX"],
     links: [
       { label: "roomboard.online", href: "https://roomboard.online" },
@@ -105,8 +105,8 @@ export const SECONDARY: Project[] = [
 export const MINOR: Project[] = [
   {
     index: "⑤",
-    year: "2026",
-    role: "Solo · React systems demo",
+    year: "2024",
+    role: "Solo · React systems",
     title: "SignalOps",
     blurb:
       "A React operations cockpit for AI generation infrastructure: provider health, incident drill-down, virtualized job inspection, and routing-rule simulation.",
@@ -117,11 +117,11 @@ export const MINOR: Project[] = [
   },
   {
     index: "⑥",
-    year: "2026",
+    year: "2025",
     role: "Solo · CMS marketing build",
     title: "Flux Sanity Site",
     blurb:
-      "A recruiter-facing marketing-site case study: Next.js App Router, Sanity schemas, reusable sections, draft preview wiring, SEO, and Vercel deployment.",
+      "A marketing site on Next.js App Router with Sanity: reusable section schemas, draft preview wiring, technical SEO, and Vercel deployment.",
     tags: ["Next.js 16", "Sanity", "Headless CMS", "Technical SEO", "Vercel"],
     links: [
       { label: "live site", href: "https://sanity.ilyamoskovkin.com" },
@@ -133,21 +133,21 @@ export const MINOR: Project[] = [
   {
     index: "⑦",
     year: "2026",
-    role: "Solo · Astro SSG sample",
+    role: "Solo · Astro SSG",
     title: "HelixCare Pulse",
     blurb:
-      "A dark premium healthcare marketing rebuild sample in Astro: static output, section data, reusable components, and tiny vanilla-JS interactions.",
+      "A dark, premium healthcare marketing site built in Astro: static output, section-driven data, reusable components, and tiny vanilla-JS interactions.",
     tags: ["Astro", "SSG", "Vanilla JS", "Netlify"],
     links: [{ label: "live demo", href: "https://helixcare-pulse.vercel.app" }],
     thumb: "/work/helixcare-pulse/hero-device.png",
   },
   {
     index: "⑧",
-    year: "2026",
-    role: "Solo · Web3 / Cosmos demo",
+    year: "2023",
+    role: "Solo · Web3 / Cosmos",
     title: "Injective Testnet dApp",
     blurb:
-      "A small Nuxt/TypeScript dApp on the Injective (Cosmos) testnet: wallet connect (Keplr/Leap), on-chain balances, and a live spot order book with hand-rolled price and depth charts — all read over the injective-ts gRPC-web SDK.",
+      "A Nuxt/TypeScript dApp on the Injective (Cosmos) testnet: wallet connect (Keplr/Leap), on-chain balances, and a live spot order book with hand-rolled price and depth charts — all read over the injective-ts gRPC-web SDK.",
     tags: ["Nuxt 3", "TypeScript", "Injective / Cosmos", "gRPC-web", "Keplr"],
     links: [
       { label: "live demo", href: "https://injective.ilyamoskovkin.com" },
@@ -160,7 +160,13 @@ export const MINOR: Project[] = [
 export const STACK = [
   {
     label: "core",
-    items: ["TypeScript", "Vue 3 / Nuxt 4", "React / Next.js", "Node.js"],
+    items: [
+      "TypeScript",
+      "React 19 / Next.js (App Router)",
+      "TanStack Query · Zustand",
+      "Vue 3 / Nuxt 4",
+      "Node.js",
+    ],
   },
   {
     label: "data & infra",
@@ -185,7 +191,7 @@ export const CONTACT = [
   {
     key: "linkedin",
     label: "linkedin.com/in/ilya-moskovkin",
-    href: "https://www.linkedin.com/in/ilya-moskovkin",
+    href: "https://www.linkedin.com/in/ilya-moskovkin-963ab85b/",
   },
   { key: "résumé", label: "Ilya_Moskovkin_CV.pdf", href: "/Ilya_Moskovkin_CV.pdf" },
 ];

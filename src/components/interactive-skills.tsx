@@ -8,27 +8,34 @@ const SKILLS = [
   {
     id: "react",
     title: "React / Next.js systems",
-    skills: ["React 19", "Next.js App Router", "TanStack Query", "Zustand", "Framer Motion"],
+    skills: [
+      "React 19",
+      "Next.js App Router",
+      "TanStack Query",
+      "Zustand",
+      "TypeScript",
+      "Module Federation",
+    ],
   },
   {
     id: "vue",
     title: "Vue / Nuxt product apps",
-    skills: ["Vue 3", "Nuxt", "Pinia", "VueUse"],
+    skills: ["Vue 3", "Nuxt", "Pinia / Vuex", "VueUse"],
   },
   {
     id: "ai",
     title: "AI workflows",
-    skills: ["LLM Integration", "Streaming UIs", "LangChain", "OpenAI / Anthropic APIs"],
+    skills: ["Vertex AI / Gemini", "Prompt Design", "Streaming UIs", "LLM Response Handling"],
   },
   {
     id: "data",
     title: "Data-heavy dashboards",
-    skills: ["Complex State", "Data Visualization", "Virtualization", "WebSockets"],
+    skills: ["TanStack Table", "Virtualization", "DevExtreme", "Data Visualization", "WebSockets"],
   },
   {
     id: "visual",
     title: "Visual editors",
-    skills: ["Canvas API", "WebGL / Three.js", "Drag & Drop", "Complex Interactions"],
+    skills: ["Canvas API", "WebGL / Three.js", "Pixi.js", "Drag & Drop"],
   },
 ];
 

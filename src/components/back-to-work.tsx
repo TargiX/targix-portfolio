@@ -34,10 +34,10 @@ export function BackToWork() {
       <div ref={sentinelRef}>
         <Link
           href="/#work"
-          className="group inline-flex items-center gap-2 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim transition-colors hover:text-fg"
+          className="group inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.06em] text-fg-dim transition-colors hover:text-fg"
         >
           <span className="inline-block transition-transform group-hover:-translate-x-0.5">←</span>
-          back to work
+          Back to work
         </Link>
       </div>
 
@@ -54,10 +54,10 @@ export function BackToWork() {
             <Link
               href="/#work"
               aria-label="back to work"
-              className="group inline-flex items-center gap-2 rounded-full border border-line-soft bg-bg-2/70 px-3 py-1.5 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim shadow-sm backdrop-blur-md transition-colors hover:border-[color:color-mix(in_oklab,var(--accent)_30%,var(--line))] hover:text-fg"
+              className="group inline-flex items-center gap-2 rounded-full border border-line-soft bg-bg-2/70 px-3 py-1.5 font-mono text-[11px] tracking-[0.06em] text-fg-dim shadow-sm backdrop-blur-md transition-colors hover:border-[color:color-mix(in_oklab,var(--accent)_30%,var(--line))] hover:text-fg"
             >
               <span className="inline-block transition-transform group-hover:-translate-x-0.5">←</span>
-              <span className="hidden sm:inline">back to work</span>
+              <span className="hidden sm:inline">Back to work</span>
             </Link>
           </motion.div>
         )}

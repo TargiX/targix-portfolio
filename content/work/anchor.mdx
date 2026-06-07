@@ -1,9 +1,9 @@
 ---
 slug: anchor
 title: Anchor
-year: "2026"
+year: "2026 — now"
 role: Solo · Design + Eng
-blurb: A calm daily-ritual app — morning and evening check-ins for mood, sleep, intention, and journaling. One Next.js codebase that ships to web, iOS/Android (Capacitor), and desktop (Electron).
+blurb: A calm daily-ritual app — morning and evening check-ins for mood, sleep, intention, and journaling. A real hybrid app launching now — one Next.js codebase that ships to web, iOS/Android (Capacitor), and desktop (Electron).
 tags: ["Next.js 16", "React 19", "TypeScript", "Tailwind v4", "Radix UI", "Framer Motion", "Capacitor", "Electron", "Vercel"]
 links:
   - { label: "live app", href: "https://anchor.ilyamoskovkin.com" }
@@ -17,7 +17,7 @@ featured: false
 
 Most habit and mood apps are a wall of inputs. Anchor is the opposite: two short rituals — one to open the day, one to close it — and a quiet trend line in between. Set an intention in the morning, log how you slept, breathe. Reflect and journal at night, prep tomorrow's sleep window. That's the whole product.
 
-It started as a prototype to answer a narrower question: **how far can one Next.js codebase stretch across web, mobile, and desktop without forking the UI?** The answer turned out to be "all the way," and that's the part worth showing.
+It started from a narrower question: **how far can one Next.js codebase stretch across web, mobile, and desktop without forking the UI?** The answer turned out to be "all the way," and that's the part worth showing.
 
 <AnchorDemo />
 
@@ -55,7 +55,7 @@ Vercel keeps the full server build; `npm run cap:sync` produces the static expor
 
 **Radix primitives + Tailwind v4, not a component kit.** The whole thing is warm, paper-and-ink, with a custom OKLCH palette. Radix gives accessible behavior (slider, dialog, tabs) and I style it down to the token. shadcn-style ownership of the component source meant I could fix things directly instead of fighting a library's defaults.
 
-**Framer Motion, used sparingly.** Ritual steps cross-fade, the brand motif settles in, status cards slide. Animation is the difference between "prototype" and "product," but every extra spring is a frame budget — so it's restrained on purpose.
+**Framer Motion, used sparingly.** Ritual steps cross-fade, the brand motif settles in, status cards slide. Animation is what separates something that feels unfinished from something that feels shipped, but every extra spring is a frame budget — so it's restrained on purpose.
 
 ## What AI got wrong (and how I caught it)
 
@@ -80,7 +80,7 @@ That's the recurring tax on AI-generated frontend: it's confident with modern AP
 
 ## What I'd do differently
 
-- **Persist state to IndexedDB from day one.** The prototype keeps entries in memory; a real release needs offline-first storage that survives a reload, which Capacitor makes easy but I deferred.
+- **Persist state to IndexedDB from day one.** The current build keeps entries in memory; production needs offline-first storage that survives a reload, which Capacitor makes easy but I deferred.
 - **Wire Sentry before shipping, not after.** Cross-platform means cross-platform bugs; I'd want the crash data from the first native build.
 - **Lock the design tokens earlier.** I iterated the palette in the components and had to reconcile it back into CSS variables. Tokens first, components second.
 
@@ -89,4 +89,4 @@ That's the recurring tax on AI-generated frontend: it's confident with modern AP
 - **Targets from one codebase:** 3 — web, mobile (iOS + Android), desktop.
 - **Production build:** 7 static routes, clean typecheck + lint.
 - **Native seam:** one env-gated config block, no UI fork.
-- **Time to cross-platform prototype:** a single focused build session.
+- **Time to cross-platform build:** a single focused build session.

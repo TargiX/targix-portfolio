@@ -151,16 +151,16 @@ function HeroCopy() {
 
         <div className="flex flex-wrap gap-x-5 gap-y-4 text-[11px] lowercase tracking-[0.04em] text-fg-dim">
           <MetaItem k="based" v="vietnam → remote" />
-          <MetaItem k="years" v="12+" />
+          <MetaItem k="years" v="10+" />
           <MetaItem k="stack" v="vue · react · node" />
           <MetaItem k="status" v={<span style={{ color: "oklch(0.78 0.16 145)" }}>open to roles</span>} />
         </div>
 
         <a
           href="#lab"
-          className="group mt-8 inline-flex items-center gap-2 font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim transition-colors hover:text-[var(--accent)]"
+          className="group mt-8 inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.08em] text-fg-dim transition-colors hover:text-[var(--accent)]"
         >
-          interactive experiments — open the lab
+          Interactive experiments — open the lab
           <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
         </a>
       </div>
