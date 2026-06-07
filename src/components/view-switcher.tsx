@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import { useVietnamTime } from "@/lib/use-vietnam-time";
 import { cn } from "@/lib/utils";
 
@@ -253,12 +252,9 @@ export function ViewSwitcher({
             ))}
           </div>
 
-          <div className="ml-auto flex items-center gap-2">
-            <ThemeSwitcher />
-            <div className="hidden items-center gap-2 font-mono text-[10px] lowercase tracking-[0.04em] text-fg-dim sm:flex">
-              <span className="status-dot" />
-              <span>ict {time}</span>
-            </div>
+          <div className="ml-auto hidden items-center gap-2 font-mono text-[10px] lowercase tracking-[0.04em] text-fg-dim sm:flex">
+            <span className="status-dot" />
+            <span>ict {time}</span>
           </div>
         </div>
       </nav>

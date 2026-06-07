@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import { PostHogProvider } from "@/components/posthog-provider";
 import { SITE, absoluteUrl } from "@/lib/seo";
@@ -65,11 +64,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  colorScheme: "light dark",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
-    { media: "(prefers-color-scheme: dark)", color: "#101114" },
-  ],
+  colorScheme: "dark",
+  themeColor: "#101114",
 };
 
 export default function RootLayout({
@@ -80,14 +76,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="dark"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        <Script id="theme-init" strategy="beforeInteractive">
-          {`try{var t=localStorage.getItem('portfolio-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t}else{document.documentElement.removeAttribute('data-theme')}}catch(e){}`}
-        </Script>
-      </head>
       <body className="min-h-full">
         <PostHogProvider>
           <div className="body-dots" aria-hidden="true" />
