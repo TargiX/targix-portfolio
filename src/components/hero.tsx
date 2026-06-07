@@ -23,13 +23,32 @@ export function Hero() {
   // 'pending' until the WebGL hero comes up; on 'failed' we fall back to the
   // plain DOM hero. When ready on desktop, the WebGL scene owns bg + the whole
   // left block + glass; the only DOM left is a transparent, clickable overlay
-  // for the link. On mobile the SDF typography can't reflow, so we always render
-  // the copy in the DOM and let WebGL paint only the bg + glass cubes behind it.
+  // for the link. On mobile and in light mode the SDF typography is suppressed,
+  // so DOM copy can use the active CSS palette and stay readable.
   const [webgl, setWebgl] = useState<"pending" | "ready" | "failed">("pending");
   const [linkRect, setLinkRect] = useState<HeroLayout["link"] | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("dark");
   const time = useVietnamTime();
   const webglReady = webgl === "ready";
+  const lightHero = resolvedTheme === "light";
+
+  useEffect(() => {
+    const system = window.matchMedia("(prefers-color-scheme: dark)");
+    const resolve = () => {
+      const manual = document.documentElement.dataset.theme;
+      setResolvedTheme(manual === "light" ? "light" : manual === "dark" ? "dark" : system.matches ? "dark" : "light");
+    };
+
+    resolve();
+    system.addEventListener("change", resolve);
+    const observer = new MutationObserver(resolve);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => {
+      system.removeEventListener("change", resolve);
+      observer.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 639px)");
@@ -41,9 +60,9 @@ export function Hero() {
 
   const onLayout = useCallback((l: HeroLayout) => setLinkRect(l.link), []);
 
-  // the DOM copy is shown on mobile (over the live WebGL bg) and as the fallback
-  // when WebGL can't start at all
-  const showDomCopy = isMobile || webgl === "failed";
+  // the DOM copy is shown on mobile, in light mode (dark SDF canvas copy would be wrong),
+  // and as the fallback when WebGL can't start at all
+  const showDomCopy = isMobile || lightHero || webgl === "failed";
 
   return (
     <header
@@ -53,12 +72,13 @@ export function Hero() {
       {/* full-bleed WebGL scene: ported bg shader + glass cubes (+ SDF typography
           on desktop). On mobile, text is suppressed and the copy lives in the DOM. */}
       <ThreeHero
-        accent="#a3e635"
-        accent2="#2dd4bf"
+        accent={lightHero ? "#166534" : "#a3e635"}
+        accent2={lightHero ? "#047857" : "#2dd4bf"}
+        surface={resolvedTheme}
         onStatus={setWebgl}
         time={time}
         onLayout={onLayout}
-        mobile={isMobile}
+        mobile={isMobile || lightHero}
       />
 
       {/* SEO / a11y: the hero copy always lives in the DOM, even when WebGL paints it */}
@@ -75,7 +95,7 @@ export function Hero() {
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           background:
-            "radial-gradient(60% 80% at 20% 30%, oklch(0.20 0.01 250 / .45), transparent 70%), linear-gradient(180deg, transparent 55%, var(--bg) 100%)",
+            "radial-gradient(60% 80% at 20% 30%, color-mix(in oklab, var(--bg-3) 72%, var(--accent) 8%), transparent 70%), linear-gradient(180deg, transparent 55%, var(--bg) 100%)",
         }}
       />
 

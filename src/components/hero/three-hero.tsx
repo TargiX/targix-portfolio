@@ -25,6 +25,7 @@ type Props = {
   accent?: string;
   /** teal companion — blends with `accent` for the blue-green flow */
   accent2?: string;
+  surface?: "light" | "dark";
   className?: string;
   onStatus?: (status: "ready" | "failed") => void;
   /** time string for the status line, e.g. "09:46:35" */
@@ -39,7 +40,7 @@ type Props = {
   mobile?: boolean;
 };
 
-export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, onStatus, time, onLayout, mobile = false }: Props) {
+export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", surface = "dark", className, onStatus, time, onLayout, mobile = false }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const timeRef = useRef(time ?? "");
   timeRef.current = time ?? "";
@@ -52,6 +53,9 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
     const accentRgb = hexToRgb(accent);
     const accent2Rgb = hexToRgb(accent2);
+    const isLightSurface = surface === "light";
+    const pageBgRgb = isLightSurface ? [0.965, 0.967, 0.972] : [0.052, 0.055, 0.062];
+    const baseDotRgb = isLightSurface ? [0.56, 0.59, 0.64] : [0.32, 0.34, 0.4];
 
     let renderer: THREE.WebGLRenderer;
     try {
@@ -98,6 +102,9 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
         uMouseActive: { value: 0 },
         uAccent: { value: new THREE.Vector3(...accentRgb) },
         uAccent2: { value: new THREE.Vector3(...accent2Rgb) },
+        uPageBg: { value: new THREE.Vector3(...pageBgRgb) },
+        uBaseDot: { value: new THREE.Vector3(...baseDotRgb) },
+        uLight: { value: isLightSurface ? 1 : 0 },
         uTime: { value: 0 },
       },
     });
@@ -635,7 +642,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", className, 
       renderer.dispose();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
-  }, [accent, accent2, onStatus, onLayout, mobile]);
+  }, [accent, accent2, surface, onStatus, onLayout, mobile]);
 
   return (
     <div

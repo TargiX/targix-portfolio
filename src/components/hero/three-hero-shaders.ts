@@ -12,6 +12,9 @@ uniform vec2  uMouse;
 uniform float uMouseActive;
 uniform vec3  uAccent;
 uniform vec3  uAccent2;
+uniform vec3  uPageBg;
+uniform vec3  uBaseDot;
+uniform float uLight;
 uniform float uTime;
 
 float hash21(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
@@ -33,7 +36,7 @@ void main(){
   float gridSize = 26.0;
   vec2 g = fract(p/gridSize) - 0.5;
   float gridDot = smoothstep(2.2, 0.6, length(g)*gridSize);
-  float dotBright = 0.18 + aurora*0.65;
+  float dotBright = mix(0.18 + aurora*0.65, 0.10 + aurora*0.30, uLight);
 
   float mDist = length(p - uMouse);
   float mGlow = exp(-mDist*mDist/42000.0);
@@ -44,17 +47,17 @@ void main(){
   vec3 accHover = uAccent;
   vec3 dotTint = mix(accSmoke, accHover, mLocal*uMouseActive);
 
-  vec3 baseDot = vec3(0.32,0.34,0.40);
-  vec3 dotColor = mix(baseDot, dotTint, 0.35 + mLocal*uMouseActive*0.85);
+  vec3 baseDot = uBaseDot;
+  vec3 dotColor = mix(baseDot, dotTint, mix(0.35, 0.24, uLight) + mLocal*uMouseActive*0.85);
   vec3 col = vec3(0.0);
-  col += gridDot * dotColor * dotBright * (0.55 + mLocal*uMouseActive*0.5);
-  col += accSmoke * aurora*aurora * 0.05;
-  col += accHover * mGlow * uMouseActive * 0.42;
+  col += gridDot * dotColor * dotBright * (mix(0.55, 0.36, uLight) + mLocal*uMouseActive*0.5);
+  col += accSmoke * aurora*aurora * mix(0.05, 0.018, uLight);
+  col += accHover * mGlow * uMouseActive * mix(0.42, 0.22, uLight);
   col += (grain(p+uTime*13.0)-0.5) * 0.006;
   vec2 vc = p/uResolution - 0.5;
   col *= 0.45 + (1.0 - smoothstep(0.30,0.85,length(vc))) * 0.55;
 
-  vec3 pageBg = vec3(0.052,0.055,0.062);
+  vec3 pageBg = uPageBg;
   gl_FragColor = vec4(pageBg + col, 1.0);
 }
 `;

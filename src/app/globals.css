@@ -23,11 +23,11 @@
   --line-soft:  oklch(0.86  0.005 250);
 
   /* accent (overridable) */
-  --accent:     #65a30d;
-  --accent-rgb: 101 163 13;
+  --accent:     #166534;
+  --accent-rgb: 22 101 52;
   /* teal companion — blends with --accent for the blue-green flow */
-  --accent-2:     #0f766e;
-  --accent-2-rgb: 15 118 110;
+  --accent-2:     #047857;
+  --accent-2-rgb: 4 120 87;
 
   /* shadcn-compat tokens (mapped) */
   --background: var(--bg);
@@ -90,10 +90,10 @@
   --fg-dim:     oklch(0.62  0.006 250);
   --line:       oklch(0.78  0.006 250);
   --line-soft:  oklch(0.86  0.005 250);
-  --accent:     #65a30d;
-  --accent-rgb: 101 163 13;
-  --accent-2:     #0f766e;
-  --accent-2-rgb: 15 118 110;
+  --accent:     #166534;
+  --accent-rgb: 22 101 52;
+  --accent-2:     #047857;
+  --accent-2-rgb: 4 120 87;
   --destructive: oklch(0.58 0.2 25);
   --destructive-foreground: var(--bg);
 }
