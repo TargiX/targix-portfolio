@@ -370,10 +370,10 @@ export function ReactFlowDemo() {
             </div>
             <p className="m-0 text-[12px] leading-relaxed text-fg-muted">
               Build a{" "}
-              <span className="text-fg">{selected[2]?.choice?.label.toLowerCase()}</span> for{" "}
-              <span className="text-fg">{selected[1]?.choice?.label.toLowerCase()}</span>, optimized
-              for <span className="text-fg">{selected[0]?.choice?.label.toLowerCase()}</span>, with a{" "}
-              <span className="text-fg">{selected[3]?.choice?.label.toLowerCase()}</span> handoff.
+              <span className="text-fg">{selected[2]?.choice?.label?.toLowerCase() ?? "—"}</span> for{" "}
+              <span className="text-fg">{selected[1]?.choice?.label?.toLowerCase() ?? "—"}</span>, optimized
+              for <span className="text-fg">{selected[0]?.choice?.label?.toLowerCase() ?? "—"}</span>, with a{" "}
+              <span className="text-fg">{selected[3]?.choice?.label?.toLowerCase() ?? "—"}</span> handoff.
             </p>
           </div>
         </aside>
