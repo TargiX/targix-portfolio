@@ -52,7 +52,7 @@ void main(){
   vec3 col = vec3(0.0);
   col += gridDot * dotColor * dotBright * (mix(0.55, 0.36, uLight) + mLocal*uMouseActive*0.5);
   col += accSmoke * aurora*aurora * mix(0.05, 0.018, uLight);
-  col += accHover * mGlow * uMouseActive * mix(0.42, 0.22, uLight);
+  col += accHover * mGlow * uMouseActive * mix(0.42, 0.36, uLight);
   col += (grain(p+uTime*13.0)-0.5) * 0.006;
   vec2 vc = p/uResolution - 0.5;
   col *= 0.45 + (1.0 - smoothstep(0.30,0.85,length(vc))) * 0.55;
@@ -87,6 +87,8 @@ varying vec3 vP;
 uniform sampler2D uScene;
 uniform vec2  uRes;
 uniform vec3  uAccent;
+uniform vec3  uAccent2;
+uniform float uLight;
 uniform float uReveal;
 
 void main(){
@@ -101,10 +103,20 @@ void main(){
   vec3 refl = texture2D(uScene, reflUV).rgb;
 
   vec3 col = mix(refr, refl, fres * 0.85);
-  col += uAccent * fres * 0.16;
-  col += vec3(0.04, 0.045, 0.05);
-  col *= 0.74 + 0.26 * clamp(N.z * 0.5 + 0.5, 0.0, 1.0);
-  col += vec3(0.7, 0.74, 0.8) * pow(fres, 2.0) * 0.5;
+  float facing = clamp(N.z * 0.5 + 0.5, 0.0, 1.0);
+  float edge = pow(fres, 1.35);
+
+  // Dark theme keeps the original almost-white glass. Light theme needs a
+  // designed emerald/cyan wash so the refraction still reads on a pale field.
+  vec3 lightWash = mix(vec3(0.82, 0.94, 0.88), mix(uAccent, uAccent2, 0.38), 0.34);
+  col = mix(col, lightWash, uLight * (0.18 + edge * 0.34));
+  col += uAccent * fres * mix(0.16, 0.38, uLight);
+  col += uAccent2 * (1.0 - facing) * 0.12 * uLight;
+  col += mix(vec3(0.04, 0.045, 0.05), vec3(0.0, 0.035, 0.018), uLight);
+  col *= 0.74 + 0.26 * facing;
+  vec3 rim = mix(vec3(0.7, 0.74, 0.8), mix(uAccent, uAccent2, 0.45), uLight);
+  col += rim * pow(fres, 2.0) * mix(0.5, 0.68, uLight);
+  col = clamp(col, 0.0, 1.0);
 
   float alpha = (0.85 + fres * 0.15) * uReveal;
   gl_FragColor = vec4(col, alpha);
@@ -124,6 +136,7 @@ precision highp float;
 varying vec2 vUv;
 uniform vec3 uColor;
 uniform float uIntensity;
+uniform float uLight;
 uniform float uTime;
 
 void main() {
@@ -136,9 +149,11 @@ void main() {
   // The glass cubes will naturally break this light into complex patterns.
   float alpha = 1.0 - smoothstep(0.0, 1.0, dist);
   
-  // Bright soft core that fades out smoothly
-  float glow = pow(alpha, 1.8) * 0.85;
-  
-  gl_FragColor = vec4(uColor * glow * uIntensity, glow * uIntensity);
+  // Dark: acid core. Light: broader emerald aura with enough chroma to survive
+  // additive blending on an almost-white background.
+  float glow = mix(pow(alpha, 1.8) * 0.85, pow(alpha, 1.18) * 1.25, uLight);
+  float boost = mix(1.0, 2.35, uLight);
+  float outAlpha = glow * uIntensity * mix(1.0, 0.62, uLight);
+  gl_FragColor = vec4(uColor * glow * uIntensity * boost, outAlpha);
 }
 `;

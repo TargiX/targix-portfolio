@@ -155,6 +155,8 @@ export function ThreeHero({
         uScene: { value: sceneRT.texture },
         uRes: { value: new THREE.Vector2(W * pr, H * pr) },
         uAccent: { value: new THREE.Vector3(...accentRgb) },
+        uAccent2: { value: new THREE.Vector3(...accent2Rgb) },
+        uLight: { value: isLightSurface ? 1 : 0 },
         uReveal: { value: 0 },
       },
     });
@@ -178,6 +180,7 @@ export function ThreeHero({
       uniforms: {
         uColor: { value: new THREE.Vector3(...accentRgb) },
         uIntensity: { value: 0.0 },
+        uLight: { value: isLightSurface ? 1 : 0 },
         uTime: { value: 0.0 },
       },
     });
@@ -602,7 +605,7 @@ export function ThreeHero({
         twist = null;
       }
 
-      glowMat.uniforms.uIntensity.value = maxBulge * 0.75;
+      glowMat.uniforms.uIntensity.value = maxBulge * (isLightSurface ? 1.35 : 0.75);
       glowMat.uniforms.uTime.value = elapsed;
 
       // ── render: scene (bg+text) → RT, composite → screen, cubes on top ──
