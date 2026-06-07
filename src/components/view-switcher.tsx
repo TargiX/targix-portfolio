@@ -40,6 +40,8 @@ export function ViewSwitcher({
   about: ReactNode;
 }) {
   const [view, setView] = useState<View>("work");
+  const viewRef = useRef<View>(view);
+  viewRef.current = view;
   const [dir, setDir] = useState(1);
   const [axis, setAxis] = useState<Axis>("x");
   const [instant, setInstant] = useState(false);
@@ -56,11 +58,14 @@ export function ViewSwitcher({
       const { axis: nextAxis = "x", push = true, instant: instantNext = false } = opts;
       setView((cur) => {
         if (cur === next) return cur;
-        if (instantNext) setInstant(true);
-        setDir(ORDER.indexOf(next) > ORDER.indexOf(cur) ? 1 : -1);
-        setAxis(nextAxis);
         return next;
       });
+      // Read via ref to avoid side effects inside the updater
+      const cur = viewRef.current;
+      if (cur === next) return;
+      setDir(ORDER.indexOf(next) > ORDER.indexOf(cur) ? 1 : -1);
+      if (instantNext) setInstant(true);
+      setAxis(nextAxis);
       // No scroll animation here — the actual reset happens instantly in
       // onExitComplete, hidden under the transition. Animating the scroll +
       // sliding at the same time is what made it feel queasy.
@@ -209,7 +214,6 @@ export function ViewSwitcher({
       {/* sticky nav */}
       <nav 
         className="sticky top-0 z-50 border-b border-line-soft/70 bg-bg/95"
-        style={{ transform: "translate3d(0, 0, 999px)" }}
       >
         <div className="mx-auto flex max-w-[1280px] items-center gap-4 px-5 py-3 sm:px-8">
           <button
