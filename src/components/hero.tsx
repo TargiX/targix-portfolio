@@ -78,7 +78,8 @@ export function Hero() {
         onStatus={setWebgl}
         time={time}
         onLayout={onLayout}
-        mobile={isMobile || lightHero}
+        mobile={isMobile}
+        suppressText={isMobile || lightHero}
       />
 
       {/* SEO / a11y: the hero copy always lives in the DOM, even when WebGL paints it */}
@@ -101,7 +102,7 @@ export function Hero() {
 
       {/* transparent, clickable overlay for the "open the lab" link — desktop only
           (WebGL draws the visible text; this keeps it a real, focusable anchor). */}
-      {webglReady && !isMobile && linkRect && (
+      {webglReady && !isMobile && !lightHero && linkRect && (
         <a
           href="#lab"
           aria-label="interactive experiments — open the lab"

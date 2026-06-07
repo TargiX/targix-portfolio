@@ -33,14 +33,25 @@ type Props = {
   /** reports screen-space positions of interactive bits so the DOM can overlay them */
   onLayout?: (l: HeroLayout) => void;
   /**
-   * narrow viewport: the SDF typography doesn't reflow, so on mobile the copy is
-   * rendered in the DOM instead. We skip drawing the in-canvas text and float the
-   * cube cluster lower-centre so it never lands on the headline.
+   * Narrow viewport: the SDF typography doesn't reflow, so on mobile the copy is
+   * rendered in the DOM instead and the cube cluster floats lower-centre.
    */
   mobile?: boolean;
+  /** Hide only the in-canvas SDF text while preserving desktop cube placement. */
+  suppressText?: boolean;
 };
 
-export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", surface = "dark", className, onStatus, time, onLayout, mobile = false }: Props) {
+export function ThreeHero({
+  accent = "#a3e635",
+  accent2 = "#2dd4bf",
+  surface = "dark",
+  className,
+  onStatus,
+  time,
+  onLayout,
+  mobile = false,
+  suppressText = false,
+}: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const timeRef = useRef(time ?? "");
   timeRef.current = time ?? "";
@@ -598,8 +609,8 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", surface = "
       renderer.setRenderTarget(sceneRT);
       renderer.clear(true, true, true);
       renderer.render(bgScene, fsCamera);
-      // mobile draws the copy in the DOM; skip the SDF text so it can't overflow
-      if (!mobile) renderer.render(textScene, ortho);
+      // mobile/light DOM copy owns the text; skip SDF only when requested
+      if (!mobile && !suppressText) renderer.render(textScene, ortho);
       
       // Render the core glow into the scene texture so the glass cubes can refract it!
       renderer.render(glowScene, cubeCam);
@@ -642,7 +653,7 @@ export function ThreeHero({ accent = "#a3e635", accent2 = "#2dd4bf", surface = "
       renderer.dispose();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
-  }, [accent, accent2, surface, onStatus, onLayout, mobile]);
+  }, [accent, accent2, surface, onStatus, onLayout, mobile, suppressText]);
 
   return (
     <div
