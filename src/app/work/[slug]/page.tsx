@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const c = await getCase(slug);
   if (!c) return {};
   const title = c.title;
-  const ogTitle = `${c.title} — Ilya Moskovkin`;
+  const ogTitle = `${c.title} · Ilya Moskovkin`;
   const url = absoluteUrl(`/work/${c.slug}`);
   const ogImage = getProjectImageUrl(c.cover);
 

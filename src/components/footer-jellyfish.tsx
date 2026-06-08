@@ -70,6 +70,9 @@ export function FooterJellyfish({ className }: Props) {
     let loading = false;
     let last = performance.now() / 1000;
     let elapsed = 0;
+    
+    let themeMo: MutationObserver | null = null;
+    let themeListener: (() => void) | null = null;
 
     const loadModel = () => {
       if (loaded || loading) return;
@@ -89,12 +92,33 @@ export function FooterJellyfish({ className }: Props) {
           box.getSize(size);
           box.getCenter(center);
 
-          // brand tint: recolor the *albedo* with a vertical lime→teal gradient
+          // brand tint: recolor the *albedo* with a vertical gradient
           // BEFORE lighting (in <color_fragment>), so env reflections, specular
           // and surface detail are computed on top and survive. Modulating by the
           // original luminance keeps the texture/normal detail instead of flattening.
-          const lime = new THREE.Color(0xa3e635);
-          const teal = new THREE.Color(0x2dd4bf);
+          const lime = new THREE.Color();
+          const teal = new THREE.Color();
+          
+          const updateColors = () => {
+            const isLight = document.documentElement.dataset.theme === "light" || (!document.documentElement.dataset.theme && !window.matchMedia("(prefers-color-scheme: dark)").matches);
+            if (isLight) {
+              // Light mode: pastel-greens from our new Aurora
+              lime.setRGB(0.65, 0.98, 0.75); // Vivid Mint Green
+              teal.setRGB(0.45, 0.95, 0.60); // Bright Emerald Green
+            } else {
+              // Dark mode: original colors
+              lime.setHex(0xa3e635);
+              teal.setHex(0x2dd4bf);
+            }
+          };
+          updateColors();
+          
+          // React to theme changes
+          themeMo = new MutationObserver(updateColors);
+          themeMo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+          themeListener = updateColors;
+          window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", themeListener);
+
           const ymin = box.min.y;
           const ymax = box.max.y;
           const tint = (mat: THREE.Material) => {
@@ -240,6 +264,8 @@ export function FooterJellyfish({ className }: Props) {
       scene.environment?.dispose();
       pmrem.dispose();
       renderer.dispose();
+      themeMo?.disconnect();
+      if (themeListener) window.matchMedia("(prefers-color-scheme: dark)").removeEventListener("change", themeListener);
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
   }, []);

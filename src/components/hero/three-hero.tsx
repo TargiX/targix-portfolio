@@ -65,8 +65,8 @@ export function ThreeHero({
     const accentRgb = hexToRgb(accent);
     const accent2Rgb = hexToRgb(accent2);
     const isLightSurface = surface === "light";
-    const pageBgRgb = isLightSurface ? [0.965, 0.967, 0.972] : [0.052, 0.055, 0.062];
-    const baseDotRgb = isLightSurface ? [0.56, 0.59, 0.64] : [0.32, 0.34, 0.4];
+    const pageBgRgb = isLightSurface ? [0.981, 0.981, 0.984] : [0.052, 0.055, 0.062];
+    const baseDotRgb = isLightSurface ? [0.50, 0.53, 0.58] : [0.32, 0.34, 0.4];
 
     let renderer: THREE.WebGLRenderer;
     try {
@@ -137,13 +137,11 @@ export function ThreeHero({
 
     const {
       scene: textScene,
-      status,
       h1,
       para,
       meta,
       link,
-      dot,
-    } = createHeroTextObjects();
+    } = createHeroTextObjects(surface);
 
     const cubeMat = new THREE.ShaderMaterial({
       vertexShader: CUBE_VERT,
@@ -174,7 +172,7 @@ export function ThreeHero({
       vertexShader: GLOW_VERT,
       fragmentShader: GLOW_FRAG,
       transparent: true,
-      blending: THREE.AdditiveBlending,
+      blending: isLightSurface ? THREE.NormalBlending : THREE.AdditiveBlending,
       depthWrite: false,
       depthTest: true,
       uniforms: {
@@ -213,26 +211,21 @@ export function ThreeHero({
 
       const paraSize = 19;
       const paraH = paraSize * 1.5 * 3;
-      const gapStatus = 56;
       const gapH1 = 28;
       const gapPara = 28;
       const gapMeta = 32;
-      const total = 15 + gapStatus + fontH1 + gapH1 + paraH + gapPara + 15 + gapMeta + 18;
+      const total = fontH1 + gapH1 + paraH + gapPara + 15 + gapMeta + 18;
 
       let y = total / 2;
       const place = (t: { position: THREE.Object3D["position"] }, h: number, gap: number) => {
         t.position.set(colLeft, y, 0);
         y -= h + gap;
       };
-      status.position.set(colLeft + 20, y, 0);
-      dot.position.set(colLeft + 5, y - 8, 1);
-      y -= 15 + gapStatus;
       place(h1, fontH1, gapH1);
       place(para, paraH, gapPara);
       place(meta, 15, gapMeta);
       place(link, 18, 0);
 
-      status.sync();
       h1.sync();
       para.sync();
       meta.sync();
@@ -438,7 +431,6 @@ export function ThreeHero({
 
       if (items.length === 0) {
         items.push(
-          { t: status, base: status.position.y, delay: 0 },
           { t: h1, base: h1.position.y, delay: 0.08 },
           { t: para, base: para.position.y, delay: 0.18 },
           { t: meta, base: meta.position.y, delay: 0.26 },
@@ -446,11 +438,7 @@ export function ThreeHero({
         );
       }
 
-      if (timeRef.current && timeRef.current !== lastTime) {
-        lastTime = timeRef.current;
-        status.text = `available for work   ·   vietnam, ict ${timeRef.current}`;
-        status.sync();
-      }
+      // Time updates removed since status text is removed.
 
       // mouse → bg glow
       let targetActive = mouse.active;
@@ -469,7 +457,7 @@ export function ThreeHero({
       const cur = bgMat.uniforms.uMouseActive.value as number;
       bgMat.uniforms.uMouseActive.value = cur + (targetActive - cur) * 0.06;
       
-      textUniforms.uMouse.value.set(mouse.x, mouse.y);
+      textUniforms.uMouse.value.set(mouse.x * pr, mouse.y * pr);
       textUniforms.uResolution.value.set(W * pr, H * pr);
 
       // staggered reveal of text
@@ -480,10 +468,7 @@ export function ThreeHero({
         it.t.position.y = it.base + (1 - e) * 10;
       }
       
-      // Calculate h1ease for the dot animation that depends on it
-      const h1ease = 1 - Math.pow(1 - Math.min(1, Math.max(0, (elapsed - 0.12) / 0.6)), 3);
-      const dotMat = dot.material as THREE.MeshBasicMaterial;
-      dotMat.opacity = h1ease * (0.6 + 0.4 * Math.sin(elapsed * 3.0));
+      // No dot to animate anymore
 
       // ── cube cluster: reveal, slow spin, breathe ──
       const reveal = 1 - Math.pow(1 - Math.min(1, elapsed / 1.1), 3);
@@ -605,7 +590,7 @@ export function ThreeHero({
         twist = null;
       }
 
-      glowMat.uniforms.uIntensity.value = maxBulge * (isLightSurface ? 1.35 : 0.75);
+      glowMat.uniforms.uIntensity.value = maxBulge * (isLightSurface ? 0.32 : 0.75);
       glowMat.uniforms.uTime.value = elapsed;
 
       // ── render: scene (bg+text) → RT, composite → screen, cubes on top ──
@@ -642,9 +627,7 @@ export function ThreeHero({
         window.removeEventListener("touchend", onTouchEnd);
       }
       ro.disconnect();
-      [status, h1, para, meta, link].forEach((t) => t.dispose());
-      dot.geometry.dispose();
-      (dot.material as THREE.Material).dispose();
+      [h1, para, meta, link].forEach((t) => t.dispose());
       fsGeo.dispose();
       cubeGeo.dispose();
       glowGeo.dispose();

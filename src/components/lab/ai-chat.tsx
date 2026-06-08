@@ -43,7 +43,7 @@ export function AiChat() {
       case "cloud_offline":
         return "cloud model isn't configured on this deploy (no API key).";
       case "rate_limited":
-        return `slow down a sec${retry ? ` — try again in ${retry}s` : ""}.`;
+        return `slow down a sec${retry ? `, try again in ${retry}s` : ""}.`;
       case "upstream_error":
         return "the model provider hiccuped. try again.";
       default:
@@ -115,7 +115,7 @@ export function AiChat() {
           cloud · openrouter
         </span>
         <span className="rounded-full border border-dashed border-line px-2 py-0.5 text-fg-dim">
-          local · webllm — soon
+          local · webllm · soon
         </span>
         <span className="ml-auto text-fg-dim">
           {cloud === "checking" ? "…" : cloud === "online" ? "streaming" : "offline"}
@@ -128,7 +128,7 @@ export function AiChat() {
           <div className="flex h-full flex-col items-start justify-center gap-3">
             <p className="max-w-[44ch] text-sm text-fg-muted">
               A provider-agnostic chat. Right now it streams from a free OpenRouter model through a
-              server proxy — local in-browser inference is the next drop.
+              server proxy. Local in-browser inference is the next drop.
             </p>
             <div className="flex flex-wrap gap-2">
               {EXAMPLES.map((ex) => (

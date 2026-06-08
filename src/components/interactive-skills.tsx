@@ -14,7 +14,7 @@ const SKILLS = [
       "TanStack Query",
       "Zustand",
       "TypeScript",
-      "Module Federation",
+      "Mantine",
     ],
   },
   {

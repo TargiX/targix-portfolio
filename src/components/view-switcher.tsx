@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 import { useVietnamTime } from "@/lib/use-vietnam-time";
 import { cn } from "@/lib/utils";
 
@@ -271,6 +272,7 @@ export function ViewSwitcher({
               <span className="status-dot" />
               <span>ict {time}</span>
             </div>
+            <ThemeSwitcher />
           </div>
         </div>
       </nav>
@@ -315,7 +317,7 @@ export function ViewSwitcher({
             onClick={() => go(nextView, { axis: "y" })}
             className="group flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-line-soft py-3 font-mono text-[11px] tracking-[0.08em] text-fg-dim transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
           >
-            Keep scrolling — or click — to open {nextLabel}
+            Keep scrolling, or click, to open {nextLabel}
             <span className="inline-block transition-transform group-hover:translate-y-0.5">↓</span>
           </button>
         </div>

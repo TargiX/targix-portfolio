@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
 import { Typed } from "@/components/typed";
-import { StatusBar } from "@/components/status-bar";
+
 import { useVietnamTime } from "@/lib/use-vietnam-time";
 import type { HeroLayout } from "@/components/hero/three-hero";
 
@@ -60,9 +60,10 @@ export function Hero() {
 
   const onLayout = useCallback((l: HeroLayout) => setLinkRect(l.link), []);
 
-  // the DOM copy is shown on mobile, in light mode (dark SDF canvas copy would be wrong),
-  // and as the fallback when WebGL can't start at all
-  const showDomCopy = isMobile || lightHero || webgl === "failed";
+  // the DOM copy is shown on mobile and as the fallback when WebGL can't start.
+  // On desktop (light or dark) the SDF text is drawn into the scene so the glass
+  // cubes can refract it — that's the signature effect, so we keep it in light too.
+  const showDomCopy = isMobile || webgl === "failed";
 
   return (
     <header
@@ -72,40 +73,44 @@ export function Hero() {
       {/* full-bleed WebGL scene: ported bg shader + glass cubes (+ SDF typography
           on desktop). On mobile, text is suppressed and the copy lives in the DOM. */}
       <ThreeHero
-        accent={lightHero ? "#166534" : "#a3e635"}
-        accent2={lightHero ? "#047857" : "#2dd4bf"}
+        accent={lightHero ? "#15803d" : "#a3e635"}
+        accent2={lightHero ? "#65a30d" : "#2dd4bf"}
         surface={resolvedTheme}
         onStatus={setWebgl}
         time={time}
         onLayout={onLayout}
         mobile={isMobile}
-        suppressText={isMobile || lightHero}
+        suppressText={isMobile}
       />
 
       {/* SEO / a11y: the hero copy always lives in the DOM, even when WebGL paints it */}
       <div className="sr-only">
-        <h1>Ilya Moskovkin — Senior frontend engineer</h1>
+        <h1>Ilya Moskovkin, Senior frontend engineer</h1>
         <p>
           Senior frontend engineer with fullstack chops and UI/UX roots. Building experiences
           that matter. Based in Vietnam, open to remote roles. Stack: Vue, React, Node.
         </p>
       </div>
 
-      {/* soft fade into the bg at the bottom + radial highlight */}
+      {/* soft fade into the bg at the bottom + radial highlight.
+          In light the grey radial would muddy the SDF text, so light gets only a
+          clean bottom fade; the WebGL aurora handles the rest. */}
       <div
         className="pointer-events-none absolute inset-0 z-0"
         style={{
-          background:
-            "radial-gradient(60% 80% at 20% 30%, color-mix(in oklab, var(--bg-3) 72%, var(--accent) 8%), transparent 70%), linear-gradient(180deg, transparent 55%, var(--bg) 100%)",
+          background: lightHero
+            ? "linear-gradient(180deg, transparent 64%, var(--bg) 100%)"
+            : "radial-gradient(60% 80% at 20% 30%, color-mix(in oklab, var(--bg-3) 72%, var(--accent) 8%), transparent 70%), linear-gradient(180deg, transparent 55%, var(--bg) 100%)",
         }}
       />
 
+
       {/* transparent, clickable overlay for the "open the lab" link — desktop only
           (WebGL draws the visible text; this keeps it a real, focusable anchor). */}
-      {webglReady && !isMobile && !lightHero && linkRect && (
+      {webglReady && !isMobile && linkRect && (
         <a
           href="#lab"
-          aria-label="interactive experiments — open the lab"
+          aria-label="interactive experiments: open the lab"
           className="absolute z-20 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
           style={{
             left: linkRect.x,
@@ -131,7 +136,6 @@ export function Hero() {
 function HeroCopy() {
   return (
     <div className="relative z-10 mx-auto flex min-h-[78svh] max-w-[1280px] flex-col justify-center px-5 pb-24 pt-6 sm:px-8">
-      <StatusBar />
       <div>
         <div className="mb-7 inline-flex items-center gap-2.5 font-mono text-[11px] tracking-[0.3em] text-fg-dim">
           <span className="h-px w-5 bg-line" />
@@ -150,7 +154,7 @@ function HeroCopy() {
         </p>
 
         <div className="flex flex-wrap gap-x-5 gap-y-4 text-[11px] lowercase tracking-[0.04em] text-fg-dim">
-          <MetaItem k="based" v="vietnam → remote" />
+          <MetaItem k="based" v="vietnam · remote" />
           <MetaItem k="years" v="10+" />
           <MetaItem k="stack" v="vue · react · node" />
           <MetaItem k="status" v={<span style={{ color: "oklch(0.78 0.16 145)" }}>open to roles</span>} />
@@ -160,8 +164,7 @@ function HeroCopy() {
           href="#lab"
           className="group mt-8 inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.08em] text-fg-dim transition-colors hover:text-[var(--accent)]"
         >
-          Interactive experiments — open the lab
-          <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+          Interactive experiments: open the lab
         </a>
       </div>
     </div>

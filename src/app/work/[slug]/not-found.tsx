@@ -10,8 +10,8 @@ export default function CaseNotFound() {
         No case study at that URL.
       </h1>
       <p className="mb-8 max-w-[48ch] font-mono text-fg-muted">
-        Either I haven&apos;t written it yet, or you followed a broken link. Most likely the former
-        — case studies trickle out as time permits.
+        Either I haven&apos;t written it yet, or you followed a broken link. Most likely the former;
+        case studies trickle out as time permits.
       </p>
       <Link
         href="/#work"

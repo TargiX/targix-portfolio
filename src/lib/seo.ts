@@ -5,16 +5,16 @@ export const SITE = {
   url: "https://ilyamoskovkin.com",
   name: "Ilya Moskovkin Portfolio",
   author: "Ilya Moskovkin",
-  title: "Ilya Moskovkin — Senior Frontend Engineer",
+  title: "Ilya Moskovkin · Senior Frontend Engineer",
   description:
-    "Senior frontend/product engineer building React, Next.js, Vue, Nuxt, TypeScript, AI workflow, dashboard, and visual-editor interfaces.",
+    "Senior frontend engineer building React, Next.js, Vue, Nuxt, TypeScript, AI workflow, dashboard, and visual-editor interfaces.",
   shortDescription:
     "Senior frontend engineer with UI/UX roots, building product-heavy React, Next.js, Vue, Nuxt, and AI workflow interfaces.",
   locale: "en_US",
   keywords: [
     "Ilya Moskovkin",
     "Senior Frontend Engineer",
-    "Frontend Product Engineer",
+    "Frontend Developer",
     "React",
     "Next.js",
     "Vue",
@@ -85,7 +85,7 @@ export function getCaseJsonLd(caseStudy: CaseDoc) {
     "@context": "https://schema.org",
     "@type": "Article",
     "@id": `${url}#article`,
-    headline: `${caseStudy.title} — Case Study`,
+    headline: `${caseStudy.title} · Case Study`,
     description: caseStudy.blurb,
     image: [getProjectImageUrl(caseStudy.cover)],
     url,

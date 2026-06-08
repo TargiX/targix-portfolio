@@ -126,7 +126,7 @@ export function ContactForm({ disabled = false }: { disabled?: boolean }) {
             className="sm:col-span-2 inline-flex items-center gap-2 rounded-sm border border-[color:color-mix(in_oklab,var(--accent)_50%,var(--line))] bg-bg-2/60 px-3 py-1.5 font-mono text-[11px] text-fg"
           >
             <Check className="size-3 text-[var(--accent)]" />
-            sent — i&apos;ll get back to you soon.
+            sent. i&apos;ll get back to you soon.
           </motion.div>
         )}
       </AnimatePresence>

@@ -25,10 +25,10 @@ const NODES: Node[] = [
 ];
 
 const ZONE_STYLE: Record<Zone, string> = {
-  subject: "border-violet-400/50 bg-violet-500/10 text-violet-200",
-  setting: "border-cyan-400/50 bg-cyan-500/10 text-cyan-200",
-  mood: "border-amber-400/50 bg-amber-500/10 text-amber-200",
-  aesthetic: "border-emerald-400/50 bg-emerald-500/10 text-emerald-200",
+  subject: "border-violet-400/50 bg-violet-500/10 text-[var(--zone-subject)]",
+  setting: "border-cyan-400/50 bg-cyan-500/10 text-[var(--zone-setting)]",
+  mood: "border-amber-400/50 bg-amber-500/10 text-[var(--zone-mood)]",
+  aesthetic: "border-emerald-400/50 bg-emerald-500/10 text-[var(--zone-aesthetic)]",
 };
 
 const MODEL_STEPS = [

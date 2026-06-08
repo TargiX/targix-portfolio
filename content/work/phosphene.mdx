@@ -1,7 +1,7 @@
 ---
 slug: phosphene
 title: Phosphene
-year: "2024 — now"
+year: "2024 – now"
 role: Solo founder · Design + Eng
 blurb: A visual prompt workspace for image generation. Users compose zones, references, models, templates, and generated outputs without losing the structure behind the prompt.
 tags: ["Nuxt 4", "Vue 3", "tRPC", "Prisma", "Postgres", "Redis", "Hetzner S3", "D3", "Vue Flow", "fal.ai", "Gemini", "Paddle", "Auth.js", "Sentry", "PostHog"]
@@ -34,13 +34,13 @@ Phosphene replaces the blank prompt box with a **visual workspace**. You compose
 
 ## Stack decisions worth defending
 
-**Nuxt 4 over Next.** This is a heavy editor app, not a content site. Vue's reactivity model is a better fit for canvas state — fewer footguns, less code. Server components were tempting but the editor is fundamentally client-side anyway. Nuxt's auto-imports and file-based server routes get out of the way.
+**Nuxt 4 over Next.** This is a heavy editor app, and Vue's reactivity model fits canvas state well: fewer footguns, less code. Server components were tempting, but the editor is fundamentally client-side anyway, so Nuxt's auto-imports and file-based server routes get out of the way.
 
-**D3 plus Vue Flow, not one graph abstraction for everything.** The freeform prompt graph wants force layout, zones, positions, and weird interaction details. The flow surface wants modules, ports, and connections. Keeping those as different surfaces made the product easier to reason about.
+**D3 plus Vue Flow as two separate surfaces.** The freeform prompt graph wants force layout, zones, positions, and weird interaction details. The flow surface wants modules, ports, and connections. Keeping those as different surfaces made the product easier to reason about.
 
 **tRPC where the app is tightly coupled, Nitro endpoints where the boundary is external.** Internal dream/image/user flows get typed contracts. Webhooks, auth, storage, and provider calls stay as explicit server routes.
 
-**Prisma + Postgres.** The state model is not just users and images. It includes saved dreams, generated-image metadata, graph JSON, custom subjects, model preferences, branch/moment lineage, likes, payments, and rate-limit records. A boring relational core is the right kind of boring here.
+**Prisma + Postgres.** The state model goes well beyond users and images. It includes saved dreams, generated-image metadata, graph JSON, custom subjects, model preferences, branch/moment lineage, likes, payments, and rate-limit records. A boring relational core is the right kind of boring here.
 
 <PhospheneScreen screen="feed" />
 

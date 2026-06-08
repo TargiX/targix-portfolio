@@ -6,8 +6,8 @@ import { C_DIM, C_FG, C_GREEN, C_MUTED, FONT_MONO, FONT_SANS, paintRange } from 
 type TextWithColorRanges = Text & { colorRanges?: Record<number, number> };
 
 const PARA = "Senior frontend engineer with fullstack\nchops and UI/UX roots.\nBuilding experiences that matter.";
-const META = "based  vietnam → remote      years  10+      stack  vue · react · node      status  open to roles";
-const LINK = "interactive experiments — open the lab →";
+const META = "based  vietnam · remote      years  10+      stack  vue · react · node      status  open to roles";
+const LINK = "interactive experiments · open the lab";
 
 const applyColorRanges = (text: Text, ranges: Record<number, number>) => {
   (text as TextWithColorRanges).colorRanges = ranges;
@@ -18,8 +18,18 @@ export const textUniforms = {
   uResolution: { value: new THREE.Vector2(1, 1) },
 };
 
-export function createHeroTextObjects() {
+export function createHeroTextObjects(surface: "light" | "dark" = "dark") {
   const scene = new THREE.Scene();
+
+  // Light theme needs dark glyphs so the SDF text reads on the pale field AND
+  // shows up when the glass cubes refract the scene texture (that's the effect).
+  const isLight = surface === "light";
+  const P = isLight
+    ? { fg: 0x0e0f12, muted: 0x3a3e44, dim: 0x676c74, green: 0x15803d, link: 0x6b7280 }
+    : { fg: C_FG, muted: C_MUTED, dim: C_DIM, green: C_GREEN, link: 0xc2c7cf };
+  // keyword lift: green accent in light (the page wanted accent colour), soft
+  // white in dark (unchanged).
+  const kw = isLight ? P.green : P.fg;
 
   const mkText = (font: string, size: number, color: number, ls = 0, allowGreenTint = true) => {
     const t = new Text();
@@ -59,10 +69,11 @@ export function createHeroTextObjects() {
          // If the text is a highlighted keyword (white or green), its green channel is > 0.6
          float isHighlight = step(0.6, gl_FragColor.g);
          
-         // Highlighted text gets an acid-green tint, normal text gets pure white
-         vec3 targetColor = mix(vec3(1.0), vec3(0.75, 1.0, 0.55), isHighlight * uAllowGreenTint);
+         // Near the cursor, text lifts toward the theme's highlight color
+         // In light mode, use a dark brand green to match the rest of the site
+         vec3 targetColor = mix(${isLight ? "vec3(0.09, 0.10, 0.11)" : "vec3(1.0)"}, ${isLight ? "vec3(0.08, 0.50, 0.24)" : "vec3(0.75, 1.0, 0.55)"}, isHighlight * uAllowGreenTint);
          
-         gl_FragColor.rgb = mix(gl_FragColor.rgb, targetColor, mLocal * 0.95);
+         gl_FragColor.rgb = mix(gl_FragColor.rgb, targetColor, mLocal * ${isLight ? "0.85" : "0.95"});
         `
       );
     };
@@ -72,47 +83,39 @@ export function createHeroTextObjects() {
     return t;
   };
 
-  const status = mkText(FONT_MONO, 13, C_MUTED, 0.02);
-
-  const h1 = mkText(FONT_SANS, 88, C_FG, -0.03, false);
+  const h1 = mkText(FONT_SANS, 88, P.fg, -0.03, false);
   h1.text = "Ilya Moskovkin";
-  h1.outlineColor = C_FG;
+  h1.outlineColor = P.fg;
 
-  const para = mkText(FONT_MONO, 19, C_MUTED, 0);
+  const para = mkText(FONT_MONO, 19, P.muted, 0);
   para.text = PARA;
   para.lineHeight = 1.5;
   {
-    const ranges: Record<number, number> = { 0: C_MUTED };
-    // keywords get a soft-white lift (not green) against the greyish body
-    paintRange(ranges, PARA, "frontend", C_FG, C_MUTED);
-    paintRange(ranges, PARA, "UI/UX", C_FG, C_MUTED);
+    const ranges: Record<number, number> = { 0: P.muted };
+    // keywords get a soft lift against the body color
+    paintRange(ranges, PARA, "frontend", kw, P.muted);
+    paintRange(ranges, PARA, "UI/UX", kw, P.muted);
     applyColorRanges(para, ranges);
   }
 
-  const meta = mkText(FONT_MONO, 13, C_DIM, 0.04);
+  const meta = mkText(FONT_MONO, 13, P.dim, 0.04);
   meta.text = META;
   {
-    const ranges: Record<number, number> = { 0: C_DIM };
-    paintRange(ranges, META, "vietnam → remote", C_FG, C_DIM);
-    paintRange(ranges, META, "10+", C_FG, C_DIM);
-    paintRange(ranges, META, "vue · react · node", C_FG, C_DIM);
-    paintRange(ranges, META, "open to roles", C_GREEN, C_DIM);
+    const ranges: Record<number, number> = { 0: P.dim };
+    paintRange(ranges, META, "vietnam · remote", P.fg, P.dim);
+    paintRange(ranges, META, "10+", P.fg, P.dim);
+    paintRange(ranges, META, "vue · react · node", P.fg, P.dim);
+    paintRange(ranges, META, "open to roles", P.green, P.dim);
     applyColorRanges(meta, ranges);
   }
 
-  const link = mkText(FONT_MONO, 14, 0xc2c7cf, 0.04);
+  const link = mkText(FONT_MONO, 14, P.link, 0.04);
   link.text = LINK;
   {
-    const ranges: Record<number, number> = { 0: 0xc2c7cf };
-    paintRange(ranges, LINK, "open the lab →", C_GREEN, 0xc2c7cf);
+    const ranges: Record<number, number> = { 0: P.link };
+    paintRange(ranges, LINK, "open the lab", P.green, P.link);
     applyColorRanges(link, ranges);
   }
 
-  const dot = new THREE.Mesh(
-    new THREE.CircleGeometry(4, 24),
-    new THREE.MeshBasicMaterial({ color: C_GREEN, transparent: true, opacity: 0 }),
-  );
-  scene.add(dot);
-
-  return { scene, status, h1, para, meta, link, dot };
+  return { scene, h1, para, meta, link };
 }
