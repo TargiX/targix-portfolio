@@ -98,8 +98,11 @@ void main(){
   float vigLight = 0.95 + (1.0 - smoothstep(0.45, 1.10, vd)) * 0.05;
   col *= mix(vigDark, vigLight, uLight);
 
-  // Darken the light theme background to a soft pastel grey-green so the bright glass stands out
-  vec3 pageBg = mix(uPageBg, vec3(0.84, 0.87, 0.86), uLight);
+  // Concentrate the light-theme atmosphere on the RIGHT (behind the glass): the
+  // left (text) stays clean white, the right fades into a soft pastel grey-green
+  // so the cubes have a rich gradient to refract and actually read as glass.
+  float side = smoothstep(0.32, 0.78, vUv.x);
+  vec3 pageBg = mix(uPageBg, mix(uPageBg, vec3(0.84, 0.87, 0.86), side), uLight);
   // Light theme: an awwwards level fluid mesh gradient aurora.
   // Using the organic CPPN neural fluid animation!
   vec2 cppnUv = vec2(vUv.x, 1.0 - vUv.y) * 2.0 - 1.0;
@@ -112,14 +115,19 @@ void main(){
   float q2 = cppn_val.y;
   float q3 = cppn_val.z;
   
-  vec3 cSoftGreen = vec3(0.85, 0.98, 0.85); // Very soft background green
-  
+  vec3 cSoftGreen = vec3(0.86, 0.98, 0.88); // Very soft background green
+  vec3 cAqua = vec3(0.46, 0.93, 0.90);      // teal / aqua
+  vec3 cSky  = vec3(0.52, 0.80, 0.99);      // sky blue
+  vec3 cPeri = vec3(0.74, 0.79, 0.99);      // periwinkle — iridescent lift
+
   vec3 auroraCol = mix(cSoftGreen, cMint, smoothstep(0.2, 0.8, q1));
-  auroraCol = mix(auroraCol, cEmerald, smoothstep(0.3, 0.7, q2));
-  auroraCol = mix(auroraCol, cCyan, smoothstep(0.4, 0.8, q3));
+  auroraCol = mix(auroraCol, cEmerald, smoothstep(0.30, 0.72, q2) * 0.85);
+  auroraCol = mix(auroraCol, cAqua, smoothstep(0.32, 0.78, q3) * 0.75);
+  auroraCol = mix(auroraCol, cSky, smoothstep(0.45, 0.85, q1 * q3) * 0.55);
+  auroraCol = mix(auroraCol, cPeri, smoothstep(0.58, 0.90, q2 * q3) * 0.32);
   
   float mask = smoothstep(0.1, 0.9, fbm(uv * 0.9 + t * 0.05));
-  pageBg = mix(pageBg, auroraCol, uLight * mask * 0.95);
+  pageBg = mix(pageBg, auroraCol, uLight * mask * 0.95 * side);
   pageBg = mix(pageBg, spotColorLight, spotAlpha * uLight * 0.15);
   vec3 finalBg = pageBg + col;
   
@@ -174,9 +182,18 @@ void main(){
 
   vec2 suv = gl_FragCoord.xy / uRes;
   
-  // Clean single-tap refraction (no chromatic dispersion) so text stays sharp and black
-  vec3 refr = texture2D(uScene, clamp(suv + N.xy * 0.16, 0.002, 0.998)).rgb;
-  vec3 refl = texture2D(uScene, clamp(suv - N.xy * 0.34, 0.002, 0.998)).rgb;
+  // Gentle edge-weighted chromatic dispersion: split R/G/B only where fresnel is
+  // high (the glancing edges) so the cube throws subtle rainbow caustics, while
+  // the flat faces stay a single clean tap — the refracted text never triples.
+  float disp = uLight * 0.0028 * fres;
+  vec3 refr;
+  refr.r = texture2D(uScene, clamp(suv + N.xy * (0.16 + disp), 0.002, 0.998)).r;
+  refr.g = texture2D(uScene, clamp(suv + N.xy * 0.16,          0.002, 0.998)).g;
+  refr.b = texture2D(uScene, clamp(suv + N.xy * (0.16 - disp), 0.002, 0.998)).b;
+  vec3 refl;
+  refl.r = texture2D(uScene, clamp(suv - N.xy * (0.34 + disp * 1.3), 0.002, 0.998)).r;
+  refl.g = texture2D(uScene, clamp(suv - N.xy * 0.34,                0.002, 0.998)).g;
+  refl.b = texture2D(uScene, clamp(suv - N.xy * (0.34 - disp * 1.3), 0.002, 0.998)).b;
   vec3 col = mix(refr, refl, fres * 0.85);
   
   // Sharp specular highlight from a virtual top-right studio light
@@ -191,7 +208,7 @@ void main(){
   // Dark theme keeps the original almost-white glass (accent-tinted edges).
   // Light theme is CLEAR glass: no heavy white wash, just a tiny cool edge tint.
   vec3 lightWash = vec3(0.95, 0.96, 0.98);
-  col = mix(col, lightWash, uLight * edge * 0.12);
+  col = mix(col, lightWash, uLight * edge * 0.16);
   
   col += uAccent * fres * mix(0.16, 0.02, uLight);
   // accent2 backscatter was a light-only tint; drop it so light glass stays clear
@@ -199,7 +216,7 @@ void main(){
   col += mix(vec3(0.04, 0.045, 0.05), vec3(0.0, 0.0, 0.0), uLight);
   col *= mix(0.74, 0.9, uLight) + mix(0.26, 0.1, uLight) * facing;
   vec3 rim = mix(vec3(0.7, 0.74, 0.8), vec3(0.66, 0.70, 0.78), uLight);
-  col += rim * pow(fres, 2.0) * mix(0.5, 0.2, uLight);
+  col += rim * pow(fres, 2.0) * mix(0.5, 0.32, uLight);
   col = clamp(col, 0.0, 1.0);
 
   float alpha = (0.85 + fres * 0.15) * uReveal;
