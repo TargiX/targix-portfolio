@@ -10,7 +10,7 @@ import { ANCHOR_DEPLOYED, ANCHOR_REPO_URL, ANCHOR_URL } from "@/lib/project-link
  * screenshot fallback, an auto-rotating view switcher, and 404-safe links.
  *
  * ── To go live ──────────────────────────────────────────────────────────
- *  1. Deploy Anchor, set the shared ANCHOR_URL to the real https://…vercel.app.
+ *  1. Deploy Anchor, set the shared ANCHOR_URL to the production domain.
  *  2. Flip ANCHOR_DEPLOYED to true.
  * Until then it shows captured screenshots (no failed requests, no dead links —
  * the "open" link points at the repo). Once live it embeds the real app and
@@ -123,7 +123,7 @@ export function AnchorDemo() {
             <iframe
               key={`frame-${active.id}`}
               src={`${ANCHOR_URL}${active.path}`}
-              title={`Anchor — ${active.label} (live)`}
+              title={`Anchor · ${active.label} (live)`}
               loading="lazy"
               onLoad={handleLoad}
               className="absolute inset-0 h-full w-full border-0"

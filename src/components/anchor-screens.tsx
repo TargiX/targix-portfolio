@@ -20,21 +20,21 @@ const BEATS = [
     img: "/work/anchor/dashboard.png",
     label: "Dashboard",
     heading: "The streak as an anchor",
-    body: "One number, two cards. The dashboard shows today's completion state and the running streak — the mechanism that makes skipping feel costly without being punitive.",
+    body: "One number, two cards. The dashboard shows today's completion state and the running streak, the mechanism that makes skipping feel costly while staying gentle.",
   },
   {
     id: "sleep",
     img: "/work/anchor/sleep.png",
     label: "Morning ritual",
     heading: "Touch-first controls",
-    body: "The sleep-quality slider is a Radix primitive reskinned to token. This is also the component behind the invisible-track bug — and the selector fix that earned its own paragraph in the write-up.",
+    body: "The sleep-quality slider is a Radix primitive reskinned to token. This is also the component behind the invisible-track bug, and the selector fix that earned its own paragraph in the write-up.",
   },
   {
     id: "evening",
     img: "/work/anchor/evening.png",
     label: "Evening ritual",
     heading: "Close the loop",
-    body: "Mood, free journal, tomorrow's sleep window. The evening ritual reuses the same step-machine pattern as morning — different data shape, same interaction contract.",
+    body: "Mood, free journal, tomorrow's sleep window. The evening ritual reuses the same step-machine pattern as morning: different data shape, same interaction contract.",
   },
 ] as const;
 
@@ -252,7 +252,7 @@ export function AnchorParallaxGallery() {
       </div>
 
       <figcaption className="mt-1 text-center font-mono text-[10px] lowercase tracking-[0.08em] text-fg-dim">
-        landing · dashboard · morning · evening — one codebase, all screens
+        landing · dashboard · morning · evening · one codebase, all screens
       </figcaption>
     </figure>
   );

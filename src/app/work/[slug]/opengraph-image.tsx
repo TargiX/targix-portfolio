@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getCase } from "@/lib/content";
 
-export const alt = "Case study — Ilya Moskovkin";
+export const alt = "Case study · Ilya Moskovkin";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

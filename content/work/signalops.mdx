@@ -21,19 +21,19 @@ links:
     href: "https://github.com/TargiX/signalops"
 ---
 
-SignalOps is a focused data product: an internal operations cockpit for AI image-generation infrastructure. The point is not just to show charts. The point is to show how a frontend can help an operator notice provider risk, inspect affected jobs, and preview a routing decision.
+SignalOps is a focused data product: an internal operations cockpit for AI image-generation infrastructure. The point is to show how a frontend can help an operator notice provider risk, inspect affected jobs, and preview a routing decision.
 
 ![SignalOps full dashboard](/work/signalops/cockpit.png)
 
 ## The Workflow
 
-The main screen is intentionally not a decorative analytics wall. It is a decision surface: pick an incident, inspect the blast radius, compare model/provider behavior, then preview a routing rule before it touches production traffic.
+The main screen is built as a decision surface: pick an incident, inspect the blast radius, compare model/provider behavior, then preview a routing rule before it touches production traffic.
 
 Opening an incident moves the operator out of the broad overview and into a narrower investigation route. The page keeps the same system language, but the layout changes from monitoring to review: timeline, affected job scope, rule draft, and audit trail.
 
 ## What It Shows
 
-- **Route-level product flow:** overview → incident detail → affected jobs → routing rule preview.
+- **Route-level product flow:** overview to incident detail to affected jobs to routing-rule preview.
 - **TanStack Table + TanStack Virtual:** a custom grid surface rather than a dropped-in enterprise table.
 - **Operational state:** saved views, provider focus, selected generation state, and simulated routing impact.
 - **Design-system discipline:** dense UI, restrained color, consistent tokens, and readable data hierarchy.

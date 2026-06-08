@@ -81,7 +81,7 @@ export function BrokerVideos() {
       </div>
       <p className="mt-3 border-l border-line-soft pl-3 font-mono text-[11px] leading-relaxed text-fg-dim">
         Real walkthroughs of the live platform. Customer creation, accounts, quoting, proposals,
-        and contract generation — the frontend in every one of these flows is what my team and I
+        and contract generation. The frontend in every one of these flows is what my team and I
         built and maintained.{" "}
         <a
           href="https://www.brokeronlinexchange.com/broker-resources/"

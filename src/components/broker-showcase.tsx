@@ -51,7 +51,7 @@ export function BrokerShots() {
         ))}
       </div>
       <figcaption className="mt-2 border-l border-line-soft pl-3 font-mono text-[11px] leading-relaxed text-fg-dim">
-        The interface, screen by screen — sign-in, quoting tables, account modals, the inspector,
+        The interface, screen by screen: sign-in, quoting tables, account modals, the inspector,
         and document upload. The design system was a studio collaboration; building it into the
         live, stateful React app was my team&apos;s frontend.
       </figcaption>
