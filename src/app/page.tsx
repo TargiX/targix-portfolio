@@ -281,7 +281,9 @@ export default function Home() {
       />
       <ViewSwitcher work={work} lab={lab} about={about} />
 
-      <footer className="relative mt-10 overflow-hidden border-t border-line-soft">
+      <footer className="relative mt-10 overflow-hidden">
+        {/* grey-green aurora tint that rises from the bottom, mirroring the hero */}
+        <div aria-hidden="true" className="footer-glow pointer-events-none absolute inset-0 z-0" />
         <FooterJellyfish />
         <div className="relative z-10 mx-auto max-w-[1280px] px-5 py-14 sm:px-8">
           <div className="grid gap-10 sm:grid-cols-[1fr_auto] sm:items-start">

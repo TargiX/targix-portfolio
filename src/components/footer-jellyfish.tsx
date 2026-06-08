@@ -102,7 +102,7 @@ export function FooterJellyfish({ className }: Props) {
           const updateColors = () => {
             const isLight = document.documentElement.dataset.theme === "light" || (!document.documentElement.dataset.theme && !window.matchMedia("(prefers-color-scheme: dark)").matches);
             if (isLight) {
-              // Light mode: pastel-greens from our new Aurora
+              // Light mode: pastel-greens that sit nicely on the grey-green footer
               lime.setRGB(0.65, 0.98, 0.75); // Vivid Mint Green
               teal.setRGB(0.45, 0.95, 0.60); // Bright Emerald Green
             } else {

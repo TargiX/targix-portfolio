@@ -91,7 +91,12 @@ void main(){
   col += accHover * spotAlpha * mix(0.42, 0.0, uLight); // keep original in dark mode
   col += (grain(p+uTime*13.0)-0.5) * 0.006;
   vec2 vc = p/uResolution - 0.5;
-  col *= 0.45 + (1.0 - smoothstep(0.30,0.85,length(vc))) * 0.55;
+  float vd = length(vc);
+  // Dark: full vignette to frame the scene. Light: barely-there (far corners
+  // only, ~5%) so the pale background stays clean instead of looking muddy.
+  float vigDark = 0.45 + (1.0 - smoothstep(0.30, 0.85, vd)) * 0.55;
+  float vigLight = 0.95 + (1.0 - smoothstep(0.45, 1.10, vd)) * 0.05;
+  col *= mix(vigDark, vigLight, uLight);
 
   // Darken the light theme background to a soft pastel grey-green so the bright glass stands out
   vec3 pageBg = mix(uPageBg, vec3(0.84, 0.87, 0.86), uLight);
@@ -119,9 +124,11 @@ void main(){
   vec3 finalBg = pageBg + col;
   
   vec2 uv2 = vUv * (1.0 - vUv.yx);
-  float vig = uv2.x * uv2.y * 15.0;
-  vig = pow(vig, 0.15);
-  
+  float vig = pow(uv2.x * uv2.y * 15.0, 0.15);
+  // Light theme: nearly remove this edge darkening so the corners and the area
+  // under the header stay clean. Dark theme keeps the full frame.
+  vig = mix(vig, 1.0, uLight * 0.9);
+
   gl_FragColor = vec4(finalBg * vig, 1.0);
 }
 `;

@@ -136,6 +136,27 @@
   --destructive-foreground: var(--fg);
 }
 
+/* Footer background mirrors the hero's grey-green aurora, flipped so the tint
+   rises from the bottom and bookends the page. Theme-aware: pale grey-green on
+   light, deep grey-green on dark, with an accent glow rising from the bottom. */
+.footer-glow {
+  background:
+    linear-gradient(180deg, transparent 0%, transparent 18%, oklch(0.90 0.02 165) 100%),
+    radial-gradient(92% 130% at 50% 122%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 62%);
+}
+:root[data-theme="dark"] .footer-glow {
+  background:
+    linear-gradient(180deg, transparent 0%, transparent 18%, oklch(0.165 0.012 165) 100%),
+    radial-gradient(92% 130% at 50% 122%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 62%);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .footer-glow {
+    background:
+      linear-gradient(180deg, transparent 0%, transparent 18%, oklch(0.165 0.012 165) 100%),
+      radial-gradient(92% 130% at 50% 122%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 62%);
+  }
+}
+
 @theme inline {
   /* fonts wired via next/font in layout.tsx */
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
