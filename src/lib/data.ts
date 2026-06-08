@@ -138,7 +138,7 @@ export const MINOR: Project[] = [
     thumb: "/work/flux-sanity/homepage.png",
   },
   {
-    index: "⑥",
+    index: "⑦",
     year: "2026",
     role: "Solo · Astro SSG",
     title: "HelixCare Pulse",
@@ -149,7 +149,7 @@ export const MINOR: Project[] = [
     thumb: "/work/helixcare-pulse/hero-device.png",
   },
   {
-    index: "⑦",
+    index: "⑧",
     year: "2023",
     role: "Solo · Web3 / Cosmos",
     title: "Injective Testnet dApp",
