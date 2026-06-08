@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import type { MotionValue } from "motion/react";
+import { useLightbox, type LightboxImage } from "@/components/lightbox";
 
 /* ── Scrollytell ─────────────────────────────────────── */
 
@@ -189,18 +190,26 @@ const GALLERY = [
   { img: "/work/anchor/evening.png",   label: "Evening ritual", yRange: [-60,  20] as [number,number], rotate:  3   },
 ];
 
+const GALLERY_LB: LightboxImage[] = GALLERY.map((p) => ({
+  src: p.img,
+  alt: `Anchor — ${p.label}`,
+  label: p.label,
+}));
+
 function ParallaxPhone({
   img,
   label,
   rotate,
   yRange,
   progress,
+  onOpen,
 }: {
   img: string;
   label: string;
   rotate: number;
   yRange: [number, number];
   progress: MotionValue<number>;
+  onOpen: () => void;
 }) {
   const y = useTransform(progress, [0, 1], yRange);
 
@@ -209,7 +218,12 @@ function ParallaxPhone({
       style={{ y, rotate }}
       className="flex-shrink-0"
     >
-      <div className="relative rounded-[1.8rem] border border-line bg-[oklch(0.16_0.006_250)] p-[7px] shadow-2xl shadow-black/50">
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label={`View ${label} screen full screen`}
+        className="relative block cursor-zoom-in rounded-[1.8rem] border border-line bg-[oklch(0.16_0.006_250)] p-[7px] shadow-2xl shadow-black/50 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.04]"
+      >
         <div className="absolute left-1/2 top-[7px] z-10 h-[11px] w-[64px] -translate-x-1/2 rounded-b-lg bg-[oklch(0.16_0.006_250)]" />
         <div className="relative h-[340px] w-[155px] overflow-hidden rounded-[1.4rem] bg-bg-2">
           <Image
@@ -220,13 +234,14 @@ function ParallaxPhone({
             className="object-cover object-top"
           />
         </div>
-      </div>
+      </button>
     </motion.div>
   );
 }
 
 export function AnchorParallaxGallery() {
   const ref = useRef<HTMLDivElement>(null);
+  const { open } = useLightbox();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
@@ -239,7 +254,7 @@ export function AnchorParallaxGallery() {
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-bg to-transparent" />
 
       <div className="flex items-center justify-center gap-4 py-20">
-        {GALLERY.map((phone) => (
+        {GALLERY.map((phone, i) => (
           <ParallaxPhone
             key={phone.label}
             img={phone.img}
@@ -247,6 +262,7 @@ export function AnchorParallaxGallery() {
             rotate={phone.rotate}
             yRange={phone.yRange}
             progress={scrollYProgress}
+            onOpen={() => open(GALLERY_LB, i)}
           />
         ))}
       </div>

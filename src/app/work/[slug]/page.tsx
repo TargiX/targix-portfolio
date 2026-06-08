@@ -8,6 +8,7 @@ import remarkGfm from "remark-gfm";
 import { getAllSlugs, getCase } from "@/lib/content";
 import { mdxComponents } from "@/components/mdx-components";
 import { BackToWork } from "@/components/back-to-work";
+import { LightboxProvider } from "@/components/lightbox";
 import { CaseMetaRail } from "@/components/case-meta-rail";
 import {
   SITE,
@@ -113,26 +114,28 @@ export default async function CasePage({ params }: { params: Params }) {
 
         <div className="lg:col-start-1 lg:row-start-2">
           <div className="mt-10 mb-10 h-px bg-line-soft" />
-          <article>
-            <MDXRemote
-              source={c.content}
-              components={mdxComponents}
-              options={{
-                mdxOptions: {
-                  remarkPlugins: [remarkGfm],
-                  rehypePlugins: [
-                    [
-                      rehypePrettyCode,
-                      {
-                        theme: { dark: "github-dark-dimmed", light: "github-dark-dimmed" },
-                        keepBackground: false,
-                      },
+          <LightboxProvider>
+            <article>
+              <MDXRemote
+                source={c.content}
+                components={mdxComponents}
+                options={{
+                  mdxOptions: {
+                    remarkPlugins: [remarkGfm],
+                    rehypePlugins: [
+                      [
+                        rehypePrettyCode,
+                        {
+                          theme: { dark: "github-dark-dimmed", light: "github-dark-dimmed" },
+                          keepBackground: false,
+                        },
+                      ],
                     ],
-                  ],
-                },
-              }}
-            />
-          </article>
+                  },
+                }}
+              />
+            </article>
+          </LightboxProvider>
         </div>
       </div>
 
