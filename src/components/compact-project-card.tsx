@@ -4,6 +4,9 @@ import Link from "next/link";
 import { Code, ExternalLink } from "lucide-react";
 import type { Project } from "@/lib/data";
 
+// Detect link types for icons
+const isGithub = (url: string) => /github\.com/i.test(url);
+
 /**
  * Small project card for the "more work" tier — a 4-column grid of lighter,
  * lower-priority projects below the big highlighted cards. It's a shrunken
@@ -22,10 +25,6 @@ export function CompactProjectCard({ project }: { project: Project }) {
 
   // Collect visible secondary links (everything except the primary stretched link target)
   const secondaryLinks = (links ?? []).filter((l) => l.href !== href);
-
-  // Detect link types for icons
-  const isGithub = (url: string) => /github\.com/i.test(url);
-  const isLive = (url: string) => /^https?:\/\//i.test(url) && !isGithub(url);
 
   return (
     <article className="group/card relative flex h-full flex-col overflow-hidden rounded-xl border border-line-soft bg-bg-2/30 transition-colors duration-300 hover:border-[color:color-mix(in_oklab,var(--accent)_30%,var(--line))]">
@@ -95,7 +94,6 @@ export function CompactProjectCard({ project }: { project: Project }) {
             <div className="ml-auto flex items-center gap-1">
               {secondaryLinks.map((link) => {
                 const gh = isGithub(link.href);
-                const live = isLive(link.href);
                 return (
                   <a
                     key={link.href}
@@ -108,8 +106,6 @@ export function CompactProjectCard({ project }: { project: Project }) {
                   >
                     {gh ? (
                       <Code className="size-3" />
-                    ) : live ? (
-                      <ExternalLink className="size-3" />
                     ) : (
                       <ExternalLink className="size-3" />
                     )}
