@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { Code, ExternalLink } from "lucide-react";
 import type { Project } from "@/lib/data";
 
 /**
@@ -6,12 +9,23 @@ import type { Project } from "@/lib/data";
  * lower-priority projects below the big highlighted cards. It's a shrunken
  * version of <ProjectCard>: same media stage (gradient + dot grid, thumb or
  * monogram fallback), same lime→teal title hover. The whole card is a link.
+ *
+ * Secondary links (live demo, GitHub, case study) are exposed as small
+ * icon buttons in the footer so evaluators can reach every surface without
+ * opening the card first.
  */
 export function CompactProjectCard({ project }: { project: Project }) {
   const { year, title, blurb, tags, links, caseSlug, thumb } = project;
   const external = links?.[0]?.href;
   const href = caseSlug ? `/work/${caseSlug}` : external;
   const isExternal = href ? /^https?:\/\//.test(href) : false;
+
+  // Collect visible secondary links (everything except the primary stretched link target)
+  const secondaryLinks = (links ?? []).filter((l) => l.href !== href);
+
+  // Detect link types for icons
+  const isGithub = (url: string) => /github\.com/i.test(url);
+  const isLive = (url: string) => /^https?:\/\//i.test(url) && !isGithub(url);
 
   return (
     <article className="group/card relative flex h-full flex-col overflow-hidden rounded-xl border border-line-soft bg-bg-2/30 transition-colors duration-300 hover:border-[color:color-mix(in_oklab,var(--accent)_30%,var(--line))]">
@@ -68,14 +82,46 @@ export function CompactProjectCard({ project }: { project: Project }) {
           </ul>
         )}
 
-        <span
-          aria-hidden
-          className="mt-3 inline-block font-mono text-[10px] lowercase tracking-[0.06em] text-fg-dim transition-colors group-hover/card:text-[color:var(--accent)]"
-        >
-          {caseSlug ? `${title} case study →` : isExternal ? "open ↗" : "view project"}
-        </span>
+        {/* Footer: primary CTA + secondary link icons */}
+        <div className="mt-3 flex items-center gap-2">
+          <span
+            aria-hidden
+            className="font-mono text-[10px] lowercase tracking-[0.06em] text-fg-dim transition-colors group-hover/card:text-[color:var(--accent)]"
+          >
+            {caseSlug ? `${title} case study →` : isExternal ? "open ↗" : "view project"}
+          </span>
+
+          {secondaryLinks.length > 0 && (
+            <div className="ml-auto flex items-center gap-1">
+              {secondaryLinks.map((link) => {
+                const gh = isGithub(link.href);
+                const live = isLive(link.href);
+                return (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={link.label}
+                    onClick={(e) => e.stopPropagation()}
+                    className="relative z-20 flex size-6 items-center justify-center rounded-md border border-line-soft text-fg-dim transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                  >
+                    {gh ? (
+                      <Code className="size-3" />
+                    ) : live ? (
+                      <ExternalLink className="size-3" />
+                    ) : (
+                      <ExternalLink className="size-3" />
+                    )}
+                  </a>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
 
+      {/* Stretched primary link */}
       {href &&
         (isExternal ? (
           <a
