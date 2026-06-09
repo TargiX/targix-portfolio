@@ -5,11 +5,12 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
 
-import { getAllSlugs, getCase } from "@/lib/content";
+import { getAllSlugs, getCase, getAdjacentCases } from "@/lib/content";
 import { mdxComponents } from "@/components/mdx-components";
 import { BackToWork } from "@/components/back-to-work";
 import { LightboxProvider } from "@/components/lightbox";
 import { CaseMetaRail } from "@/components/case-meta-rail";
+import { CaseNav } from "@/components/case-nav";
 import {
   SITE,
   absoluteUrl,
@@ -64,6 +65,7 @@ export default async function CasePage({ params }: { params: Params }) {
   if (!c) notFound();
   const caseJsonLd = getCaseJsonLd(c);
   const breadcrumbJsonLd = getCaseBreadcrumbJsonLd(c);
+  const { prev, next } = await getAdjacentCases(slug);
 
   return (
     <main className="relative mx-auto max-w-[1080px] px-5 pb-24 pt-12 sm:px-8">
@@ -138,6 +140,8 @@ export default async function CasePage({ params }: { params: Params }) {
           </LightboxProvider>
         </div>
       </div>
+
+      <CaseNav prev={prev} next={next} />
 
       <footer className="mt-20 flex items-center justify-between border-t border-line-soft pt-8 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim">
         <Link
