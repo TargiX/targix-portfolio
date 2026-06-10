@@ -5,10 +5,12 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
 
-import { getAllSlugs, getCase } from "@/lib/content";
+import { getAllSlugs, getCase, getAdjacentCases } from "@/lib/content";
 import { mdxComponents } from "@/components/mdx-components";
 import { BackToWork } from "@/components/back-to-work";
+import { LightboxProvider } from "@/components/lightbox";
 import { CaseMetaRail } from "@/components/case-meta-rail";
+import { CaseNav } from "@/components/case-nav";
 import {
   SITE,
   absoluteUrl,
@@ -29,7 +31,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const c = await getCase(slug);
   if (!c) return {};
   const title = c.title;
-  const ogTitle = `${c.title} — Ilya Moskovkin`;
+  const ogTitle = `${c.title} · Ilya Moskovkin`;
   const url = absoluteUrl(`/work/${c.slug}`);
   const ogImage = getProjectImageUrl(c.cover);
 
@@ -63,6 +65,7 @@ export default async function CasePage({ params }: { params: Params }) {
   if (!c) notFound();
   const caseJsonLd = getCaseJsonLd(c);
   const breadcrumbJsonLd = getCaseBreadcrumbJsonLd(c);
+  const { prev, next } = await getAdjacentCases(slug);
 
   return (
     <main className="relative mx-auto max-w-[1080px] px-5 pb-24 pt-12 sm:px-8">
@@ -113,28 +116,32 @@ export default async function CasePage({ params }: { params: Params }) {
 
         <div className="lg:col-start-1 lg:row-start-2">
           <div className="mt-10 mb-10 h-px bg-line-soft" />
-          <article>
-            <MDXRemote
-              source={c.content}
-              components={mdxComponents}
-              options={{
-                mdxOptions: {
-                  remarkPlugins: [remarkGfm],
-                  rehypePlugins: [
-                    [
-                      rehypePrettyCode,
-                      {
-                        theme: { dark: "github-dark-dimmed", light: "github-dark-dimmed" },
-                        keepBackground: false,
-                      },
+          <LightboxProvider>
+            <article>
+              <MDXRemote
+                source={c.content}
+                components={mdxComponents}
+                options={{
+                  mdxOptions: {
+                    remarkPlugins: [remarkGfm],
+                    rehypePlugins: [
+                      [
+                        rehypePrettyCode,
+                        {
+                          theme: { dark: "github-dark-dimmed", light: "github-dark-dimmed" },
+                          keepBackground: false,
+                        },
+                      ],
                     ],
-                  ],
-                },
-              }}
-            />
-          </article>
+                  },
+                }}
+              />
+            </article>
+          </LightboxProvider>
         </div>
       </div>
+
+      <CaseNav prev={prev} next={next} />
 
       <footer className="mt-20 flex items-center justify-between border-t border-line-soft pt-8 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim">
         <Link

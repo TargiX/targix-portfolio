@@ -23,7 +23,7 @@ export type Project = {
 
 export const FEATURED: Project = {
   index: "①",
-  year: "2024 — now",
+  year: "2024 – now",
   role: "Solo founder · Design + Eng",
   title: "Phosphene",
   blurb:
@@ -41,12 +41,12 @@ export const FEATURED: Project = {
 export const SECONDARY: Project[] = [
   {
     index: "②",
-    year: "2021 — 2026",
+    year: "2021 – 2026",
     role: "Lead Frontend · Broker Online Exchange",
     title: "Broker Online Exchange",
     blurb:
-      "Nearly five years leading the frontend team at Broker Online Exchange (acquired by AppDirect along the way). Mentored juniors and built MyServiceCloud, a B2B energy-brokerage platform, then led the migration from Vue 3 to React micro-frontends (Mantine, Zustand). Flagship: Bill Scan → Quote — scanned bills turned into structured quotes via Gemini Vision OCR.",
-    tags: ["React", "Vue 3", "TypeScript", "Micro-frontends", "Mantine", "Zustand", "Laravel", "Team lead"],
+      "Nearly five years leading the frontend team at Broker Online Exchange (acquired by AppDirect along the way). Mentored juniors and built MyServiceCloud, a B2B energy-brokerage platform, then led a full design-system re-theme to AppDirect's design language (Mantine) and built new feature areas in React. Flagship: Bill Scan to Quote, scanned bills turned into structured quotes via Gemini Vision OCR.",
+    tags: ["Vue 3", "React", "TypeScript", "Design systems", "Mantine", "Zustand", "Laravel", "Team lead"],
     links: [
       { label: "brokeronlinexchange.com", href: "https://www.brokeronlinexchange.com/" },
       { label: "case study", href: "/work/broker-online-exchange" },
@@ -56,14 +56,14 @@ export const SECONDARY: Project[] = [
   },
   {
     index: "③",
-    year: "2026 — now",
+    year: "2026 – now",
     role: "Solo · Design + Eng",
     title: "Anchor",
     blurb:
-      "A calm daily-ritual app — mood, sleep, intention, journaling. A real hybrid app launching now: one Next.js codebase shipping to web, iOS/Android (Capacitor), and desktop (Electron).",
+      "A calm daily-ritual app for mood, sleep, intention, and journaling. Live at anchorapp.cc, built from one Next.js codebase that ships to web, iOS/Android (Capacitor), and desktop (Electron).",
     tags: ["Next.js 16", "React 19", "Capacitor", "Electron", "Framer Motion"],
     links: [
-      ...(ANCHOR_DEPLOYED ? [{ label: "live app", href: ANCHOR_URL }] : []),
+      ...(ANCHOR_DEPLOYED ? [{ label: "anchorapp.cc", href: ANCHOR_URL }] : []),
       { label: "github", href: ANCHOR_REPO_URL },
       { label: "case study", href: "/work/anchor" },
     ],
@@ -82,7 +82,7 @@ export const SECONDARY: Project[] = [
     role: "Solo · Product Design + Eng",
     title: "Roomboard",
     blurb:
-      "A live realtime collaboration room for moodboards, landing-page reviews, and creative decisions — open at roomboard.online. Drop images, write notes, add comments, link cards, and share one lockable room URL.",
+      "A live realtime collaboration room for moodboards, landing-page reviews, and creative decisions, open at roomboard.online. Drop images, write notes, add comments, link cards, and share one lockable room URL.",
     tags: ["Next.js 16", "React 19", "Pixi.js", "Elixir/Phoenix", "Supabase", "Realtime", "Canvas UX"],
     links: [
       { label: "roomboard.online", href: "https://roomboard.online" },
@@ -154,7 +154,7 @@ export const MINOR: Project[] = [
     role: "Solo · Web3 / Cosmos",
     title: "Injective Testnet dApp",
     blurb:
-      "A Nuxt/TypeScript dApp on the Injective (Cosmos) testnet: wallet connect (Keplr/Leap), on-chain balances, and a live spot order book with hand-rolled price and depth charts — all read over the injective-ts gRPC-web SDK.",
+      "A Nuxt/TypeScript dApp on the Injective (Cosmos) testnet: wallet connect (Keplr/Leap), on-chain balances, and a live spot order book with hand-rolled price and depth charts, all read over the injective-ts gRPC-web SDK.",
     tags: ["Nuxt 3", "TypeScript", "Injective / Cosmos", "gRPC-web", "Keplr"],
     links: [
       { label: "live demo", href: "https://injective.ilyamoskovkin.com" },

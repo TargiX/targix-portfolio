@@ -22,6 +22,12 @@
   --line:       oklch(0.78  0.006 250);
   --line-soft:  oklch(0.86  0.005 250);
 
+  /* zone text colors (fallback to dark mode defaults since color-scheme is dynamic) */
+  --zone-subject: var(--color-violet-200);
+  --zone-setting: var(--color-cyan-200);
+  --zone-mood: var(--color-amber-200);
+  --zone-aesthetic: var(--color-emerald-200);
+
   /* accent (overridable) */
   --accent:     #166534;
   --accent-rgb: 22 101 52;
@@ -68,6 +74,11 @@
     --line:       oklch(0.26  0.005 250);
     --line-soft:  oklch(0.22  0.005 250);
 
+    --zone-subject: var(--color-violet-200);
+    --zone-setting: var(--color-cyan-200);
+    --zone-mood: var(--color-amber-200);
+    --zone-aesthetic: var(--color-emerald-200);
+
     /* accent */
     --accent:     #a3e635;
     --accent-rgb: 163 230 53;
@@ -90,6 +101,10 @@
   --fg-dim:     oklch(0.62  0.006 250);
   --line:       oklch(0.78  0.006 250);
   --line-soft:  oklch(0.86  0.005 250);
+  --zone-subject: var(--color-violet-800);
+  --zone-setting: var(--color-cyan-800);
+  --zone-mood: var(--color-amber-800);
+  --zone-aesthetic: var(--color-emerald-800);
   --accent:     #166534;
   --accent-rgb: 22 101 52;
   --accent-2:     #047857;
@@ -109,12 +124,37 @@
   --fg-dim:     oklch(0.45  0.005 250);
   --line:       oklch(0.26  0.005 250);
   --line-soft:  oklch(0.22  0.005 250);
+  --zone-subject: var(--color-violet-200);
+  --zone-setting: var(--color-cyan-200);
+  --zone-mood: var(--color-amber-200);
+  --zone-aesthetic: var(--color-emerald-200);
   --accent:     #a3e635;
   --accent-rgb: 163 230 53;
   --accent-2:     #2dd4bf;
   --accent-2-rgb: 45 212 191;
   --destructive: oklch(0.6 0.2 25);
   --destructive-foreground: var(--fg);
+}
+
+/* Footer background mirrors the hero's grey-green aurora, flipped so the tint
+   rises from the bottom and bookends the page. Theme-aware: pale grey-green on
+   light, deep grey-green on dark, with an accent glow rising from the bottom. */
+.footer-glow {
+  background:
+    linear-gradient(180deg, transparent 0%, transparent 18%, oklch(0.90 0.02 165) 100%),
+    radial-gradient(92% 130% at 50% 122%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 62%);
+}
+:root[data-theme="dark"] .footer-glow {
+  background:
+    linear-gradient(180deg, transparent 0%, transparent 18%, oklch(0.165 0.012 165) 100%),
+    radial-gradient(92% 130% at 50% 122%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 62%);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .footer-glow {
+    background:
+      linear-gradient(180deg, transparent 0%, transparent 18%, oklch(0.165 0.012 165) 100%),
+      radial-gradient(92% 130% at 50% 122%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 62%);
+  }
 }
 
 @theme inline {
@@ -177,8 +217,6 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   min-height: 100svh;
-  background-image:
-    radial-gradient(1200px 600px at 50% -200px, color-mix(in oklab, var(--bg-3) 78%, transparent), transparent 60%);
 }
 
 ::selection { background: var(--accent); color: var(--bg); }
@@ -342,6 +380,26 @@ button:not(:disabled) {
   .group\/section:hover .section-title { animation: none; }
 }
 
+/* Light theme overrides: calm solid green instead of gradients */
+:root[data-theme="light"] .group\/card:hover .card-title,
+:root[data-theme="light"] .group\/section:hover .section-title,
+:root[data-theme="light"] .heading-gradient {
+  background-image: none;
+  -webkit-text-fill-color: initial;
+  color: var(--accent);
+  animation: none;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .group\/card:hover .card-title,
+  :root:not([data-theme="dark"]) .group\/section:hover .section-title,
+  :root:not([data-theme="dark"]) .heading-gradient {
+    background-image: none;
+    -webkit-text-fill-color: initial;
+    color: var(--accent);
+    animation: none;
+  }
+}
+
 /* text button with a thin lime→teal gradient border — the same palette as the
    headings. Used to lift the primary case-study link above the plain underline
    links without a heavy filled pill. The body fills with the page bg so the
@@ -404,6 +462,17 @@ button:not(:disabled) {
     black calc(100% - 240px),
     transparent 100%
   );
+}
+
+/* Light theme: the 7% accent dots vanish on a pale field — give the grid a
+   denser, slightly darker dot so the texture still reads (light theme only). */
+:root[data-theme="light"] .body-dots {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--accent) 55%, #475569) 0.8px,
+    transparent 1.5px
+  );
+  opacity: 0.18;
 }
 
 /* status dot pulse */

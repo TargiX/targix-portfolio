@@ -61,8 +61,8 @@ export function RoomboardThemeShowcase() {
         </div>
       </div>
       <figcaption className="mt-2 border-l border-line-soft pl-3 font-mono text-[11px] leading-relaxed text-fg-dim">
-        Same landing, both themes — light mode re-themes the Pixi-rendered canvas cards too, not
-        just the DOM shell. Toggle to compare.
+        Same landing, both themes. Light mode re-themes the Pixi-rendered canvas cards as well as
+        the DOM shell. Toggle to compare.
       </figcaption>
     </figure>
   );

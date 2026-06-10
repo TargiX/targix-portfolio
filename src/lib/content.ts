@@ -78,3 +78,16 @@ export async function getAllSlugs(): Promise<string[]> {
   const all = await getAllCases();
   return all.map((c) => c.slug);
 }
+
+/** Return the previous and next case study for a given slug (sorted by order). */
+export async function getAdjacentCases(
+  slug: string,
+): Promise<{ prev: CaseMeta | null; next: CaseMeta | null }> {
+  const all = await getAllCases();
+  const idx = all.findIndex((c) => c.slug === slug);
+  if (idx === -1) return { prev: null, next: null };
+  // "prev" = earlier in the list (lower order), "next" = later
+  const prev = idx > 0 ? all[idx - 1] : null;
+  const next = idx < all.length - 1 ? all[idx + 1] : null;
+  return { prev, next };
+}

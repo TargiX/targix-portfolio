@@ -116,8 +116,8 @@ export default function Home() {
             <p>
               What I do best is turn design into interfaces that genuinely feel
               good to use. Pixel-perfect implementation, smooth interactions,
-              fast load times, the small details users feel even when they don't
-              notice them. I came into engineering from a UI design background,
+              fast load times, and the small details that make an interface feel
+              effortless. I came into engineering from a UI design background,
               so I read Figma the way a designer does.
             </p>
 
@@ -144,7 +144,7 @@ export default function Home() {
                 },
                 {
                   label: "AI-augmented workflow:",
-                  body: "Claude Code + Codex are part of my daily process — faster scaffolding, refactors, and test generation, more ground covered per hour. Architecture and quality calls stay mine.",
+                  body: "Claude Code + Codex are part of my daily process: faster scaffolding, refactors, and test generation, more ground covered per hour. Architecture and quality calls stay mine.",
                 },
                 {
                   label: "AI integration in production:",
@@ -174,11 +174,11 @@ export default function Home() {
 
             <p>
               Comfortable jumping into a messy codebase and shipping real
-              improvements — full stack listed below.
+              improvements. Full stack listed below.
             </p>
 
             <p>
-              Available now — open to senior frontend or design-engineering
+              Available now, open to senior frontend or design-engineering
               roles, contract or full-time. I work remote from Vietnam (UTC+7),
               with comfortable overlap into European and US-morning hours. Let's
               talk.
@@ -232,14 +232,14 @@ export default function Home() {
           <>
             <p className="mb-6 text-fg-muted">
               The form goes through a Server Action and lands in my inbox via
-              Resend. The mailto and direct links below work too — pick whichever
+              Resend. The mailto and direct links below work too, pick whichever
               feels less formal.
             </p>
             <ContactForm disabled={false} />
           </>
         ) : (
           <p className="mb-6 text-fg-muted">
-            Fastest way to reach me is email — links below. I usually reply
+            Fastest way to reach me is email; links below. I usually reply
             within a day.
           </p>
         )}
@@ -281,7 +281,9 @@ export default function Home() {
       />
       <ViewSwitcher work={work} lab={lab} about={about} />
 
-      <footer className="relative mt-10 overflow-hidden border-t border-line-soft">
+      <footer className="relative mt-10 overflow-hidden">
+        {/* grey-green aurora tint that rises from the bottom, mirroring the hero */}
+        <div aria-hidden="true" className="footer-glow pointer-events-none absolute inset-0 z-0" />
         <FooterJellyfish />
         <div className="relative z-10 mx-auto max-w-[1280px] px-5 py-14 sm:px-8">
           <div className="grid gap-10 sm:grid-cols-[1fr_auto] sm:items-start">
@@ -304,8 +306,8 @@ export default function Home() {
                 </span>
               </a>
               <p className="mt-3 max-w-[46ch] text-[13px] leading-relaxed text-fg-muted">
-                Open to senior frontend, frontend-heavy product engineering, or
-                design-engineering roles. Based in Vietnam, comfortable async.
+                Open to senior frontend or design-engineering roles. Based in
+                Vietnam, comfortable async.
               </p>
             </div>
 

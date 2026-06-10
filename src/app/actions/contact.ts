@@ -68,7 +68,7 @@ export async function sendContact(
   if (!rateLimit.ok) {
     return {
       ok: false,
-      error: `too many messages — try again in ${Math.ceil(rateLimit.retryAfterSeconds / 60)}m`,
+      error: `too many messages; try again in ${Math.ceil(rateLimit.retryAfterSeconds / 60)}m`,
       version: prev.version,
     };
   }
@@ -82,7 +82,7 @@ export async function sendContact(
     }
     return {
       ok: false,
-      error: "contact form is not configured — use the email link instead",
+      error: "contact form is not configured; use the email link instead",
       version: prev.version,
     };
   }
@@ -100,7 +100,7 @@ export async function sendContact(
       console.error("[contact] resend error:", error);
       return {
         ok: false,
-        error: "send failed — try the email link instead",
+        error: "send failed; try the email link instead",
         version: prev.version,
       };
     }
@@ -108,7 +108,7 @@ export async function sendContact(
     console.error("[contact] unexpected error:", err);
     return {
       ok: false,
-      error: "send failed — try the email link instead",
+      error: "send failed; try the email link instead",
       version: prev.version,
     };
   }

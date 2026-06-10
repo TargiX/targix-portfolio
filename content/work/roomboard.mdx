@@ -3,7 +3,7 @@ slug: roomboard
 title: Roomboard
 year: "2025"
 role: Solo · Product Design + Eng
-blurb: A live realtime collaboration room for moodboards, landing-page reviews, and creative decisions — open at roomboard.online. Drop images, write notes, add comments, link cards, and share one lockable URL.
+blurb: "A live realtime collaboration room for moodboards, landing-page reviews, and creative decisions, open at roomboard.online. Drop images, write notes, add comments, link cards, and share one lockable URL."
 tags: ["Next.js 16", "React 19", "Pixi.js", "Elixir/Phoenix", "Supabase", "Vercel", "Realtime", "Canvas UX"]
 links:
   - { label: "roomboard.online", href: "https://roomboard.online" }
@@ -17,13 +17,13 @@ featured: false
 
 Design feedback is usually scattered across screenshots, chat threads, file links, and half-remembered decisions. Roomboard compresses that into one live room: paste a visual reference, write a note, connect the cards, comment in context, and share the link.
 
-The product rule is intentionally simple: **no account before value**. A teammate can open a room link, pick a display name and color, and immediately join the board. The creator can lock the room when the decision is made, close it when it is done, or keep it as a lightweight artifact.
+The product rule is intentionally simple: **value before signup**. A teammate can open a room link, pick a display name and color, and immediately join the board. The creator can lock the room when the decision is made, close it when it is done, or keep it as a lightweight artifact.
 
 <RoomboardScreen screen="landing" />
 
 ## What I built
 
-- **A real canvas surface**, not a static landing-page mock. Notes, image cards, connector lines, zoom, pan, selection, comments, uploads, and lock states all run in the app.
+- **A real, working canvas surface.** Notes, image cards, connector lines, zoom, pan, selection, comments, uploads, and lock states all run in the app.
 - **Pixi.js for the board**, because the cards and connectors need to stay smooth under pan/zoom and still feel like an editor.
 - **Next.js App Router for the product shell**, room routes, upload endpoints, owner-token actions, and deployable web surface.
 - **Phoenix Channels for realtime presence and board events**, with a Vercel-friendly fallback path for local/offline operation.
@@ -34,11 +34,11 @@ The product rule is intentionally simple: **no account before value**. A teammat
 
 ## Product decisions
 
-The core question was not "can I draw cards on a canvas?" It was "can this feel like a real product a small creative team would actually use?"
+The core question went past "can I draw cards on a canvas?" It was "can this feel like a real product a small creative team would actually use?"
 
-That changed the scope. The app needed room creation, share links, local user identity, close/lock flows, drag-and-drop image upload, comments, and visible presence. Otherwise the canvas would look nice but feel hollow. The details matter: a user should not be asked for their name on every reload, image cards should respect aspect ratio, and light mode has to theme the Pixi-rendered cards too - not just the DOM shell.
+That changed the scope. The app needed room creation, share links, local user identity, close/lock flows, drag-and-drop image upload, comments, and visible presence. Otherwise the canvas would look nice but feel hollow. The details matter: a user keeps their name across reloads, image cards respect aspect ratio, and light mode themes the Pixi-rendered cards as well as the DOM shell.
 
-The collaboration model is also deliberately link-first. There is no hard auth wall for the first interaction because this product is for quick creative review, not enterprise document control. The creator still has owner controls: lock, close, and keep the room from turning into a permanent public junk drawer.
+The collaboration model is also deliberately link-first. The first interaction stays open because this product is for quick creative review rather than enterprise document control. The creator still has owner controls: lock, close, and keep the room tidy over time.
 
 ## Realtime architecture
 
@@ -49,13 +49,13 @@ Roomboard uses the right tool for each layer:
 - **Phoenix Channels** handle the realtime layer: cursor presence, user labels, board events, and fanout between collaborators.
 - **Supabase** gives the app a hosted persistence layer without running a custom database server.
 
-The important part is that Elixir is not just a badge. It is used for the part where BEAM is genuinely strong: many small live sessions, presence state, and low-latency broadcast. Next.js stays focused on the web product and persistence boundary.
+Elixir earns its place here. It runs the part where BEAM is genuinely strong: many small live sessions, presence state, and low-latency broadcast. Next.js stays focused on the web product and persistence boundary.
 
 ## UX details that make it feel real
 
 - **Local session memory**: the same computer remembers your room profile and theme.
 - **Room lifecycle**: rooms can be shared, locked by the creator, and closed.
-- **Card-level comments**: feedback belongs to the visual object, not a detached chat transcript.
+- **Card-level comments**: feedback lives on the visual object itself.
 - **Image-first workflow**: upload from disk, paste URLs, keep aspect ratios, and inspect the source.
 - **Presence with intent**: collaborator cursors, names, colors, and focus make the room feel alive without turning it into noise.
 
@@ -63,13 +63,13 @@ The important part is that Elixir is not just a badge. It is used for the part w
 
 ## The honest read
 
-Roomboard is a focused, live product, not a bloated enterprise whiteboard. That is the point. I wanted one sharp thing: a room where a small creative team can make a visual decision in minutes.
+Roomboard is a focused, live product built around one sharp idea: a room where a small creative team can make a visual decision in minutes.
 
 The interesting engineering is in the seams: DOM controls around a Pixi canvas, realtime channels around optimistic local movement, uploaded files beside URL images, link-based collaboration beside owner controls, and a public landing page that sells the product by showing the actual workflow.
 
 ## Numbers
 
 - **Time to first card:** about 4 seconds in the intended flow.
-- **Onboarding steps:** zero account steps - join, name, collaborate.
+- **Onboarding steps:** zero; join, name, collaborate.
 - **Core surfaces:** landing page, room canvas, inspector, upload, comments, realtime presence, room dashboard.
 - **Deployment shape:** Vercel for the Next.js app, Phoenix for realtime, Supabase for persistence.

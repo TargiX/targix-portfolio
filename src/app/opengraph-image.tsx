@@ -73,7 +73,7 @@ export default function Image() {
               fontFamily: "Geist Mono, ui-monospace, monospace",
             }}
           >
-            Senior frontend/product engineer for React, Next.js, Vue, Nuxt,
+            Senior frontend engineer for React, Next.js, Vue, Nuxt,
             AI workflows, dashboards, and visual editors.
           </div>
         </div>
@@ -91,7 +91,7 @@ export default function Image() {
             color: "rgba(255,255,255,0.55)",
           }}
         >
-          <span>vietnam → remote · 10+ yrs</span>
+          <span>vietnam · remote · 10+ yrs</span>
           <span style={{ color: "#a3e635" }}>● open to roles</span>
         </div>
       </div>

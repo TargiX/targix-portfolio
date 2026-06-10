@@ -1,12 +1,12 @@
 ---
 slug: anchor
 title: Anchor
-year: "2026 — now"
+year: "2026 – now"
 role: Solo · Design + Eng
-blurb: A calm daily-ritual app — morning and evening check-ins for mood, sleep, intention, and journaling. A real hybrid app launching now — one Next.js codebase that ships to web, iOS/Android (Capacitor), and desktop (Electron).
+blurb: "A calm daily-ritual app: morning and evening check-ins for mood, sleep, intention, and journaling. Live at anchorapp.cc from one Next.js codebase that ships to web, iOS/Android (Capacitor), and desktop (Electron)."
 tags: ["Next.js 16", "React 19", "TypeScript", "Tailwind v4", "Radix UI", "Framer Motion", "Capacitor", "Electron", "Vercel"]
 links:
-  - { label: "live app", href: "https://anchor.ilyamoskovkin.com" }
+  - { label: "anchorapp.cc", href: "https://anchorapp.cc" }
   - { label: "github", href: "https://github.com/TargiX/Next.js-Tether" }
 cover: "/work/anchor/desktop-hero.png"
 order: 2
@@ -15,13 +15,13 @@ featured: false
 
 ## The pitch
 
-Most habit and mood apps are a wall of inputs. Anchor is the opposite: two short rituals — one to open the day, one to close it — and a quiet trend line in between. Set an intention in the morning, log how you slept, breathe. Reflect and journal at night, prep tomorrow's sleep window. That's the whole product.
+Most habit and mood apps are a wall of inputs. Anchor is the opposite: two short rituals (one to open the day, one to close it) and a quiet trend line in between. Set an intention in the morning, log how you slept, breathe. Reflect and journal at night, prep tomorrow's sleep window. That's the whole product.
 
 It started from a narrower question: **how far can one Next.js codebase stretch across web, mobile, and desktop without forking the UI?** The answer turned out to be "all the way," and that's the part worth showing.
 
 <AnchorDemo />
 
-The frame above is the real deployed app, not a screenshot — it's the live web build running at [anchor.ilyamoskovkin.com](https://anchor.ilyamoskovkin.com). Touch it: start a ritual, drag the sleep slider, walk the steps.
+The frame above is the real deployed app, the live web build running at [anchorapp.cc](https://anchorapp.cc). Touch it: start a ritual, drag the sleep slider, walk the steps.
 
 <AnchorScrollytell />
 
@@ -29,9 +29,9 @@ The frame above is the real deployed app, not a screenshot — it's the live web
 
 The app is a standard Next.js 16 App Router project. The trick is that every route is client-rendered against local state (no SSR data dependency), which means the exact same build can run three ways:
 
-- **Web** — deployed on Vercel, server build, the default.
-- **Mobile** — `BUILD_TARGET=native next build` flips on `output: "export"`, producing a static bundle that **Capacitor** wraps into native iOS and Android shells.
-- **Desktop** — the same static bundle, wrapped by `@capacitor-community/electron` for macOS / Windows / Linux.
+- **Web:** deployed on Vercel, server build, the default.
+- **Mobile:** `BUILD_TARGET=native next build` flips on `output: "export"`, producing a static bundle that **Capacitor** wraps into native iOS and Android shells.
+- **Desktop:** the same static bundle, wrapped by `@capacitor-community/electron` for macOS / Windows / Linux.
 
 The conditional in `next.config.mjs` is the whole seam:
 
@@ -47,19 +47,19 @@ const nextConfig = {
 };
 ```
 
-Vercel keeps the full server build; `npm run cap:sync` produces the static export and copies it into the native projects. No second UI, no React Native rewrite, no divergent component tree.
+Vercel keeps the full server build; `npm run cap:sync` produces the static export and copies it into the native projects. One UI, one component tree, shipped to all three targets from a single build.
 
 ## Stack decisions worth defending
 
-**Next.js for an app that's mostly client-side.** The product is a stateful flow, not a content site — but App Router's file routing, font handling, and the static-export escape hatch make it the path of least resistance to a Capacitor bundle. Server components would have been dead weight here, so there are none.
+**Next.js for an app that's mostly client-side.** The product is a stateful flow, and App Router's file routing, font handling, and static-export escape hatch make it the path of least resistance to a Capacitor bundle. The editor lives on the client, so it skips server components entirely.
 
-**Radix primitives + Tailwind v4, not a component kit.** The whole thing is warm, paper-and-ink, with a custom OKLCH palette. Radix gives accessible behavior (slider, dialog, tabs) and I style it down to the token. shadcn-style ownership of the component source meant I could fix things directly instead of fighting a library's defaults.
+**Radix primitives + Tailwind v4, styled to the token.** The whole thing is warm, paper-and-ink, with a custom OKLCH palette. Radix gives accessible behavior (slider, dialog, tabs) and I style it down to the token. shadcn-style ownership of the component source let me fix things directly instead of fighting a library's defaults.
 
-**Framer Motion, used sparingly.** Ritual steps cross-fade, the brand motif settles in, status cards slide. Animation is what separates something that feels unfinished from something that feels shipped, but every extra spring is a frame budget — so it's restrained on purpose.
+**Framer Motion, used sparingly.** Ritual steps cross-fade, the brand motif settles in, status cards slide. Animation is what makes a flow feel shipped rather than half-built, and every extra spring is a frame budget, so it stays restrained on purpose.
 
 ## What AI got wrong (and how I caught it)
 
-I built this fast with an AI assistant, which is exactly where critical review earns its keep. The clearest example: the sleep slider rendered as an invisible track — only the thumb showed, floating on white.
+I built this fast with an AI assistant, which is exactly where critical review earns its keep. The clearest example: the sleep slider rendered as an invisible track, with only the thumb showing, floating on white.
 
 The generated Tailwind looked plausible:
 
@@ -68,25 +68,25 @@ The generated Tailwind looked plausible:
   className="... data-horizontal:h-2 ..." />
 ```
 
-But Radix sets `data-orientation="horizontal"`, not `data-horizontal`. So `data-horizontal:h-2` matched nothing, the track collapsed to `height: 0`, and the rail vanished. A color tweak would never have fixed it — the element had no height at all. The actual fix was the selector:
+Radix sets `data-orientation="horizontal"`, so `data-horizontal:h-2` matched nothing, the track collapsed to `height: 0`, and the rail vanished. The element had zero height, so the fix lived in the selector:
 
 ```tsx
 className="... data-[orientation=horizontal]:h-2 ..."
 ```
 
-That's the recurring tax on AI-generated frontend: it's confident with modern APIs and quietly wrong at the edges. Reading the rendered DOM, not the source, is what surfaced it.
+That's the recurring tax on AI-generated frontend: it's confident with modern APIs and quietly wrong at the edges. Reading the rendered DOM is what surfaced it.
 
 <AnchorParallaxGallery />
 
 ## What I'd do differently
 
 - **Persist state to IndexedDB from day one.** The current build keeps entries in memory; production needs offline-first storage that survives a reload, which Capacitor makes easy but I deferred.
-- **Wire Sentry before shipping, not after.** Cross-platform means cross-platform bugs; I'd want the crash data from the first native build.
+- **Wire Sentry up front, before shipping.** Cross-platform means cross-platform bugs; I'd want the crash data from the first native build.
 - **Lock the design tokens earlier.** I iterated the palette in the components and had to reconcile it back into CSS variables. Tokens first, components second.
 
 ## Numbers
 
-- **Targets from one codebase:** 3 — web, mobile (iOS + Android), desktop.
+- **Targets from one codebase:** 3 (web, mobile for iOS + Android, desktop).
 - **Production build:** 7 static routes, clean typecheck + lint.
-- **Native seam:** one env-gated config block, no UI fork.
+- **Native seam:** one env-gated config block, single shared UI.
 - **Time to cross-platform build:** a single focused build session.
