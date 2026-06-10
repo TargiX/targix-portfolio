@@ -92,6 +92,25 @@ export const SECONDARY: Project[] = [
     thumb: "/work/roomboard/landing-hero.png",
     demo: "roomboard",
   },
+  {
+    index: "⑤",
+    year: "2024",
+    role: "Solo · React systems",
+    title: "SignalOps",
+    blurb:
+      "An operations cockpit for AI generation infrastructure: provider health monitoring, incident drill-down with guided replay, virtualized job inspection, and routing-rule simulation. A focused data product built to show how frontend craft serves operational decisions — not just dashboards.",
+    tags: ["Next.js 16", "React 19", "TanStack Table", "TanStack Virtual", "Recharts", "TypeScript"],
+    links: [
+      { label: "live app", href: "https://signalops.ilyamoskovkin.com" },
+      { label: "github", href: "https://github.com/TargiX/signalops" },
+      { label: "case study", href: "/work/signalops" },
+    ],
+    caseSlug: "signalops",
+    screens: [
+      "/work/signalops/cockpit.png",
+      "/work/signalops/incident.png",
+    ],
+  },
 ];
 
 /**
@@ -103,18 +122,6 @@ export const SECONDARY: Project[] = [
  * SECONDARY above) and the band appears automatically.
  */
 export const MINOR: Project[] = [
-  {
-    index: "⑤",
-    year: "2024",
-    role: "Solo · React systems",
-    title: "SignalOps",
-    blurb:
-      "A React operations cockpit for AI generation infrastructure: provider health, incident drill-down, virtualized job inspection, and routing-rule simulation.",
-    tags: ["Next.js 16", "React 19", "TanStack Table", "TanStack Virtual", "Recharts"],
-    links: [{ label: "case study", href: "/work/signalops" }],
-    caseSlug: "signalops",
-    thumb: "/work/signalops/incident.png",
-  },
   {
     index: "⑥",
     year: "2025",
