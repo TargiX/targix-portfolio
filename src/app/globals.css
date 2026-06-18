@@ -144,6 +144,37 @@
     linear-gradient(180deg, transparent 0%, transparent 18%, oklch(0.90 0.02 165) 100%),
     radial-gradient(92% 130% at 50% 122%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 62%);
 }
+
+.hero-bg {
+  background:
+    radial-gradient(95% 70% at 20% 18%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 68%),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 76%);
+}
+
+.hero-fade {
+  background:
+    radial-gradient(60% 80% at 20% 30%, color-mix(in oklab, var(--bg-3) 72%, var(--accent) 8%), transparent 70%),
+    linear-gradient(180deg, transparent 55%, var(--bg) 100%);
+}
+
+:root[data-theme="light"] .hero-bg {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--bg) 88%, var(--accent) 5%) 0%, var(--bg) 72%);
+}
+
+:root[data-theme="light"] .hero-fade {
+  background: linear-gradient(180deg, transparent 64%, var(--bg) 100%);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .hero-bg {
+    background: linear-gradient(180deg, color-mix(in oklab, var(--bg) 88%, var(--accent) 5%) 0%, var(--bg) 72%);
+  }
+
+  :root:not([data-theme="dark"]) .hero-fade {
+    background: linear-gradient(180deg, transparent 64%, var(--bg) 100%);
+  }
+}
+
 :root[data-theme="dark"] .footer-glow {
   background:
     linear-gradient(180deg, transparent 0%, transparent 18%, oklch(0.165 0.012 165) 100%),

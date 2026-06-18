@@ -45,6 +45,7 @@ export function ViewSwitcher({
   const [dir, setDir] = useState(1);
   const [axis, setAxis] = useState<Axis>("x");
   const [instant, setInstant] = useState(false);
+  const [readyForTransitions, setReadyForTransitions] = useState(false);
   const time = useVietnamTime();
 
   const lockRef = useRef(false);
@@ -95,6 +96,10 @@ export function ViewSwitcher({
         clearTimeout(cooldownTimerRef.current);
       }
     };
+  }, []);
+
+  useEffect(() => {
+    setReadyForTransitions(true);
   }, []);
 
   useEffect(() => {
@@ -215,16 +220,16 @@ export function ViewSwitcher({
       <nav 
         className="sticky top-0 z-50 border-b border-line-soft/70 bg-bg/95"
       >
-        <div className="mx-auto flex max-w-[1280px] items-center gap-4 px-5 py-3 sm:px-8">
+        <div className="mx-auto flex max-w-[1280px] items-center gap-3 overflow-hidden px-5 py-3 sm:gap-4 sm:px-8">
           <button
             type="button"
             onClick={() => go("work")}
-            className="font-mono text-[11px] tracking-[0.18em] text-fg-dim transition-colors hover:text-fg"
+            className="shrink-0 font-mono text-[11px] tracking-[0.14em] text-fg-dim transition-colors hover:text-fg sm:tracking-[0.18em]"
           >
-            IM<span className="text-fg"> / </span>portfolio
+            IM<span className="text-fg"> / </span><span className="max-[420px]:sr-only">portfolio</span>
           </button>
 
-          <div aria-label="Portfolio sections" role="tablist" className="flex items-center gap-1">
+          <div aria-label="Portfolio sections" role="tablist" className="flex min-w-0 items-center gap-1">
             {TABS.map((t) => (
               <button
                 key={t.id}
@@ -237,7 +242,7 @@ export function ViewSwitcher({
                 onClick={() => go(t.id)}
                 onKeyDown={onTabKeyDown}
                 className={cn(
-                  "relative rounded-md px-3 py-1 font-mono text-[12px] tracking-[0.02em] transition-colors",
+                  "relative rounded-md px-2.5 py-1 font-mono text-[12px] tracking-[0.02em] transition-colors sm:px-3",
                   view === t.id ? "text-fg" : "text-fg-dim hover:text-fg-muted",
                 )}
               >
@@ -253,7 +258,7 @@ export function ViewSwitcher({
             ))}
           </div>
 
-          <div className="ml-auto flex items-center gap-3 font-mono text-[11px] tracking-[0.04em] sm:gap-4">
+          <div className="ml-auto flex shrink-0 items-center gap-2 font-mono text-[11px] tracking-[0.04em] sm:gap-4">
             <a
               href="mailto:hello@ilyamoskovkin.com"
               className="hidden text-fg-dim transition-colors hover:text-fg sm:inline"
@@ -264,7 +269,7 @@ export function ViewSwitcher({
               href="/Ilya_Moskovkin_CV.pdf"
               target="_blank"
               rel="noreferrer"
-              className="rounded-md border border-line bg-bg-2 px-2.5 py-1 text-fg-muted transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              className="hidden rounded-md border border-line bg-bg-2 px-2.5 py-1 text-fg-muted transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] sm:inline-flex"
             >
               Résumé ↗
             </a>
@@ -294,7 +299,7 @@ export function ViewSwitcher({
               key={view}
               custom={{ dir, axis }}
               variants={variants}
-              initial="enter"
+              initial={readyForTransitions ? "enter" : false}
               animate="center"
               exit="exit"
               transition={{ duration: axis === "y" ? 0.4 : 0.32, ease: [0.22, 1, 0.36, 1] }}

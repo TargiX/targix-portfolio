@@ -4,7 +4,7 @@ import { Hero } from "@/components/hero";
 import { Section } from "@/components/section";
 import { ProjectCard } from "@/components/project-card";
 import { CompactProjectCard } from "@/components/compact-project-card";
-import { FooterJellyfish } from "@/components/footer-jellyfish";
+import { LazyFooterJellyfish } from "@/components/lazy-footer-jellyfish";
 import { GitHubActivity } from "@/components/server/github-activity";
 import { GitHubContributions } from "@/components/server/github-contributions";
 import { ContactForm } from "@/components/forms/contact-form";
@@ -284,7 +284,7 @@ export default function Home() {
       <footer className="relative mt-10 overflow-hidden">
         {/* grey-green aurora tint that rises from the bottom, mirroring the hero */}
         <div aria-hidden="true" className="footer-glow pointer-events-none absolute inset-0 z-0" />
-        <FooterJellyfish />
+        <LazyFooterJellyfish />
         <div className="relative z-10 mx-auto max-w-[1280px] px-5 py-14 sm:px-8">
           <div className="grid gap-10 sm:grid-cols-[1fr_auto] sm:items-start">
             {/* big CTA */}

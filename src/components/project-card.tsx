@@ -1,14 +1,25 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion, type Variants } from "motion/react";
 import type { Project } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { ScreenFan } from "@/components/screen-fan";
-import { PhospheneShowcase } from "@/components/phosphene-showcase";
-import { RoomboardShowcase } from "@/components/roomboard-showcase";
-import { BrokerShowcase } from "@/components/broker-showcase";
+
+const PhospheneShowcase = dynamic(
+  () => import("@/components/phosphene-showcase").then((m) => m.PhospheneShowcase),
+  { ssr: false },
+);
+const RoomboardShowcase = dynamic(
+  () => import("@/components/roomboard-showcase").then((m) => m.RoomboardShowcase),
+  { ssr: false },
+);
+const BrokerShowcase = dynamic(
+  () => import("@/components/broker-showcase").then((m) => m.BrokerShowcase),
+  { ssr: false },
+);
 
 const cardVariants: Variants = {
   rest: { y: 0 },
@@ -99,19 +110,19 @@ export function ProjectCard({
             className="absolute inset-0 opacity-40 [background-image:radial-gradient(circle,color-mix(in_oklab,var(--accent)_22%,transparent)_1px,transparent_1.5px)] [background-size:20px_20px]"
           />
 
-          {demo === "phosphene" ? (
+          {shown && demo === "phosphene" ? (
             <div className="absolute inset-0">
               <PhospheneShowcase />
             </div>
-          ) : demo === "roomboard" ? (
+          ) : shown && demo === "roomboard" ? (
             <div className="absolute inset-0">
               <RoomboardShowcase />
             </div>
-          ) : demo === "broker" ? (
+          ) : shown && demo === "broker" ? (
             <div className="absolute inset-0">
               <BrokerShowcase />
             </div>
-          ) : fan ? (
+          ) : shown && fan ? (
             <ScreenFan screens={fan} alt={title} />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -180,7 +191,7 @@ export function ProjectCard({
                   {inner}
                 </a>
               ) : (
-                <Link key={l.label} href={l.href} className={cls} prefetch>
+                <Link key={l.label} href={l.href} className={cls} prefetch={false}>
                   {inner}
                 </Link>
               );
@@ -194,7 +205,7 @@ export function ProjectCard({
       {href && (
         <Link
           href={href}
-          prefetch
+          prefetch={false}
           aria-label={`${title} — open case study`}
           className="absolute inset-0 z-10"
         />
