@@ -226,10 +226,16 @@ export function ThreeHero({
       place(meta, 15, gapMeta);
       place(link, 18, 0);
 
-      h1.sync();
-      para.sync();
-      meta.sync();
-      link.sync();
+      // sync() is async; the glyph layout (and thus blockBounds) lands a frame
+      // later, so we read the width in the callback to size the L→R wavefront.
+      const syncWidth = (t: { sync: (cb?: () => void) => void }) =>
+        t.sync(() => {
+          (t as unknown as { syncWidth?: () => void }).syncWidth?.();
+        });
+      syncWidth(h1);
+      syncWidth(para);
+      syncWidth(meta);
+      syncWidth(link);
 
       // Desktop uses the cluster's original placement. Mobile floats lower-centre
       // below the DOM copy.
@@ -412,8 +418,8 @@ export function ThreeHero({
     window.addEventListener("pointercancel", onPointerUp);
 
     let raf = 0;
-    let lastTime = "";
-    const items: Array<{ t: { fillOpacity: number; position: { y: number } }; base: number; delay: number }> = [];
+    type RevealItem = { setReveal: (v: number) => void; delay: number; dur: number };
+    const items: RevealItem[] = [];
 
     const _plane = new THREE.Plane();
     const _cameraForward = new THREE.Vector3();
@@ -430,11 +436,19 @@ export function ThreeHero({
       bgMat.uniforms.uTime.value = elapsed;
 
       if (items.length === 0) {
+        // each block reveals left→right; stagger the start so h1 leads, then
+        // para/meta/link cascade. dur is the sweep time across one block.
+        const mk = (t: unknown, delay: number): RevealItem => ({
+          setReveal: (v: number) =>
+            (t as unknown as { setReveal?: (v: number) => void }).setReveal?.(v),
+          delay,
+          dur: 0.7,
+        });
         items.push(
-          { t: h1, base: h1.position.y, delay: 0.08 },
-          { t: para, base: para.position.y, delay: 0.18 },
-          { t: meta, base: meta.position.y, delay: 0.26 },
-          { t: link, base: link.position.y, delay: 0.32 },
+          mk(h1, 0.10),
+          mk(para, 0.24),
+          mk(meta, 0.34),
+          mk(link, 0.42),
         );
       }
 
@@ -460,12 +474,13 @@ export function ThreeHero({
       textUniforms.uMouse.value.set(mouse.x * pr, mouse.y * pr);
       textUniforms.uResolution.value.set(W * pr, H * pr);
 
-      // staggered reveal of text
+      // staggered per-glyph wave reveal (left→right) per block; once each block
+      // has fully swept, its uReveal sits at 1 and the shader leaves it alone.
       for (const it of items) {
-        const local = Math.min(1, Math.max(0, (elapsed - it.delay) / 0.6));
-        const e = 1 - Math.pow(1 - local, 3);
-        it.t.fillOpacity = e;
-        it.t.position.y = it.base + (1 - e) * 10;
+        const local = Math.min(1, Math.max(0, (elapsed - it.delay) / it.dur));
+        // easeInOut so the wavefront enters/leaves softly, not linearly
+        const e = local <= 0 ? 0 : local >= 1 ? 1 : local * local * (3 - 2 * local);
+        it.setReveal(e);
       }
       
       // No dot to animate anymore
