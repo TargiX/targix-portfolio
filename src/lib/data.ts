@@ -57,7 +57,7 @@ export const FEATURED: Project[] = [
   },
   {
     index: "③",
-    year: "2024 – now",
+    year: "2026 – now",
     role: "Solo founder · Design + Eng",
     title: "Phosphene",
     blurb:
