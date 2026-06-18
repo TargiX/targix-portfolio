@@ -21,8 +21,8 @@ export type Project = {
 };
 
 // The strongest hiring proof first: a real B2B platform led for ~5 years, a
-// dense React/data-heavy cockpit, and the AI product. Everything else drops to
-// the lighter "More work" tier below.
+// dense React/data-heavy cockpit, the AI product, and a shipped cross-platform
+// side product. Everything else drops to the lighter "More work" tier below.
 export const FEATURED: Project[] = [
   {
     index: "①",
@@ -48,7 +48,7 @@ export const FEATURED: Project[] = [
       "An operations cockpit for AI generation infrastructure: provider health monitoring, incident drill-down with guided replay, virtualized job inspection, and routing-rule simulation. A focused data product built to show how frontend craft serves operational decisions — not just dashboards.",
     tags: ["Next.js 16", "React 19", "TanStack Table", "TanStack Virtual", "Recharts", "TypeScript"],
     links: [
-      { label: "live app", href: "https://signalops.ilyamoskovkin.com" },
+      { label: "signalops.cc", href: "https://signalops.cc" },
       { label: "github", href: "https://github.com/TargiX/signalops" },
       { label: "case study", href: "/work/signalops" },
     ],
@@ -70,11 +70,6 @@ export const FEATURED: Project[] = [
     caseSlug: "phosphene",
     demo: "phosphene",
   },
-];
-
-// Lighter tier: still real, but lower hiring weight. A 4-col compact grid so
-// they don't visually compete with the three featured cards above.
-export const MORE: Project[] = [
   {
     index: "④",
     year: "2026 – now",
@@ -97,6 +92,11 @@ export const MORE: Project[] = [
       "/work/anchor/evening.png",
     ],
   },
+];
+
+// Lighter tier: still real, but lower hiring weight. A 4-col compact grid so
+// they don't visually compete with the four featured cards above.
+export const MORE: Project[] = [
   {
     index: "⑤",
     year: "2025",

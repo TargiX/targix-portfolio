@@ -5,7 +5,7 @@ import { C_DIM, C_FG, C_GREEN, C_MUTED, FONT_MONO, FONT_SANS, paintRange } from 
 
 type TextWithColorRanges = Text & { colorRanges?: Record<number, number> };
 
-const PARA = "Senior frontend engineer for complex\nSaaS UI, AI workflows, and design\nsystems. React and Vue, both production-grade.";
+const PARA = "Senior frontend engineer for complex\nSaaS UI, AI workflows, and design\nsystems.";
 const META = "based  vietnam · remote      years  10+      stack  react · vue · node      status  open to roles";
 const LINK = "jump to selected work ↓";
 
@@ -97,8 +97,6 @@ export function createHeroTextObjects(surface: "light" | "dark" = "dark") {
     paintRange(ranges, PARA, "AI workflows", kw, P.muted);
     paintRange(ranges, PARA, "design", kw, P.muted);
     paintRange(ranges, PARA, "systems", kw, P.muted);
-    paintRange(ranges, PARA, "React", kw, P.muted);
-    paintRange(ranges, PARA, "Vue", kw, P.muted);
     applyColorRanges(para, ranges);
   }
 
