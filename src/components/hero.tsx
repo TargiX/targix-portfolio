@@ -130,10 +130,11 @@ export function Hero() {
     };
   }, [webgl, PixiMetaballHero]);
 
-  // the DOM copy is shown on mobile and as the fallback when WebGL can't start.
-  // On desktop (light or dark) the SDF text is drawn into the scene so the glass
-  // cubes can refract it - that's the signature effect, so we keep it in light too.
-  const showDomCopy = isMobile !== false || !webglReady;
+  // Mobile keeps DOM copy because the WebGL typography is intentionally
+  // suppressed there. Desktop pending state uses a dedicated loader instead of
+  // a fake text-only hero, then crossfades into the full WebGL scene.
+  const showDomCopy = isMobile === true || webgl === "failed";
+  const showLoader = !webglReady && webgl !== "failed" && isMobile !== true;
 
   return (
     <header
@@ -141,6 +142,7 @@ export function Hero() {
       data-screen-label="00 Hero"
     >
       <div aria-hidden="true" className="hero-bg absolute inset-0 z-0" />
+      {showLoader && <HeroLoader />}
 
       {/* full-bleed WebGL scene: ported bg shader + glass cubes (+ SDF typography
           on desktop). On mobile, text is suppressed and the copy lives in the DOM. */}
@@ -163,10 +165,11 @@ export function Hero() {
 
       {/* SEO / a11y: the hero copy always lives in the DOM, even when WebGL paints it */}
       <div className="sr-only">
-        <h1>Ilya Moskovkin, Senior frontend engineer</h1>
+        <h1>Ilya Moskovkin, Senior Frontend Engineer</h1>
         <p>
-          Senior frontend engineer with fullstack chops and UI/UX roots. Building experiences
-          that matter. Based in Vietnam, open to remote roles. Stack: Vue, React, Node.
+          Senior frontend engineer for complex SaaS UI, AI workflows, and design
+          systems. I build production interfaces in React and Vue. 10+ years,
+          remote from Vietnam (UTC+7).
         </p>
       </div>
 
@@ -183,12 +186,12 @@ export function Hero() {
       />
 
 
-      {/* transparent, clickable overlay for the "open the lab" link - desktop only
+      {/* transparent, clickable overlay for the "jump to work" link - desktop only
           (WebGL draws the visible text; this keeps it a real, focusable anchor). */}
       {webglReady && !isMobile && linkRect && (
         <a
-          href="#lab"
-          aria-label="interactive experiments: open the lab"
+          href="#work"
+          aria-label="jump to selected work"
           className="absolute z-20 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
           style={{
             left: linkRect.x,
@@ -198,7 +201,7 @@ export function Hero() {
             color: "transparent",
           }}
         >
-          open the lab
+          jump to work
         </a>
       )}
 
@@ -217,7 +220,7 @@ function HeroCopy({ visible }: { visible: boolean }) {
       aria-hidden={visible ? undefined : true}
       className={[
         "relative z-10 mx-auto flex min-h-[78svh] max-w-[1280px] flex-col justify-center px-5 pb-24 pt-6 transition-opacity duration-700 ease-out will-change-opacity sm:px-8",
-        visible ? "opacity-100" : "pointer-events-none opacity-0",
+        visible ? "opacity-100" : "opacity-100 sm:pointer-events-none sm:opacity-0",
       ].join(" ")}
     >
       <div>
@@ -231,16 +234,15 @@ function HeroCopy({ visible }: { visible: boolean }) {
         </h1>
 
         <p className="m-0 mb-7 max-w-[44ch] font-mono text-[15px] leading-[1.55] text-fg-muted sm:text-base">
-          Senior <span className="text-fg">frontend</span> engineer with fullstack chops and{" "}
-          <span className="text-fg">UI/UX</span> roots.
-          <br />
-          Building experiences that matter.
+          Senior frontend engineer for <span className="text-fg">complex SaaS UI</span>,{" "}
+          <span className="text-fg">AI workflows</span>, and{" "}
+          <span className="text-fg">design systems</span>.
         </p>
 
         <div className="grid max-w-full grid-cols-2 gap-x-4 gap-y-4 text-[11px] lowercase tracking-[0.04em] text-fg-dim sm:flex sm:flex-wrap sm:gap-x-5">
           <MetaItem k="based" v="vietnam · remote" />
           <MetaItem k="years" v="10+" />
-          <MetaItem k="stack" v="vue · react · node" />
+          <MetaItem k="stack" v="react · vue · node" />
           <MetaItem
             k="status"
             v={<span style={{ color: "oklch(0.78 0.16 145)" }}>open to roles</span>}
@@ -248,12 +250,46 @@ function HeroCopy({ visible }: { visible: boolean }) {
           />
         </div>
 
-        <a
-          href="#lab"
-          className="group mt-8 inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.08em] text-fg-dim transition-colors hover:text-[var(--accent)]"
-        >
-          Interactive experiments: open the lab
-        </a>
+        <div className="mt-8 flex flex-wrap items-center gap-2.5">
+          <a
+            href="#work"
+            className="group inline-flex items-center gap-2 rounded-md border border-[var(--accent)] bg-[color-mix(in_oklab,var(--accent)_14%,transparent)] px-3 py-1.5 font-mono text-[11px] tracking-[0.06em] text-[var(--accent)] transition-colors hover:bg-[color-mix(in_oklab,var(--accent)_22%,transparent)]"
+          >
+            View work
+            <span className="inline-block transition-transform group-hover:translate-y-0.5">↓</span>
+          </a>
+          <a
+            href="/Ilya_Moskovkin_CV.pdf"
+            target="_blank"
+            rel="noreferrer"
+            className="group inline-flex items-center gap-2 rounded-md border border-line bg-bg-2 px-3 py-1.5 font-mono text-[11px] tracking-[0.06em] text-fg-muted transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          >
+            Résumé
+            <span className="inline-block transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">↗</span>
+          </a>
+          <a
+            href="mailto:hello@ilyamoskovkin.com"
+            className="group inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.06em] text-fg-dim transition-colors hover:text-[var(--accent)]"
+          >
+            Email
+            <span className="inline-block transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HeroLoader() {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 z-10 hidden items-center justify-center sm:flex"
+    >
+      <div className="hero-loader-grid" aria-hidden="true">
+        {Array.from({ length: 9 }, (_, i) => (
+          <span key={i} style={{ "--i": i } as React.CSSProperties} />
+        ))}
       </div>
     </div>
   );

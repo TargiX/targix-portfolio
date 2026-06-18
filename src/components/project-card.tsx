@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, type Variants } from "motion/react";
 import type { Project } from "@/lib/data";
@@ -51,7 +52,8 @@ export function ProjectCard({
   const { index, year, role, title, blurb, tags, links, caseSlug, screens, thumb, demo } =
     project;
   const href = caseSlug ? `/work/${caseSlug}` : undefined;
-  const fan = screens && screens.length > 0 ? screens : thumb ? [thumb] : null;
+  const fan = screens && screens.length > 0 ? screens : null;
+  const imagePreview = thumb ?? null;
 
   const col = order % 2;
   // left column lands first, right a touch later; rows cascade
@@ -124,6 +126,14 @@ export function ProjectCard({
             </div>
           ) : shown && fan ? (
             <ScreenFan screens={fan} alt={title} />
+          ) : shown && imagePreview ? (
+            <Image
+              src={imagePreview}
+              alt={`${title} product preview`}
+              fill
+              sizes="(min-width: 1024px) 620px, 100vw"
+              className="scale-[1.01] object-cover object-top transition duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/card:scale-[1.055]"
+            />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="font-sans text-[64px] font-medium tracking-[-0.03em] text-white/12">

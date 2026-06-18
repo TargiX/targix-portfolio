@@ -11,7 +11,7 @@ import { ContactForm } from "@/components/forms/contact-form";
 import { ViewSwitcher } from "@/components/view-switcher";
 import { ProductLaunchSimulator } from "@/components/lab/product-launch-simulator";
 import { ExperimentGallery } from "@/components/lab/experiment-gallery";
-import { CONTACT, FEATURED, MINOR, SECONDARY, STACK } from "@/lib/data";
+import { CONTACT, FEATURED, MORE, STACK } from "@/lib/data";
 import { getHomeJsonLd } from "@/lib/seo";
 import { InteractiveSkills } from "@/components/interactive-skills";
 
@@ -36,29 +36,31 @@ export default function Home() {
         <Section
           id="work"
           n="01"
-          title="Selected Work"
-          kicker={`${1 + SECONDARY.length} projects`}
+          title="Featured Work"
+          kicker={`${FEATURED.length} projects`}
         >
           <div className="grid grid-cols-1 gap-5 [perspective:1200px] sm:grid-cols-2">
-            {[FEATURED, ...SECONDARY].map((p, i) => (
+            {FEATURED.map((p, i) => (
               <ProjectCard key={p.title} project={p} order={i} />
             ))}
           </div>
+        </Section>
 
-          {MINOR.length > 0 && (
-            <div className="mt-16">
-              <div className="mb-6 flex items-center gap-4 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim">
-                <span>more work</span>
-                <span className="h-px flex-1 bg-line-soft" />
-                <span>{MINOR.length} side projects</span>
-              </div>
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-                {MINOR.map((p) => (
-                  <CompactProjectCard key={p.title} project={p} />
-                ))}
-              </div>
-            </div>
-          )}
+        <Section
+          id="more-work"
+          n="02"
+          title="More Work"
+          kicker={`${MORE.length} builds`}
+        >
+          <p className="mb-6 max-w-[66ch] text-[13px] text-fg-muted">
+            Side products, concept builds, and earlier experiments — real work, but
+            lighter weight than the three above.
+          </p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {MORE.map((p) => (
+              <CompactProjectCard key={p.title} project={p} />
+            ))}
+          </div>
         </Section>
       </main>
     </>

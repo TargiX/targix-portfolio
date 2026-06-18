@@ -22,6 +22,18 @@ links:
     href: "https://github.com/TargiX/signalops"
 ---
 
+<CaseTLDR
+  role="Solo · React systems"
+  line="An operations cockpit for AI generation infrastructure, built to show frontend craft serving operational decisions."
+  stack="Next.js 16, React 19, TanStack Table/Virtual, Recharts, TypeScript"
+>
+
+- 10k-row virtualized job queue (TanStack Table + Virtual), memo-derived charts
+- Guided incident replay that drives the real dashboard controls, not a video
+- Saved views + a routing-rule builder with live impact projection
+
+</CaseTLDR>
+
 ## The pitch
 
 Image-generation infrastructure runs across multiple providers — fal.ai, Google AI, Alibaba/Qwen — and each one fails differently: latency spikes, retry storms, cost bleed from silent retries. An operator needs to notice the problem, trace it to affected jobs, draft a mitigation, see the projected impact, and hand it off. Most dashboards stop at "something is red." SignalOps tries to close the full loop.

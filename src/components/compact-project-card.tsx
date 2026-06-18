@@ -43,6 +43,8 @@ export function CompactProjectCard({ project }: { project: Project }) {
           <img
             src={thumb}
             alt={title}
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 h-full w-full object-cover object-top"
           />
         ) : (
@@ -130,7 +132,7 @@ export function CompactProjectCard({ project }: { project: Project }) {
         ) : (
           <Link
             href={href}
-            prefetch
+            prefetch={false}
             aria-label={`${title} — open case study`}
             className="absolute inset-0 z-10 rounded-xl"
           />

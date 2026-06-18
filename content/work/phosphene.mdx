@@ -3,28 +3,42 @@ slug: phosphene
 title: Phosphene
 year: "2024 – now"
 role: Solo founder · Design + Eng
-blurb: A visual prompt workspace for image generation. Users compose zones, references, models, templates, and generated outputs without losing the structure behind the prompt.
+blurb: A template-first AI image product. Users pick a curated outcome, add references or small tweaks, generate results, then open deeper graph and workflow tools only when they need them.
 tags: ["Nuxt 4", "Vue 3", "tRPC", "Prisma", "Postgres", "Redis", "Hetzner S3", "D3", "Vue Flow", "fal.ai", "Gemini", "Paddle", "Auth.js", "Sentry", "PostHog"]
 links:
   - { label: "phosphene.cc", href: "https://phosphene.cc" }
   - { label: "github", href: "https://github.com/TargiX" }
-cover: "/work/phosphene/cyber-oasis-hero.jpeg"
+cover: "/work/phosphene/hero-section.jpeg"
 order: 1
 featured: true
 ---
 
+<CaseTLDR
+  role="Solo founder · Design + Eng"
+  line="A template-first AI image product I design, build, and ship end to end."
+  stack="Nuxt 4, Vue 3, tRPC, Prisma, fal.ai, Gemini, Paddle"
+>
+
+- Curated templates as the front door, graph/workflow tools as depth
+- Prompt compiler, provider adapters, lineage, persistence, billing, Sentry/PostHog
+- Nuxt 4 + tRPC + Prisma/Postgres, self-managed Hetzner/PM2 deploy
+
+</CaseTLDR>
+
 ## The pitch
 
-Image generation tools are built around **one prompt at a time**. You type a sentence, wait for images, edit the sentence, and slowly lose track of what changed. That works for play. It falls apart when the prompt has structure: subject, setting, mood, references, model choice, variations, and a history you want to come back to.
+Most image generators still ask users to become prompt engineers. Phosphene now starts from the opposite direction: choose the result you want, fill a guided form, add your references, and generate without guessing the perfect sentence.
 
-Phosphene replaces the blank prompt box with a **visual workspace**. You compose prompt ingredients as zones and nodes, switch between feed, graph, flow, and template views, then let the app compile the structure into a generation request. The product is less "chat with a model" and more "keep the creative state legible while you iterate."
+The product used to lead with the power-user workspace. I reoriented it around **templates as the front door**: a consumer-friendly loop where the user picks a curated visual outcome, customizes the few controls that matter, and gets a result fast. The graph, feed, flow, and prompt compiler are still behind the scenes, but they support the template experience instead of demanding that everyone start there.
 
-<PhospheneScreen screen="graph" />
+<PhospheneScreen screen="template" />
 
 ## What's in the box
 
-- **Canvas modes**: a D3 graph for prompt exploration, a feed for generated images, a Vue Flow surface for chained modules, and template forms for guided workflows.
-- **Prompt compiler**: shared services turn graph state, zones, template fields, references, and model settings into provider-ready prompts.
+- **Template catalog**: hundreds of curated outcomes grouped by category, each with a review page, example image, required references, smart defaults, model choice, aspect ratio, seed, and credit cost.
+- **Guided generation loop**: users upload the right references, adjust suggested tags or fields, then generate from a form that feels like a product surface instead of a blank prompt box.
+- **Prompt compiler**: shared services turn template fields, references, graph state, zones, and model settings into provider-ready prompts.
+- **Advanced workspace**: D3 graph exploration, Vue Flow modules, feed history, image lineage, and "expand to graph" paths are available when a user needs more control.
 - **Generation layer**: Nuxt Nitro and tRPC routes fan out to Google/Gemini, fal.ai-hosted models, Alibaba/Qwen paths, and image-edit utilities.
 - **Persistence**: Prisma and Postgres save users, dreams, generated images, graph state, model preferences, lineage, payments, and activity events.
 - **Product plumbing**: Auth.js with Google and email/password, Paddle subscriptions/credits, Resend email, Turnstile, Redis-backed rate limits, Sentry, and PostHog.
@@ -36,25 +50,29 @@ Phosphene replaces the blank prompt box with a **visual workspace**. You compose
 
 **Nuxt 4 over Next.** This is a heavy editor app, and Vue's reactivity model fits canvas state well: fewer footguns, less code. Server components were tempting, but the editor is fundamentally client-side anyway, so Nuxt's auto-imports and file-based server routes get out of the way.
 
+**Templates first, graph second.** The advanced editor is powerful, but it is not the right first interaction for most users. Templates became the product entry point; graph and flow stayed as depth for users who want to inspect or extend the generated structure.
+
+<PhospheneScreen screen="hero" />
+
 **D3 plus Vue Flow as two separate surfaces.** The freeform prompt graph wants force layout, zones, positions, and weird interaction details. The flow surface wants modules, ports, and connections. Keeping those as different surfaces made the product easier to reason about.
 
 **tRPC where the app is tightly coupled, Nitro endpoints where the boundary is external.** Internal dream/image/user flows get typed contracts. Webhooks, auth, storage, and provider calls stay as explicit server routes.
 
 **Prisma + Postgres.** The state model goes well beyond users and images. It includes saved dreams, generated-image metadata, graph JSON, custom subjects, model preferences, branch/moment lineage, likes, payments, and rate-limit records. A boring relational core is the right kind of boring here.
 
-<PhospheneScreen screen="feed" />
+<PhospheneScreen screen="graph" />
 
 **Provider adapters over running my own GPUs.** The catalogue changes quickly: Gemini/Nano Banana, Imagen, FLUX, Seedream, Qwen, GPT Image, utilities for upscale/inpaint/rotation. The app needs a stable product model while providers stay replaceable.
 
-<PhospheneScreen screen="template" />
+<PhospheneScreen screen="feed" />
 
-## What I am still tightening
+## Product direction
 
-- **One source of truth for editor state.** Feed, Graph, Flow, Templates, and Simple Create all want to look like separate products. They still need one canonical document underneath, or saved sessions and reloads get fragile.
-- **Lineage without making the UI feel like Git.** Branches, moments, snapshots, image provenance, and "expand to graph" are powerful, but the interaction has to stay understandable to someone who only came to make an image.
-- **Provider failure UX.** Image generation fails in provider-specific ways: rate limits, content filters, timeouts, bad reference images, model quirks. The product needs to explain those failures without dumping infrastructure into the user's face.
-- **Self-managed ops discipline.** Running the app on my own Hetzner/PM2 setup is flexible, but it means deploy health, rollback paths, Sentry, PostHog, storage, and payment readiness all have to be treated as product work.
+- **Reduce the first choice.** The user should not decide between Feed, Graph, Flow, Templates, and Simple Create. The default path is now "choose a result, review the inputs, generate"; advanced surfaces stay discoverable after that.
+- **Keep lineage without making the UI feel technical.** Branches, moments, snapshots, image provenance, and "expand to graph" are valuable, but the interaction has to stay understandable to someone who only came to make an image.
+- **Make provider failure feel like product feedback.** Image generation fails in provider-specific ways: rate limits, content filters, timeouts, bad reference images, model quirks. The UI should explain what to do next without dumping infrastructure into the user's face.
+- **Treat ops as part of the product.** Self-managed Hetzner/PM2 deployment gives me flexibility, but deploy health, rollback paths, Sentry, PostHog, storage, and payment readiness all need the same care as the interface.
 
 ## The honest read
 
-The hard part is not calling an image API. The hard part is making a creative system where the prompt structure, generated outputs, model choices, references, and history remain visible after the first exciting result. Phosphene is my attempt to turn that mess into an interface people can actually steer.
+The hard part is not calling an image API. The hard part is making a creative product where the user gets a strong result quickly, but the underlying prompt structure, references, model choices, and history do not disappear after the first exciting image. Phosphene is my attempt to make that power feel simple at the surface.

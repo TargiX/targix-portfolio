@@ -9,7 +9,7 @@ export const SITE = {
   description:
     "Senior frontend engineer building React, Next.js, Vue, Nuxt, TypeScript, AI workflow, dashboard, and visual-editor interfaces.",
   shortDescription:
-    "Senior frontend engineer with UI/UX roots, building product-heavy React, Next.js, Vue, Nuxt, and AI workflow interfaces.",
+    "Senior frontend engineer for complex SaaS UI, AI workflows, and design systems. Production interfaces in React/Next.js and Vue/Nuxt. Remote, UTC+7.",
   locale: "en_US",
   keywords: [
     "Ilya Moskovkin",

@@ -10,7 +10,6 @@ export type Project = {
   blurb: string;
   tags: string[];
   links: CaseLink[];
-  featured?: boolean;
   /** When present, the case-study link is wired to /work/<slug>. */
   caseSlug?: string;
   /** Small preview image shown beside the text on the home page card. */
@@ -21,26 +20,12 @@ export type Project = {
   demo?: "phosphene" | "roomboard" | "broker";
 };
 
-export const FEATURED: Project = {
-  index: "①",
-  year: "2024 – now",
-  role: "Solo founder · Design + Eng",
-  title: "Phosphene",
-  blurb:
-    "A visual prompt workspace for image generation. Users compose zones, references, models, templates, and generated outputs without losing the structure behind the prompt.",
-  tags: ["Nuxt 4", "Vue 3", "tRPC", "Prisma", "Postgres", "D3", "Vue Flow", "fal.ai", "Gemini", "Paddle"],
-  links: [
-    { label: "phosphene.cc", href: "https://phosphene.cc" },
-    { label: "case study", href: "/work/phosphene" },
-  ],
-  featured: true,
-  caseSlug: "phosphene",
-  demo: "phosphene",
-};
-
-export const SECONDARY: Project[] = [
+// The strongest hiring proof first: a real B2B platform led for ~5 years, a
+// dense React/data-heavy cockpit, and the AI product. Everything else drops to
+// the lighter "More work" tier below.
+export const FEATURED: Project[] = [
   {
-    index: "②",
+    index: "①",
     year: "2021 – 2026",
     role: "Lead Frontend · Broker Online Exchange",
     title: "Broker Online Exchange",
@@ -55,7 +40,43 @@ export const SECONDARY: Project[] = [
     demo: "broker",
   },
   {
+    index: "②",
+    year: "2025",
+    role: "Solo · React systems",
+    title: "SignalOps",
+    blurb:
+      "An operations cockpit for AI generation infrastructure: provider health monitoring, incident drill-down with guided replay, virtualized job inspection, and routing-rule simulation. A focused data product built to show how frontend craft serves operational decisions — not just dashboards.",
+    tags: ["Next.js 16", "React 19", "TanStack Table", "TanStack Virtual", "Recharts", "TypeScript"],
+    links: [
+      { label: "live app", href: "https://signalops.ilyamoskovkin.com" },
+      { label: "github", href: "https://github.com/TargiX/signalops" },
+      { label: "case study", href: "/work/signalops" },
+    ],
+    caseSlug: "signalops",
+    thumb: "/work/signalops/cockpit.png",
+  },
+  {
     index: "③",
+    year: "2024 – now",
+    role: "Solo founder · Design + Eng",
+    title: "Phosphene",
+    blurb:
+      "A template-first AI image product. Users pick a curated outcome, add references or small tweaks, generate results, then open deeper graph and workflow tools only when they need them.",
+    tags: ["Nuxt 4", "Vue 3", "tRPC", "Prisma", "Postgres", "Templates", "D3", "Vue Flow", "fal.ai", "Gemini", "Paddle"],
+    links: [
+      { label: "phosphene.cc", href: "https://phosphene.cc" },
+      { label: "case study", href: "/work/phosphene" },
+    ],
+    caseSlug: "phosphene",
+    demo: "phosphene",
+  },
+];
+
+// Lighter tier: still real, but lower hiring weight. A 4-col compact grid so
+// they don't visually compete with the three featured cards above.
+export const MORE: Project[] = [
+  {
+    index: "④",
     year: "2026 – now",
     role: "Solo · Design + Eng",
     title: "Anchor",
@@ -77,7 +98,7 @@ export const SECONDARY: Project[] = [
     ],
   },
   {
-    index: "④",
+    index: "⑤",
     year: "2025",
     role: "Solo · Product Design + Eng",
     title: "Roomboard",
@@ -93,74 +114,29 @@ export const SECONDARY: Project[] = [
     demo: "roomboard",
   },
   {
-    index: "⑤",
-    year: "2024",
-    role: "Solo · React systems",
-    title: "SignalOps",
-    blurb:
-      "An operations cockpit for AI generation infrastructure: provider health monitoring, incident drill-down with guided replay, virtualized job inspection, and routing-rule simulation. A focused data product built to show how frontend craft serves operational decisions — not just dashboards.",
-    tags: ["Next.js 16", "React 19", "TanStack Table", "TanStack Virtual", "Recharts", "TypeScript"],
-    links: [
-      { label: "live app", href: "https://signalops.ilyamoskovkin.com" },
-      { label: "github", href: "https://github.com/TargiX/signalops" },
-      { label: "case study", href: "/work/signalops" },
-    ],
-    caseSlug: "signalops",
-    screens: [
-      "/work/signalops/cockpit.png",
-      "/work/signalops/incident.png",
-    ],
-  },
-];
-
-/**
- * Smaller side-projects — rendered below "Selected Work" as a compact
- * tier (the "more work" band). The section only renders when this array is
- * non-empty, so it stays hidden until you add real entries here.
- *
- * To bring it back: push Project objects into this array (same shape as
- * SECONDARY above) and the band appears automatically.
- */
-export const MINOR: Project[] = [
-  {
     index: "⑥",
-    year: "2025",
-    role: "Solo · CMS marketing build",
-    title: "Flux Sanity Site",
-    blurb:
-      "A marketing site on Next.js App Router with Sanity: reusable section schemas, draft preview wiring, technical SEO, and Vercel deployment.",
-    tags: ["Next.js 16", "Sanity", "Headless CMS", "Technical SEO", "Vercel"],
-    links: [
-      { label: "live site", href: "https://sanity.ilyamoskovkin.com" },
-      { label: "case study", href: "/work/flux-sanity-site" },
-    ],
-    caseSlug: "flux-sanity-site",
-    thumb: "/work/flux-sanity/homepage.png",
-  },
-  {
-    index: "⑦",
     year: "2026",
-    role: "Solo · Astro SSG",
+    role: "Solo · Fictional concept demo",
     title: "HelixCare Pulse",
     blurb:
-      "A dark, premium healthcare marketing site built in Astro: static output, section-driven data, reusable components, and tiny vanilla-JS interactions.",
-    tags: ["Astro", "SSG", "Vanilla JS", "Netlify"],
+      "A fictional healthcare SaaS marketing concept — no real clients, metrics, or compliance claims. Dark, premium landing built in Astro to test section-driven, static-output storytelling around a high-impact product visual.",
+    tags: ["Astro", "SSG", "Premium B2B", "Healthcare", "Responsive UI", "Vercel"],
     links: [{ label: "live demo", href: "https://helixcare-pulse.vercel.app" }],
     thumb: "/work/helixcare-pulse/hero-device.png",
   },
   {
-    index: "⑧",
-    year: "2023",
-    role: "Solo · Web3 / Cosmos",
-    title: "Injective Testnet dApp",
+    index: "⑦",
+    year: "2023 – 2026",
+    role: "Solo · Web3 trading UI",
+    title: "Injective Trading Terminal",
     blurb:
-      "A Nuxt/TypeScript dApp on the Injective (Cosmos) testnet: wallet connect (Keplr/Leap), on-chain balances, and a live spot order book with hand-rolled price and depth charts, all read over the injective-ts gRPC-web SDK.",
-    tags: ["Nuxt 3", "TypeScript", "Injective / Cosmos", "gRPC-web", "Keplr"],
+      "A Nuxt/TypeScript trading terminal for the Injective testnet: wallet connect, account balances, live spot markets, an order book, candlestick charts, and gRPC-web data over injective-ts.",
+    tags: ["Nuxt 3", "TypeScript", "Injective / Cosmos", "gRPC-web", "Trading UI", "Keplr"],
     links: [
-      { label: "live demo", href: "https://injective.ilyamoskovkin.com" },
+      { label: "live app", href: "https://injective.ilyamoskovkin.com" },
       { label: "github", href: "https://github.com/TargiX/injective-testnet-dapp" },
     ],
-    thumb: "/work/injective/dashboard.png",
+    thumb: "/work/injective/dashboard-dark.png",
   },
 ];
 

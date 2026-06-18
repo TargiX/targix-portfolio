@@ -13,6 +13,18 @@ order: 2
 featured: false
 ---
 
+<CaseTLDR
+  role="Solo · Design + Eng"
+  line="A calm daily-ritual app, live at anchorapp.cc, from one Next.js codebase shipped to web, mobile, and desktop."
+  stack="Next.js 16, React 19, Capacitor, Electron, Tailwind v4"
+>
+
+- One codebase → web (Vercel), iOS/Android (Capacitor), desktop (Electron)
+- Two short rituals + a quiet trend line; the opposite of a wall of inputs
+- Radix + Tailwind v4 on a custom OKLCH palette, restrained Framer Motion
+
+</CaseTLDR>
+
 ## The pitch
 
 Most habit and mood apps are a wall of inputs. Anchor is the opposite: two short rituals (one to open the day, one to close it) and a quiet trend line in between. Set an intention in the morning, log how you slept, breathe. Reflect and journal at night, prep tomorrow's sleep window. That's the whole product.
@@ -57,9 +69,9 @@ Vercel keeps the full server build; `npm run cap:sync` produces the static expor
 
 **Framer Motion, used sparingly.** Ritual steps cross-fade, the brand motif settles in, status cards slide. Animation is what makes a flow feel shipped rather than half-built, and every extra spring is a frame budget, so it stays restrained on purpose.
 
-## What AI got wrong (and how I caught it)
+## Quality pass: where implementation review mattered
 
-I built this fast with an AI assistant, which is exactly where critical review earns its keep. The clearest example: the sleep slider rendered as an invisible track, with only the thumb showing, floating on white.
+I used an AI assistant to move faster on the first implementation pass, then treated the rendered UI as the source of truth. The clearest example: the sleep slider initially rendered as an invisible track, with only the thumb showing, floating on white.
 
 The generated Tailwind looked plausible:
 
@@ -74,7 +86,7 @@ Radix sets `data-orientation="horizontal"`, so `data-horizontal:h-2` matched not
 className="... data-[orientation=horizontal]:h-2 ..."
 ```
 
-That's the recurring tax on AI-generated frontend: it's confident with modern APIs and quietly wrong at the edges. Reading the rendered DOM is what surfaced it.
+That is the practical workflow: use AI for speed, then verify the interface like production code. Reading the rendered DOM surfaced the mismatch, and the fix landed at the component-contract level rather than as a visual band-aid.
 
 <AnchorParallaxGallery />
 

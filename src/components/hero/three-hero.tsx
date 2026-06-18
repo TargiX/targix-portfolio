@@ -17,7 +17,7 @@ import { createHeroTextObjects, textUniforms } from "./three-hero-text";
 import { C_GREEN, hexToRgb } from "./three-hero-utils";
 
 export type HeroLayout = {
-  /** screen-space rect (CSS px, top-left origin) of the "open the lab" link */
+  /** screen-space rect (CSS px, top-left origin) of the "jump to work" link */
   link: { x: number; y: number; w: number; h: number };
 };
 
@@ -231,8 +231,8 @@ export function ThreeHero({
       meta.sync();
       link.sync();
 
-      // mobile: float the cluster lower-centre, a touch smaller, so it sits in the
-      // empty space below the DOM copy rather than colliding with the headline.
+      // Desktop uses the cluster's original placement. Mobile floats lower-centre
+      // below the DOM copy.
       placeCluster(W, H, mobile ? { fracX: 0.5, fracY: 0.86, scaleK: 0.26 } : undefined);
       // only the in-canvas link needs a DOM overlay; on mobile the copy is real DOM
       if (!mobile) reportLayout();

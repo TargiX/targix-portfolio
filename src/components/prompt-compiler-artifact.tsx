@@ -32,7 +32,7 @@ const ZONE_STYLE: Record<Zone, string> = {
 };
 
 const MODEL_STEPS = [
-  ["compile", "Build a stable natural-language prompt from selected nodes."],
+  ["compile", "Build a stable natural-language prompt from selected template inputs."],
   ["route", "Pick Nano Banana 2 for fast iteration and square output."],
   ["persist", "Store graph, prompt tags, model params, and generated frames."],
 ];
@@ -80,7 +80,7 @@ export function PromptCompilerArtifact({ compact = false }: { compact?: boolean 
     >
       <div className="grid gap-px bg-line-soft md:grid-cols-[1.05fr_1fr_0.78fr]">
         <section className="bg-bg p-4">
-          <Header icon={<GitBranch className="size-3" />} label="graph input" value="7 nodes" />
+          <Header icon={<GitBranch className="size-3" />} label="template inputs" value="7 fields" />
           <div className="mt-4 grid gap-2">
             {NODES.map((node) => {
               const isEnabled = !disabled.has(node.id);

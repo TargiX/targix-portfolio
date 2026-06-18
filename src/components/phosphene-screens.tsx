@@ -5,20 +5,20 @@ import { useLightbox, type LightboxImage } from "@/components/lightbox";
 
 const SCREENS = {
   hero: {
-    src: "/work/phosphene/cyber-oasis-hero.jpeg",
-    caption: "The public landing page frames the core idea: draw structure first, let the system write the prompt.",
+    src: "/work/phosphene/hero-section.jpeg",
+    caption: "The public landing page now sells the consumer promise first: pick a curated outcome and generate without prompt struggle.",
   },
   graph: {
     src: "/work/phosphene/graph-builder.png",
-    caption: "Graph mode turns prompt ingredients into typed nodes, edges, zones, and an inspectable generation plan.",
+    caption: "Graph mode is still there for advanced iteration: prompt ingredients become typed nodes, edges, zones, and an inspectable generation plan.",
   },
   feed: {
     src: "/work/phosphene/tote-feed.jpeg",
-    caption: "Feed mode keeps each generated result connected to its prompt, model, actions, and graph expansion path.",
+    caption: "Generated results stay connected to the prompt, model, actions, and expansion path instead of becoming disposable one-off images.",
   },
   template: {
     src: "/work/phosphene/template-builder.png",
-    caption: "Templates make repeatable creative workflows feel like a guided product surface instead of a blank prompt box.",
+    caption: "Template review is the main product loop: upload references, tweak guided fields, choose model settings, and generate.",
   },
 } as const;
 

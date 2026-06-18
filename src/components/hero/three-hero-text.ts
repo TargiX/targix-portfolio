@@ -5,9 +5,9 @@ import { C_DIM, C_FG, C_GREEN, C_MUTED, FONT_MONO, FONT_SANS, paintRange } from 
 
 type TextWithColorRanges = Text & { colorRanges?: Record<number, number> };
 
-const PARA = "Senior frontend engineer with fullstack\nchops and UI/UX roots.\nBuilding experiences that matter.";
-const META = "based  vietnam · remote      years  10+      stack  vue · react · node      status  open to roles";
-const LINK = "interactive experiments · open the lab";
+const PARA = "Senior frontend engineer for complex\nSaaS UI, AI workflows, and design\nsystems. React and Vue, both production-grade.";
+const META = "based  vietnam · remote      years  10+      stack  react · vue · node      status  open to roles";
+const LINK = "jump to selected work ↓";
 
 const applyColorRanges = (text: Text, ranges: Record<number, number>) => {
   (text as TextWithColorRanges).colorRanges = ranges;
@@ -93,8 +93,12 @@ export function createHeroTextObjects(surface: "light" | "dark" = "dark") {
   {
     const ranges: Record<number, number> = { 0: P.muted };
     // keywords get a soft lift against the body color
-    paintRange(ranges, PARA, "frontend", kw, P.muted);
-    paintRange(ranges, PARA, "UI/UX", kw, P.muted);
+    paintRange(ranges, PARA, "complex", kw, P.muted);
+    paintRange(ranges, PARA, "AI workflows", kw, P.muted);
+    paintRange(ranges, PARA, "design", kw, P.muted);
+    paintRange(ranges, PARA, "systems", kw, P.muted);
+    paintRange(ranges, PARA, "React", kw, P.muted);
+    paintRange(ranges, PARA, "Vue", kw, P.muted);
     applyColorRanges(para, ranges);
   }
 
@@ -104,7 +108,7 @@ export function createHeroTextObjects(surface: "light" | "dark" = "dark") {
     const ranges: Record<number, number> = { 0: P.dim };
     paintRange(ranges, META, "vietnam · remote", P.fg, P.dim);
     paintRange(ranges, META, "10+", P.fg, P.dim);
-    paintRange(ranges, META, "vue · react · node", P.fg, P.dim);
+    paintRange(ranges, META, "react · vue · node", P.fg, P.dim);
     paintRange(ranges, META, "open to roles", P.green, P.dim);
     applyColorRanges(meta, ranges);
   }
@@ -113,7 +117,7 @@ export function createHeroTextObjects(surface: "light" | "dark" = "dark") {
   link.text = LINK;
   {
     const ranges: Record<number, number> = { 0: P.link };
-    paintRange(ranges, LINK, "open the lab", P.green, P.link);
+    paintRange(ranges, LINK, "work", P.green, P.link);
     applyColorRanges(link, ranges);
   }
 

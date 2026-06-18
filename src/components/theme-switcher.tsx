@@ -67,7 +67,7 @@ export function ThemeSwitcher() {
   };
 
   return (
-    <div ref={wrapRef} className="relative">
+    <div ref={wrapRef} className="relative z-[130]">
       <button
         type="button"
         aria-haspopup="menu"
@@ -83,7 +83,7 @@ export function ThemeSwitcher() {
         <div
           role="menu"
           aria-label="Theme"
-          className="absolute right-0 top-[calc(100%+8px)] z-50 w-36 overflow-hidden rounded-lg border border-line-soft bg-bg/96 p-1 shadow-2xl shadow-black/10 backdrop-blur"
+          className="absolute right-0 top-[calc(100%+8px)] z-[140] w-36 overflow-hidden rounded-lg border border-line-soft bg-bg/96 p-1 shadow-2xl shadow-black/10 backdrop-blur"
         >
           {OPTIONS.map((option) => {
             const Icon = option.icon;
