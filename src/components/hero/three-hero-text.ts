@@ -5,7 +5,7 @@ import { C_DIM, C_FG, C_GREEN, C_MUTED, FONT_MONO, FONT_SANS, paintRange } from 
 
 type TextWithColorRanges = Text & { colorRanges?: Record<number, number> };
 
-const PARA = "Senior frontend engineer for\ncomplex SaaS UI, AI workflows,\nand design systems.";
+const PARA = "Senior frontend engineer\nfor complex SaaS UI, AI workflows,\nand design systems.";
 const META = "based  vietnam · remote      years  10+      stack  react · vue · node      status  open to roles";
 const LINK = "jump to selected work ↓";
 
