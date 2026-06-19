@@ -1,0 +1,68 @@
+---
+title: TalentSignal
+slug: talentsignal
+year: 2026
+role: Demo · Full-stack portfolio build
+order: 6
+blurb: "A compact HR/social discovery workspace for matching profiles, reviewing compatibility, sending signals, and handling trust workflows across a Nuxt frontend and NestJS API."
+tags:
+  - Nuxt 4
+  - Vue 3
+  - Pinia
+  - NestJS
+  - MySQL
+  - Redis
+  - DynamoDB
+  - OpenSearch
+  - Vercel
+cover: "/work/talentsignal/discover-desktop.png"
+links:
+  - label: live demo
+    href: "https://charforge-web.vercel.app"
+  - label: API docs
+    href: "https://charforge-api.vercel.app/docs"
+---
+
+<CaseTLDR
+  role="Demo · Full-stack portfolio build"
+  line="A compact HR/social discovery workspace for matching profiles, trust review, signals, and moderation."
+  stack="Nuxt 4, Vue 3, Pinia, NestJS, MySQL-ready repositories, Redis/DynamoDB/OpenSearch adapters, Vercel"
+>
+
+- HR/social discovery workspace with profile matching, compatibility, trust rails, signals, and moderation.
+- Nuxt/Vue/Pinia state drives filters, selected profile tabs, profile actions, and workspace activity.
+- NestJS API exposes guarded modules, DTO validation, request context, Swagger docs, and service boundaries.
+
+</CaseTLDR>
+
+## The product idea
+
+TalentSignal is an HR/social discovery workspace for teams that need to evaluate people, opportunities, and collaboration signals in one operational surface. The product centers on a simple loop: discover a relevant profile, understand why the match is strong, take an action, and keep trust signals visible while the workflow moves.
+
+The main screen is intentionally dense: a left discovery rail for intent and filters, a selected profile workspace in the center, and a right rail for trust, activity, online presence, and suggested signals. It is shaped like a tool a small remote team could keep open during daily sourcing or community operations.
+
+![TalentSignal discovery workspace](/work/talentsignal/discover-desktop.png)
+
+## Product workflow
+
+The discovery list supports intent, skills, interests, location, availability, and verification filters. Selecting a profile updates the central workspace with role, location, status tags, compatibility breakdowns, shared skills, and profile tabs for about, activity, and portfolio context.
+
+Profile actions feed the workspace state instead of being decorative buttons. Sending a signal, bookmarking, messaging, or opening review sections updates activity and secondary screens. The sidebar carries adjacent operations: matches, signals, search intent, review queue, reports, activity feed, online users, webhooks, settings, and API status.
+
+The trust rail keeps safety information close to the decision: email and ID verification, portfolio link status, community vouch count, trust score, recent activity, online users, and suggested signals all sit beside the active profile.
+
+## Architecture
+
+**Nuxt / Vue / Pinia.** The frontend is organized around a typed API composable and a Pinia discovery store. Filters, search, active profile selection, profile tabs, moderation state, messages, bookmarks, signals, and activity updates all move through that shared state layer.
+
+**NestJS.** The backend is split into feature modules for health, profiles, matches, search, moderation, and workspace actions. Controllers expose focused routes, DTOs validate input, a demo auth guard protects the API surface, and a request-context interceptor records timing and request metadata.
+
+**Data and infra.** The data layer is SQL-ready, with repository boundaries and a MySQL schema for persistence. Redis, DynamoDB, and OpenSearch sit behind adapters so caching, audit trails, and search indexing can be connected without rewriting product code.
+
+**API contract.** Swagger documents the backend at the deployed API URL. That makes the product easy to inspect from both sides: the UI shows the workflow, while the API docs expose the modules and route contracts behind it.
+
+## Deployment
+
+TalentSignal is deployed as two Vercel projects: one for the Nuxt frontend and one for the NestJS API. The frontend reads `NUXT_PUBLIC_API_BASE` in production, and the API exposes `/api/health` plus `/docs` for quick operational checks.
+
+The split mirrors how I would hand off a small product team surface: frontend and backend can deploy independently, the API contract is visible, and the product remains easy to run locally or inspect from the live links.

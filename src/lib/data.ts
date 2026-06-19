@@ -99,6 +99,22 @@ export const FEATURED: Project[] = [
 export const MORE: Project[] = [
   {
     index: "⑤",
+    year: "2026",
+    role: "Demo · Full-stack portfolio build",
+    title: "TalentSignal",
+    blurb:
+      "A compact HR/social discovery workspace for matching profiles, reviewing compatibility, sending signals, and handling trust workflows across a Nuxt frontend and NestJS API.",
+    tags: ["Nuxt 4", "Vue 3", "NestJS", "MySQL", "Redis", "DynamoDB", "OpenSearch"],
+    links: [
+      { label: "live demo", href: "https://charforge-web.vercel.app" },
+      { label: "api docs", href: "https://charforge-api.vercel.app/docs" },
+      { label: "case study", href: "/work/talentsignal" },
+    ],
+    caseSlug: "talentsignal",
+    thumb: "/work/talentsignal/discover-desktop.png",
+  },
+  {
+    index: "⑥",
     year: "2025",
     role: "Solo · Product Design + Eng",
     title: "Roomboard",
@@ -114,7 +130,7 @@ export const MORE: Project[] = [
     demo: "roomboard",
   },
   {
-    index: "⑥",
+    index: "⑦",
     year: "2026",
     role: "Solo · Fictional concept demo",
     title: "HelixCare Pulse",
@@ -125,7 +141,7 @@ export const MORE: Project[] = [
     thumb: "/work/helixcare-pulse/hero-device.png",
   },
   {
-    index: "⑦",
+    index: "⑧",
     year: "2023 – 2026",
     role: "Solo · Web3 trading UI",
     title: "Injective Trading Terminal",
