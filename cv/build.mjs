@@ -1,12 +1,23 @@
 // Render cv/Ilya_Moskovkin_CV.html → public/Ilya_Moskovkin_CV.pdf
 // Usage: node cv/build.mjs
 // Uses the headless Chromium that Playwright already downloaded (no extra deps).
+//
+// ⚠️  TEMPORARILY DISABLED — public/Ilya_Moskovkin_CV.pdf is currently a
+// standalone designed artifact (not generated from the HTML). Re-running this
+// script would overwrite it. To re-enable, delete the guard block below.
 
 import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
+
+console.error(
+  "cv/build.mjs is disabled: public/Ilya_Moskovkin_CV.pdf is currently a\n" +
+    "standalone designed PDF and would be overwritten by this script.\n" +
+    "Re-enable by removing the guard at the top of cv/build.mjs.",
+);
+process.exit(0);
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "..");
