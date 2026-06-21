@@ -107,6 +107,7 @@ export const MORE: Project[] = [
     tags: ["Nuxt 4", "Vue 3", "NestJS", "MySQL", "Redis", "DynamoDB", "OpenSearch"],
     links: [
       { label: "live demo", href: "https://charforge-web.vercel.app" },
+      { label: "github", href: "https://github.com/TargiX/talentsignal-demo" },
       { label: "api docs", href: "https://charforge-api.vercel.app/docs" },
       { label: "case study", href: "/work/talentsignal" },
     ],

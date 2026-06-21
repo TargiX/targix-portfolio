@@ -21,6 +21,8 @@ links:
     href: "https://charforge-web.vercel.app"
   - label: API docs
     href: "https://charforge-api.vercel.app/docs"
+  - label: GitHub
+    href: "https://github.com/TargiX/talentsignal-demo"
 ---
 
 <CaseTLDR
@@ -49,7 +51,17 @@ The discovery list supports intent, skills, interests, location, availability, a
 
 Profile actions feed the workspace state instead of being decorative buttons. Sending a signal, bookmarking, messaging, or opening review sections updates activity and secondary screens. The sidebar carries adjacent operations: matches, signals, search intent, review queue, reports, activity feed, online users, webhooks, settings, and API status.
 
+![Message action flow](/work/talentsignal/message-action.png)
+
+The message composer is a small example of the product philosophy: keep the interface dense, but make each action accountable. The selected profile, current intent, and outgoing message all meet in one flow instead of sending the user to a generic compose page.
+
+![Profile activity state](/work/talentsignal/activity-tab.png)
+
 The trust rail keeps safety information close to the decision: email and ID verification, portfolio link status, community vouch count, trust score, recent activity, online users, and suggested signals all sit beside the active profile.
+
+![Moderation review queue](/work/talentsignal/review-queue.png)
+
+Moderation is treated as a first-class workspace section, not a hidden admin afterthought. Review items carry severity, source, and decision actions so the same product surface can support discovery and trust operations.
 
 ## Architecture
 
