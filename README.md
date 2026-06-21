@@ -1,5 +1,8 @@
 # Targix Portfolio
 
+**Live site:** [ilyamoskovkin.com](https://ilyamoskovkin.com)  
+**Source:** [github.com/TargiX/targix-portfolio](https://github.com/TargiX/targix-portfolio)
+
 Personal portfolio and case-study site for Ilya Moskovkin. Built with Next.js App Router, MDX case studies, interactive product artifacts, and a Resend-backed contact form.
 
 ## Stack
