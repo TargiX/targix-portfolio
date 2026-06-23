@@ -59,7 +59,7 @@ export function InteractiveSkills() {
               onMouseEnter={() => setHoveredId(item.id)}
               onFocus={() => setHoveredId(item.id)}
               className={cn(
-                "relative flex min-h-[34px] cursor-default flex-col justify-start px-3 py-2 transition-all duration-300 md:min-h-[94px]"
+                "relative flex cursor-default flex-col justify-start px-3 py-2 transition-all duration-300"
               )}
             >
               <div className="flex items-center gap-2 whitespace-nowrap">
