@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 
 type Day = { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 };
 
@@ -15,7 +15,6 @@ const LEVEL_FILL = [
 // the panel revealed mid-flip — a brighter accent shade, like a flip-board tile
 const BACK_FILL = "color-mix(in oklab, var(--accent) 55%, var(--bg-2))";
 
-const CELL = 11;
 const GAP = 3;
 const FLIP_HOLD = 650; // ms a flipped cell stays before turning back (the trail)
 const TIP_DELAY = 320; // ms hover dwell before the tooltip appears
@@ -37,6 +36,13 @@ export function ContribGrid({
   const tipRef = useRef<HTMLDivElement>(null);
   const flipTimers = useRef(new WeakMap<HTMLElement, number>());
   const tipTimer = useRef<number | undefined>(undefined);
+  const weekCount = Math.max(weeks.length, 1);
+  const gridStyle = {
+    "--contrib-gap": `${GAP}px`,
+    width: "100%",
+    minWidth: gridW,
+    paddingTop: topPad,
+  } as CSSProperties;
 
   const handleOver = (e: React.PointerEvent) => {
     const cell = (e.target as HTMLElement).closest<HTMLElement>(".contrib-cell");
@@ -76,12 +82,16 @@ export function ContribGrid({
       <div className="overflow-x-auto py-1.5">
         <div
           className="relative"
-          style={{ width: gridW, paddingTop: topPad }}
+          style={gridStyle}
           role="img"
           aria-label={ariaLabel}
         >
           {monthLabels.map((m, i) => (
-            <span key={i} className="absolute top-0 font-mono text-[9px] text-fg-dim" style={{ left: m.x }}>
+            <span
+              key={i}
+              className="absolute top-0 font-mono text-[9px] text-fg-dim"
+              style={{ left: `${(m.x / gridW) * 100}%` }}
+            >
               {m.label}
             </span>
           ))}
@@ -89,10 +99,10 @@ export function ContribGrid({
           <div
             className="grid"
             style={{
-              gridTemplateRows: `repeat(7, ${CELL}px)`,
-              gridAutoColumns: `${CELL}px`,
-              columnGap: GAP,
-              rowGap: GAP,
+              gridTemplateColumns: `repeat(${weekCount}, minmax(6px, 1fr))`,
+              gridTemplateRows: "repeat(7, auto)",
+              columnGap: "var(--contrib-gap)",
+              rowGap: "var(--contrib-gap)",
             }}
           >
             {weeks.map((week, wi) =>

@@ -5,8 +5,7 @@ import { C_DIM, C_FG, C_GREEN, C_MUTED, FONT_MONO, FONT_SANS, paintRange } from 
 
 type TextWithColorRanges = Text & { colorRanges?: Record<number, number> };
 
-const PARA = "Senior frontend engineer\nfor complex SaaS UI, AI workflows,\nand design systems.";
-const META = "based  vietnam · remote      years  10+      stack  react · vue · node      status  open to roles";
+const PARA = "I build production-grade product interfaces:\ndashboards, workflow-heavy SaaS, visual editors,\nand AI-assisted tools across React, Vue, and Node.";
 const LINK = "jump to selected work ↓";
 
 const applyColorRanges = (text: Text, ranges: Record<number, number>) => {
@@ -24,8 +23,11 @@ export function createHeroTextObjects(surface: "light" | "dark" = "dark") {
   // Light theme needs dark glyphs so the SDF text reads on the pale field AND
   // shows up when the glass cubes refract the scene texture (that's the effect).
   const isLight = surface === "light";
+  // Light theme: warm near-black ink (#1c1a17) instead of cold pure black — the
+  // warmth lets the huge display name breathe with the paper bg rather than
+  // punching out of the composition. Editorial print convention.
   const P = isLight
-    ? { fg: 0x0e0f12, muted: 0x3a3e44, dim: 0x676c74, green: 0x15803d, link: 0x6b7280 }
+    ? { fg: 0x1c1a17, muted: 0x3a3e44, dim: 0x676c74, green: 0x15803d, link: 0x6b7280 }
     : { fg: C_FG, muted: C_MUTED, dim: C_DIM, green: C_GREEN, link: 0xc2c7cf };
   // keyword lift: green accent in light (the page wanted accent colour), soft
   // white in dark (unchanged).
@@ -93,23 +95,17 @@ export function createHeroTextObjects(surface: "light" | "dark" = "dark") {
   {
     const ranges: Record<number, number> = { 0: P.muted };
     // keywords get a soft lift against the body color
-    paintRange(ranges, PARA, "complex", kw, P.muted);
-    paintRange(ranges, PARA, "AI workflows", kw, P.muted);
-    paintRange(ranges, PARA, "design", kw, P.muted);
-    paintRange(ranges, PARA, "systems", kw, P.muted);
+    paintRange(ranges, PARA, "production-grade product interfaces", kw, P.muted);
+    paintRange(ranges, PARA, "workflow-heavy SaaS", kw, P.muted);
+    paintRange(ranges, PARA, "visual editors", kw, P.muted);
+    paintRange(ranges, PARA, "AI-assisted tools", kw, P.muted);
+    paintRange(ranges, PARA, "React, Vue, and Node", kw, P.muted);
     applyColorRanges(para, ranges);
   }
 
-  const meta = mkText(FONT_MONO, 13, P.dim, 0.04);
-  meta.text = META;
-  {
-    const ranges: Record<number, number> = { 0: P.dim };
-    paintRange(ranges, META, "vietnam · remote", P.fg, P.dim);
-    paintRange(ranges, META, "10+", P.fg, P.dim);
-    paintRange(ranges, META, "react · vue · node", P.fg, P.dim);
-    paintRange(ranges, META, "open to roles", P.green, P.dim);
-    applyColorRanges(meta, ranges);
-  }
+  const meta = mkText(FONT_MONO, 1, P.dim, 0);
+  meta.text = "";
+  meta.visible = false;
 
   const link = mkText(FONT_MONO, 14, P.link, 0.04);
   link.text = LINK;

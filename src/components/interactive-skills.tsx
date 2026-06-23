@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 
 const SKILLS = [
@@ -46,10 +45,10 @@ export function InteractiveSkills() {
   return (
     <section
       aria-label="Frontend engineering proof points"
-      className="mb-14 rounded-md border border-line-soft bg-bg-2/30 px-3 py-3 sm:px-4 transition-colors"
+      className="rounded-lg border border-white/10 bg-[rgba(7,12,15,.34)] px-3 py-2.5 shadow-[0_24px_80px_rgba(0,0,0,.24)] backdrop-blur-xl transition-colors sm:px-4 sm:py-3"
       onMouseLeave={() => setHoveredId(null)}
     >
-      <ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 w-full gap-2 items-start">
+      <ul className="grid w-full grid-cols-1 items-stretch gap-2 sm:grid-cols-3 lg:grid-cols-5 lg:gap-5">
         {SKILLS.map((item) => {
           const isHovered = hoveredId === item.id;
 
@@ -59,44 +58,38 @@ export function InteractiveSkills() {
               onMouseEnter={() => setHoveredId(item.id)}
               onFocus={() => setHoveredId(item.id)}
               className={cn(
-                "relative flex flex-col justify-start rounded-md px-4 py-2 transition-all duration-300 cursor-default",
-                isHovered ? "bg-bg-2/50" : ""
+                "relative flex min-h-[34px] cursor-default flex-col justify-start rounded-md px-3 py-2 transition-colors duration-300 md:min-h-[94px]",
+                isHovered ? "bg-white/[0.045]" : ""
               )}
             >
               <div className="flex items-center gap-2 whitespace-nowrap">
-                <span className="size-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
-                <span className="font-mono text-[11px] lowercase tracking-[0.06em] text-fg-muted transition-colors duration-300">
+                <span className="size-1.5 shrink-0 rounded-full bg-[var(--accent)] shadow-[0_0_14px_color-mix(in_oklab,var(--accent)_55%,transparent)]" />
+                <span className="font-mono text-[11px] lowercase tracking-[0.06em] text-fg transition-colors duration-300">
                   {item.title}
                 </span>
               </div>
 
-              <AnimatePresence initial={false}>
-                {isAnyHovered && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="overflow-hidden"
-                  >
-                    <div className="mt-3 flex flex-wrap gap-2 pb-1">
-                      {item.skills.map((skill) => (
-                        <span
-                          key={skill}
-                          className={cn(
-                            "rounded-full px-2 py-0.5 text-[10px] transition-colors duration-300 whitespace-nowrap",
-                            isHovered
-                              ? "bg-[var(--accent)]/10 text-[var(--accent)]"
-                              : "bg-bg-2/80 text-fg-dim"
-                          )}
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </motion.div>
+              <div
+                data-skill-list
+                className={cn(
+                  "mt-3 hidden flex-wrap gap-x-4 gap-y-2 pb-1 transition-opacity duration-300 md:flex",
+                  isAnyHovered && !isHovered ? "opacity-45" : "opacity-100",
                 )}
-              </AnimatePresence>
+              >
+                {item.skills.map((skill) => (
+                  <span
+                    key={skill}
+                    className={cn(
+                      "whitespace-nowrap font-mono text-[10px] transition-colors duration-300",
+                      isHovered
+                        ? "text-[var(--accent)]"
+                        : "text-fg-dim"
+                    )}
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
             </li>
           );
         })}

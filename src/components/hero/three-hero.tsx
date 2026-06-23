@@ -39,6 +39,8 @@ type Props = {
   mobile?: boolean;
   /** Hide only the in-canvas SDF text while preserving desktop cube placement. */
   suppressText?: boolean;
+  /** Hide the old glass cube cluster; DOM product panels can own the hero media. */
+  suppressGlass?: boolean;
 };
 
 export function ThreeHero({
@@ -51,6 +53,7 @@ export function ThreeHero({
   onLayout,
   mobile = false,
   suppressText = false,
+  suppressGlass = false,
 }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const timeRef = useRef(time ?? "");
@@ -206,15 +209,16 @@ export function ThreeHero({
     function layout() {
       const padLeft = Math.max(24, (W - 1280) / 2 + 32);
       const colLeft = -W / 2 + padLeft;
-      const fontH1 = Math.max(52, Math.min(88, W * 0.058));
+      // Editorial display scale — "Ilya Moskovkin" fits one line, cube floats
+      // over it on the right (unchanged) and refracts the giant glyphs.
+      const fontH1 = Math.max(64, Math.min(104, W * 0.067));
       h1.fontSize = fontH1;
-
+      h1.letterSpacing = -0.04;
       const paraSize = 19;
       const paraH = paraSize * 1.5 * 3;
-      const gapH1 = 28;
-      const gapPara = 28;
-      const gapMeta = 32;
-      const total = fontH1 + gapH1 + paraH + gapPara + 15 + gapMeta + 18;
+      const gapH1 = 40; // more air under the giant name
+      const gapPara = 34;
+      const total = fontH1 + gapH1 + paraH + gapPara + 18;
 
       let y = total / 2;
       const place = (t: { position: THREE.Object3D["position"] }, h: number, gap: number) => {
@@ -223,12 +227,15 @@ export function ThreeHero({
       };
       place(h1, fontH1, gapH1);
       place(para, paraH, gapPara);
-      place(meta, 15, gapMeta);
       place(link, 18, 0);
+
+      // optical nudge AFTER place(), which sets position.x = colLeft. Sans glyphs
+      // read slightly right of the mono text below, so pull the name left so the
+      // left edges feel aligned. Applied last so it isn't overwritten.
+      h1.position.x = colLeft - 8;
 
       h1.sync();
       para.sync();
-      meta.sync();
       link.sync();
 
       // Desktop uses the cluster's original placement. Mobile floats lower-centre
@@ -308,6 +315,7 @@ export function ThreeHero({
     const _ndc = new THREE.Vector2();
     const _faceN = new THREE.Vector3();
     const hitCube = (clientX: number, clientY: number): { c: HeroCube; faceN: THREE.Vector3 } | null => {
+      if (suppressGlass) return null;
       const rect = host.getBoundingClientRect();
       _ndc.set(((clientX - rect.left) / W) * 2 - 1, -(((clientY - rect.top) / H) * 2 - 1));
       raycaster.setFromCamera(_ndc, cubeCam);
@@ -411,6 +419,25 @@ export function ThreeHero({
     window.addEventListener("pointerup", onPointerUp);
     window.addEventListener("pointercancel", onPointerUp);
 
+    // Visible gate: the WebGL render loop is expensive (render-to-texture +
+    // composite + cubes + glow, all on the main thread each frame). Running it
+    // while the hero is scrolled off-screen starves the main thread and is what
+    // made the rest of the page — and the scroll-back-up — feel like it had the
+    // brakes on. Pause the rAF loop the moment the hero leaves the viewport.
+    let visible = true;
+    const visibility = new IntersectionObserver(
+      ([entry]) => {
+        // small hysteresis via rootMargin so a 1px scroll jiggle at the boundary
+        // can't flap the loop on/off rapidly.
+        visible = entry.isIntersecting;
+        if (visible && !disposed && !raf) {
+          raf = requestAnimationFrame(tick);
+        }
+      },
+      { rootMargin: "100px 0px" },
+    );
+    visibility.observe(host);
+
     let raf = 0;
     let lastTime = "";
     const items: Array<{ t: { fillOpacity: number; position: { y: number } }; base: number; delay: number }> = [];
@@ -423,8 +450,14 @@ export function ThreeHero({
 
     const tick = () => {
       if (disposed) return;
-      // under reduced motion run only a short burst (let troika sync), then freeze
-      if (!reduce || reduceFrames < 8) raf = requestAnimationFrame(tick);
+      // Schedule the next frame first, but only while visible. When the hero
+      // scrolls out, `visible` flips false and the loop drains (this frame
+      // still paints a final state), then stops — freeing the main thread.
+      if (visible && (!reduce || reduceFrames < 8)) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        raf = 0;
+      }
       reduceFrames++;
       const elapsed = reduce ? REDUCE_T : (performance.now() - start) / 1000;
       bgMat.uniforms.uTime.value = elapsed;
@@ -433,8 +466,7 @@ export function ThreeHero({
         items.push(
           { t: h1, base: h1.position.y, delay: 0.08 },
           { t: para, base: para.position.y, delay: 0.18 },
-          { t: meta, base: meta.position.y, delay: 0.26 },
-          { t: link, base: link.position.y, delay: 0.32 },
+          { t: link, base: link.position.y, delay: 0.3 },
         );
       }
 
@@ -456,18 +488,28 @@ export function ThreeHero({
       bgMat.uniforms.uMouse.value.set(mouse.x, mouse.y);
       const cur = bgMat.uniforms.uMouseActive.value as number;
       bgMat.uniforms.uMouseActive.value = cur + (targetActive - cur) * 0.06;
-      
+
       textUniforms.uMouse.value.set(mouse.x * pr, mouse.y * pr);
       textUniforms.uResolution.value.set(W * pr, H * pr);
 
-      // staggered reveal of text
+      // staggered reveal. Blocks fade + drift up softly. The name runs longer
+      // and eases out extra-soft for an "airy" entrance (no clip wipe — that
+      // felt like typewriter clipping; a slow ease-out fade + float reads
+      // smoother and more premium). fillOpacity is the sole driver, so the text
+      // can never vanish even if something downstream misfires.
       for (const it of items) {
-        const local = Math.min(1, Math.max(0, (elapsed - it.delay) / 0.6));
-        const e = 1 - Math.pow(1 - local, 3);
+        const isName = it.t === h1;
+        // name: later start, longer, gentler. others: short snappy fade.
+        const delay = isName ? 0.12 : it.delay;
+        const dur = isName ? 1.4 : 0.6;
+        const local = Math.min(1, Math.max(0, (elapsed - delay) / dur));
+        // ease-out-quint for the name (very soft tail), ease-out-cubic for the rest
+        const e = isName ? 1 - Math.pow(1 - local, 5) : 1 - Math.pow(1 - local, 3);
         it.t.fillOpacity = e;
-        it.t.position.y = it.base + (1 - e) * 10;
+        // name floats up further + lingers longer (the float tapers with the ease)
+        it.t.position.y = it.base + (1 - e) * (isName ? 22 : 10);
       }
-      
+
       // No dot to animate anymore
 
       // ── cube cluster: reveal, slow spin, breathe ──
@@ -599,15 +641,15 @@ export function ThreeHero({
       renderer.render(bgScene, fsCamera);
       // mobile/light DOM copy owns the text; skip SDF only when requested
       if (!mobile && !suppressText) renderer.render(textScene, ortho);
-      
+
       // Render the core glow into the scene texture so the glass cubes can refract it!
-      renderer.render(glowScene, cubeCam);
+      if (!suppressGlass) renderer.render(glowScene, cubeCam);
 
       renderer.setRenderTarget(null);
       renderer.clear(true, true, true);
       renderer.render(compScene, fsCamera);
       renderer.clearDepth();
-      renderer.render(cubeScene, cubeCam);
+      if (!suppressGlass) renderer.render(cubeScene, cubeCam);
     };
     raf = requestAnimationFrame(tick);
 
@@ -627,6 +669,7 @@ export function ThreeHero({
         window.removeEventListener("touchend", onTouchEnd);
       }
       ro.disconnect();
+      visibility.disconnect();
       [h1, para, meta, link].forEach((t) => t.dispose());
       fsGeo.dispose();
       cubeGeo.dispose();
@@ -639,7 +682,7 @@ export function ThreeHero({
       renderer.dispose();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
-  }, [accent, accent2, surface, onStatus, onLayout, mobile, suppressText]);
+  }, [accent, accent2, surface, onStatus, onLayout, mobile, suppressText, suppressGlass]);
 
   return (
     <div

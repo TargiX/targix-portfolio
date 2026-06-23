@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Typed } from "@/components/typed";
+import { InteractiveSkills } from "@/components/interactive-skills";
+import { GlassDashboardStack } from "@/components/hero/glass-dashboard-stack";
 
 import { useVietnamTime } from "@/lib/use-vietnam-time";
 import type { HeroLayout } from "@/components/hero/three-hero";
@@ -138,7 +140,7 @@ export function Hero() {
 
   return (
     <header
-      className="relative isolate min-h-[78svh] w-full overflow-hidden"
+      className="relative isolate min-h-[calc(92svh-var(--nav-h))] w-full overflow-hidden"
       data-screen-label="00 Hero"
     >
       <div aria-hidden="true" className="hero-bg absolute inset-0 z-0" />
@@ -156,6 +158,7 @@ export function Hero() {
           onLayout={onLayout}
           mobile={isMobile ?? false}
           suppressText={isMobile ?? false}
+          suppressGlass
           className={[
             "transition-opacity duration-700 ease-out will-change-opacity",
             webglReady ? "opacity-100" : "opacity-0",
@@ -167,9 +170,9 @@ export function Hero() {
       <div className="sr-only">
         <h1>Ilya Moskovkin, Senior Frontend Engineer</h1>
         <p>
-          Senior frontend engineer for complex SaaS UI, AI workflows, and design
-          systems. I build production interfaces in React and Vue. 10+ years,
-          remote from Vietnam (UTC+7).
+          I build production-grade product interfaces: dashboards, workflow-heavy
+          SaaS, visual editors, and AI-assisted tools across React, Vue, and Node.
+          10+ years, remote from Vietnam (UTC+7).
         </p>
       </div>
 
@@ -210,6 +213,14 @@ export function Hero() {
 
       {/* DOM copy - mobile (over the live 3D bg) + WebGL-failure fallback */}
       <HeroCopy visible={showDomCopy} />
+
+      <GlassDashboardStack />
+
+      <div className="absolute inset-x-0 bottom-4 z-20 hidden px-5 sm:px-8 md:block">
+        <div className="mx-auto w-full max-w-[1280px]">
+          <InteractiveSkills />
+        </div>
+      </div>
     </header>
   );
 }
@@ -219,7 +230,7 @@ function HeroCopy({ visible }: { visible: boolean }) {
     <div
       aria-hidden={visible ? undefined : true}
       className={[
-        "relative z-10 mx-auto flex min-h-[78svh] max-w-[1280px] flex-col justify-center px-5 pb-24 pt-6 transition-opacity duration-700 ease-out will-change-opacity sm:px-8",
+        "relative z-10 mx-auto flex min-h-[calc(92svh-var(--nav-h))] max-w-[1280px] flex-col justify-center px-5 pb-7 pt-6 transition-opacity duration-700 ease-out will-change-opacity sm:px-8 md:pb-40",
         visible ? "opacity-100" : "opacity-100 sm:pointer-events-none sm:opacity-0",
       ].join(" ")}
     >
@@ -233,47 +244,14 @@ function HeroCopy({ visible }: { visible: boolean }) {
           <Typed text="Ilya Moskovkin" />
         </h1>
 
-        <p className="m-0 mb-7 max-w-[44ch] font-mono text-[15px] leading-[1.55] text-fg-muted sm:text-base">
-          Senior frontend engineer for <span className="text-fg">complex SaaS UI</span>,{" "}
-          <span className="text-fg">AI workflows</span>, and{" "}
-          <span className="text-fg">design systems</span>.
+        <p className="m-0 max-w-[54ch] font-mono text-[14px] leading-[1.6] text-fg-muted sm:text-[16px]">
+          I build <span className="text-fg">production-grade product interfaces</span>:
+          dashboards, <span className="text-fg">workflow-heavy SaaS</span>, visual editors,
+          and <span className="text-fg">AI-assisted tools</span> across React, Vue, and Node.
         </p>
 
-        <div className="grid max-w-full grid-cols-2 gap-x-4 gap-y-4 text-[11px] lowercase tracking-[0.04em] text-fg-dim sm:flex sm:flex-wrap sm:gap-x-5">
-          <MetaItem k="based" v="vietnam · remote" />
-          <MetaItem k="years" v="10+" />
-          <MetaItem k="stack" v="react · vue · node" />
-          <MetaItem
-            k="status"
-            v={<span style={{ color: "oklch(0.78 0.16 145)" }}>open to roles</span>}
-            className="col-span-2 sm:col-span-1"
-          />
-        </div>
-
-        <div className="mt-8 flex flex-wrap items-center gap-2.5">
-          <a
-            href="#work"
-            className="group inline-flex items-center gap-2 rounded-md border border-[var(--accent)] bg-[color-mix(in_oklab,var(--accent)_14%,transparent)] px-3 py-1.5 font-mono text-[11px] tracking-[0.06em] text-[var(--accent)] transition-colors hover:bg-[color-mix(in_oklab,var(--accent)_22%,transparent)]"
-          >
-            View work
-            <span className="inline-block transition-transform group-hover:translate-y-0.5">↓</span>
-          </a>
-          <a
-            href="/Ilya_Moskovkin_CV.pdf"
-            target="_blank"
-            rel="noreferrer"
-            className="group inline-flex items-center gap-2 rounded-md border border-line bg-bg-2 px-3 py-1.5 font-mono text-[11px] tracking-[0.06em] text-fg-muted transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
-          >
-            Résumé
-            <span className="inline-block transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">↗</span>
-          </a>
-          <a
-            href="mailto:hello@ilyamoskovkin.com"
-            className="group inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.06em] text-fg-dim transition-colors hover:text-[var(--accent)]"
-          >
-            Email
-            <span className="inline-block transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">↗</span>
-          </a>
+        <div className="mt-5 md:hidden">
+          <InteractiveSkills />
         </div>
       </div>
     </div>
@@ -292,14 +270,5 @@ function HeroLoader() {
         ))}
       </div>
     </div>
-  );
-}
-
-function MetaItem({ k, v, className }: { k: string; v: React.ReactNode; className?: string }) {
-  return (
-    <span className={["flex min-w-0 items-center gap-2", className].filter(Boolean).join(" ")}>
-      <span className="text-fg-muted">{k}</span>
-      <span className="whitespace-nowrap text-fg">{v}</span>
-    </span>
   );
 }
