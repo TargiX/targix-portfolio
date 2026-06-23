@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import { PostHogProvider } from "@/components/posthog-provider";
 import { SITE, absoluteUrl } from "@/lib/seo";
@@ -86,9 +85,12 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <Script id="theme-init" strategy="beforeInteractive">
-          {`try{var t=localStorage.getItem('portfolio-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t}else{document.documentElement.removeAttribute('data-theme')}}catch(e){}`}
-        </Script>
+        <script
+          id="theme-init"
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('portfolio-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t}else{document.documentElement.removeAttribute('data-theme')}}catch(e){}`,
+          }}
+        />
       </head>
       <body className="min-h-full overflow-x-hidden">
         <PostHogProvider>
