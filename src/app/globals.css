@@ -288,6 +288,7 @@
 .glass-dash-panel {
   position: absolute;
   overflow: hidden;
+  pointer-events: auto;
   border: 1px solid rgb(255 255 255 / 0.15);
   border-radius: 20px;
   background:
