@@ -200,8 +200,8 @@ function HeroCopy() {
     <div className="relative z-10 mx-auto flex min-h-[calc(92svh-var(--nav-h))] max-w-[1280px] flex-col justify-center px-5 pb-7 pt-6 sm:px-8 xl:px-0 md:pb-32">
       <div className="w-full">
         {/* Subtitle */}
-        <div className="mb-4 font-mono text-[12px] font-medium tracking-[0.1em] text-[var(--accent)] sm:mb-6 sm:text-[13px]">
-          — Senior Frontend Engineer
+        <div className="mb-4 font-mono text-[12px] font-semibold uppercase tracking-[0.2em] text-white/80 sm:mb-6 sm:text-[13px]">
+          SENIOR FRONTEND ENGINEER
         </div>
 
         {/* Headline */}
@@ -212,19 +212,19 @@ function HeroCopy() {
         {/* Value Props Bullets */}
         <ul className="mb-8 flex max-w-[850px] flex-col gap-3 font-sans text-[13px] leading-relaxed text-white/80 sm:text-[15px]">
           <li className="flex items-start gap-2.5">
-            <svg className="mt-1 size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="mt-1 size-4 shrink-0 text-white/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
             </svg>
             <span><strong className="font-bold text-white">Proactive Architect:</strong> I suggest architectures that actually scale and save time.</span>
           </li>
           <li className="flex items-start gap-2.5">
-            <svg className="mt-1 size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="mt-1 size-4 shrink-0 text-white/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
             </svg>
             <span><strong className="font-bold text-white">Cutting Edge:</strong> Always utilizing modern tech (React 19, Vue 3, AI Workflows).</span>
           </li>
           <li className="flex items-start gap-2.5">
-            <svg className="mt-1 size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="mt-1 size-4 shrink-0 text-white/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
             <span><strong className="font-bold text-white">Product Owner Mindset:</strong> I take full ownership of the frontend, from architecture to delivery.</span>
