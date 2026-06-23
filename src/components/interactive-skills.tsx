@@ -58,7 +58,7 @@ export function InteractiveSkills() {
               onMouseEnter={() => setHoveredId(item.id)}
               onFocus={() => setHoveredId(item.id)}
               className={cn(
-                "relative flex min-h-[34px] cursor-default flex-col justify-start px-3 py-2 transition-colors duration-300 md:min-h-[94px]"
+                "relative flex min-h-[34px] cursor-default flex-col justify-start px-3 py-2 transition-all duration-300"
               )}
             >
               <div className="flex items-center gap-2 whitespace-nowrap">
@@ -71,8 +71,11 @@ export function InteractiveSkills() {
               <div
                 data-skill-list
                 className={cn(
-                  "mt-3 hidden flex-wrap gap-x-4 gap-y-2 pb-1 transition-opacity duration-300 md:flex",
-                  "opacity-100"
+                  "flex flex-wrap gap-x-4 gap-y-2 transition-all duration-300 overflow-hidden",
+                  // Mobile: always visible
+                  "mt-3 max-h-40 opacity-100 pb-1",
+                  // Desktop: collapse to 0 height when not hovered
+                  !isHovered && "md:mt-0 md:max-h-0 md:opacity-0 md:pb-0"
                 )}
               >
                 {item.skills.map((skill) => (
