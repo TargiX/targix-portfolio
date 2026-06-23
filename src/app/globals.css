@@ -305,18 +305,6 @@
   -webkit-backdrop-filter: blur(20px) saturate(1.1) contrast(1.03);
   transform-origin: 82% 48%;
   transform-style: preserve-3d;
-  animation: panel-entrance 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes panel-entrance {
-  0% {
-    opacity: 0;
-    transform: translateZ(calc(var(--tz) - 20px)) translateY(30px) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translateZ(var(--tz)) translateY(0) scale(1);
-  }
 }
 
 .glass-dash-panel::before {
@@ -355,9 +343,7 @@
   width: 61%;
   min-height: 210px;
   padding: 16px;
-  --tz: -40px;
-  transform: translateZ(var(--tz));
-  animation-delay: 0.1s;
+  transform: translateZ(-40px);
 }
 
 .glass-dash-panel--workflow {
@@ -366,9 +352,7 @@
   width: 72%;
   min-height: 238px;
   padding: 16px;
-  --tz: 30px;
-  transform: translateZ(var(--tz));
-  animation-delay: 0.4s;
+  transform: translateZ(30px);
 }
 
 .glass-dash-panel--editor {
@@ -377,9 +361,7 @@
   width: 88%;
   min-height: 236px;
   padding: 16px;
-  --tz: 100px;
-  transform: translateZ(var(--tz));
-  animation-delay: 0.7s;
+  transform: translateZ(100px);
 }
 
 .glass-dash-head {

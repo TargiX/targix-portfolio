@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
 
 const workflowNodes = [
   { label: "User input", x: 14, y: 50, w: 18 },
@@ -50,7 +51,12 @@ function MetricsPanel() {
 
 
   return (
-    <article className="glass-dash-panel glass-dash-panel--metrics">
+    <motion.article 
+      className="glass-dash-panel glass-dash-panel--metrics"
+      initial={{ opacity: 0, y: 30, scale: 0.95, z: -40 }}
+      animate={{ opacity: 1, y: 0, scale: 1, z: -40 }}
+      transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="glass-dash-head">
         <span className="glass-dash-dot" />
         <span>Metrics Overview</span>
@@ -108,13 +114,18 @@ function MetricsPanel() {
           </svg>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
 
 function WorkflowPanel() {
   return (
-    <article className="glass-dash-panel glass-dash-panel--workflow">
+    <motion.article 
+      className="glass-dash-panel glass-dash-panel--workflow"
+      initial={{ opacity: 0, y: 30, scale: 0.95, z: 30 }}
+      animate={{ opacity: 1, y: 0, scale: 1, z: 30 }}
+      transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="glass-dash-head">
         <span className="glass-dash-dot" />
         <span>AI Workflow</span>
@@ -137,13 +148,18 @@ function WorkflowPanel() {
           </div>
         ))}
       </div>
-    </article>
+    </motion.article>
   );
 }
 
 function EditorPanel() {
   return (
-    <article className="glass-dash-panel glass-dash-panel--editor">
+    <motion.article 
+      className="glass-dash-panel glass-dash-panel--editor"
+      initial={{ opacity: 0, y: 30, scale: 0.95, z: 100 }}
+      animate={{ opacity: 1, y: 0, scale: 1, z: 100 }}
+      transition={{ duration: 0.8, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="glass-dash-head">
         <span>Visual Editor</span>
         <span className="ml-auto text-fg-dim">x</span>
@@ -187,7 +203,7 @@ function EditorPanel() {
           ))}
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
 
