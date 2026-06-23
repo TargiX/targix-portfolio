@@ -12,6 +12,56 @@ const workflowNodes = [
   { label: "Response", x: 86, y: 50, w: 16 },
 ];
 
+const getCenterOfElement = (el: HTMLElement) => {
+  const rect = el.getBoundingClientRect();
+  return [rect.width / 2, rect.height / 2];
+};
+
+const getEdgeProximity = (el: HTMLElement, x: number, y: number) => {
+  const [cx, cy] = getCenterOfElement(el);
+  const dx = x - cx;
+  const dy = y - cy;
+  let kx = Infinity;
+  let ky = Infinity;
+  if (dx !== 0) kx = cx / Math.abs(dx);
+  if (dy !== 0) ky = cy / Math.abs(dy);
+  return Math.min(Math.max(1 / Math.min(kx, ky), 0), 1);
+};
+
+const getCursorAngle = (el: HTMLElement, x: number, y: number) => {
+  const [cx, cy] = getCenterOfElement(el);
+  const dx = x - cx;
+  const dy = y - cy;
+  if (dx === 0 && dy === 0) return 0;
+  const radians = Math.atan2(dy, dx);
+  let degrees = radians * (180 / Math.PI) + 90;
+  if (degrees < 0) degrees += 360;
+  return degrees;
+};
+
+const handlePanelPointerMove = (e: React.PointerEvent<HTMLElement>) => {
+  if (e.target !== e.currentTarget) return;
+  const parent = e.currentTarget.parentElement;
+  if (!parent) return;
+
+  const x = e.nativeEvent.offsetX;
+  const y = e.nativeEvent.offsetY;
+
+  const edge = getEdgeProximity(parent, x, y);
+  const angle = getCursorAngle(parent, x, y);
+
+  parent.style.setProperty('--edge-proximity', `${(edge * 100).toFixed(3)}`);
+  parent.style.setProperty('--cursor-angle', `${angle.toFixed(3)}deg`);
+};
+
+const handlePanelPointerLeave = (e: React.PointerEvent<HTMLElement>) => {
+  if (e.target !== e.currentTarget) return;
+  const parent = e.currentTarget.parentElement;
+  if (parent) {
+    parent.style.setProperty('--edge-proximity', '0');
+  }
+};
+
 function MetricsPanel() {
   const [metrics, setMetrics] = useState([
     { label: "Users", value: 28400, delta: "+12.4%", format: (v: number) => `${(v / 1000).toFixed(1)}K` },
@@ -57,6 +107,7 @@ function MetricsPanel() {
       animate={{ opacity: 1, y: 0, scale: 1, z: -40 }}
       transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
     >
+      <span className="edge-light" />
       <div className="glass-dash-head relative z-10">
         <span className="glass-dash-dot" />
         <span>Metrics Overview</span>
@@ -113,7 +164,7 @@ function MetricsPanel() {
             })}
           </svg>
         </div>
-      </div>
+      <div className="absolute inset-0 !z-50 cursor-default" onPointerMove={handlePanelPointerMove} onPointerLeave={handlePanelPointerLeave} />
     </motion.article>
   );
 }
@@ -126,6 +177,7 @@ function WorkflowPanel() {
       animate={{ opacity: 1, y: 0, scale: 1, z: 30 }}
       transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
+      <span className="edge-light" />
       <div className="glass-dash-head relative z-10">
         <span className="glass-dash-dot" />
         <span>AI Workflow</span>
@@ -148,6 +200,7 @@ function WorkflowPanel() {
           </div>
         ))}
       </div>
+      <div className="absolute inset-0 !z-50 cursor-default" onPointerMove={handlePanelPointerMove} onPointerLeave={handlePanelPointerLeave} />
     </motion.article>
   );
 }
@@ -160,6 +213,7 @@ function EditorPanel() {
       animate={{ opacity: 1, y: 0, scale: 1, z: 100 }}
       transition={{ duration: 0.8, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
     >
+      <span className="edge-light" />
       <div className="glass-dash-head relative z-10">
         <span>Visual Editor</span>
         <span className="ml-auto text-fg-dim">x</span>
@@ -202,7 +256,7 @@ function EditorPanel() {
             </div>
           ))}
         </div>
-      </div>
+      <div className="absolute inset-0 !z-50 cursor-default" onPointerMove={handlePanelPointerMove} onPointerLeave={handlePanelPointerLeave} />
     </motion.article>
   );
 }
