@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 
 const SKILLS = [
@@ -58,7 +59,7 @@ export function InteractiveSkills() {
               onMouseEnter={() => setHoveredId(item.id)}
               onFocus={() => setHoveredId(item.id)}
               className={cn(
-                "relative flex min-h-[34px] cursor-default flex-col justify-start px-3 py-2 transition-all duration-300"
+                "relative flex min-h-[34px] cursor-default flex-col justify-start px-3 py-2 transition-all duration-300 md:min-h-[94px]"
               )}
             >
               <div className="flex items-center gap-2 whitespace-nowrap">
@@ -68,29 +69,44 @@ export function InteractiveSkills() {
                 </span>
               </div>
 
-              <div
-                data-skill-list
-                className={cn(
-                  "flex flex-wrap gap-x-4 gap-y-2 transition-all duration-300 overflow-hidden",
-                  // Mobile: always visible
-                  "mt-3 max-h-40 opacity-100 pb-1",
-                  // Desktop: collapse to 0 height when not hovered
-                  !isHovered && "md:mt-0 md:max-h-0 md:opacity-0 md:pb-0"
-                )}
-              >
+              {/* Mobile: always visible, Desktop: smoothly expands when ANY column is hovered */}
+              <div className="md:hidden mt-3 flex flex-wrap gap-x-4 gap-y-2 pb-1">
                 {item.skills.map((skill) => (
                   <span
                     key={skill}
-                    className={cn(
-                      "whitespace-nowrap font-mono text-[10px] transition-colors duration-300",
-                      isHovered
-                        ? "text-[var(--accent)]"
-                        : "text-fg-dim"
-                    )}
+                    className="whitespace-nowrap font-mono text-[10px] text-fg-dim"
                   >
                     {skill}
                   </span>
                 ))}
+              </div>
+
+              <div className="hidden md:block">
+                <AnimatePresence initial={false}>
+                  {isAnyHovered && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 pb-1">
+                        {item.skills.map((skill) => (
+                          <span
+                            key={skill}
+                            className={cn(
+                              "whitespace-nowrap font-mono text-[10px] transition-colors duration-300",
+                              isHovered ? "text-[var(--accent)]" : "text-fg-dim"
+                            )}
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </li>
           );
