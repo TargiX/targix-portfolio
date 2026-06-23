@@ -342,10 +342,8 @@
       black 97.5%
     );
 
-  /* Glow triggers when proximity > 60% */
-  opacity: calc((var(--edge-proximity) - 60) / 40);
+  opacity: var(--glow-opacity, 0);
   transition: opacity 0.2s ease-out;
-  mix-blend-mode: plus-lighter;
 }
 
 .glass-dash-panel::after {

@@ -13,8 +13,7 @@ const workflowNodes = [
 ];
 
 const getCenterOfElement = (el: HTMLElement) => {
-  const rect = el.getBoundingClientRect();
-  return [rect.width / 2, rect.height / 2];
+  return [el.offsetWidth / 2, el.offsetHeight / 2];
 };
 
 const getEdgeProximity = (el: HTMLElement, x: number, y: number) => {
@@ -49,8 +48,9 @@ const handlePanelPointerMove = (e: React.PointerEvent<HTMLElement>) => {
 
   const edge = getEdgeProximity(parent, x, y);
   const angle = getCursorAngle(parent, x, y);
+  const glowOpacity = Math.max(0, (edge * 100 - 60) / 40);
 
-  parent.style.setProperty('--edge-proximity', `${(edge * 100).toFixed(3)}`);
+  parent.style.setProperty('--glow-opacity', glowOpacity.toFixed(3));
   parent.style.setProperty('--cursor-angle', `${angle.toFixed(3)}deg`);
 };
 
@@ -58,7 +58,7 @@ const handlePanelPointerLeave = (e: React.PointerEvent<HTMLElement>) => {
   if (e.target !== e.currentTarget) return;
   const parent = e.currentTarget.parentElement;
   if (parent) {
-    parent.style.setProperty('--edge-proximity', '0');
+    parent.style.setProperty('--glow-opacity', '0');
   }
 };
 
@@ -164,6 +164,7 @@ function MetricsPanel() {
             })}
           </svg>
         </div>
+      </div>
       <div className="absolute inset-0 !z-50 cursor-default" onPointerMove={handlePanelPointerMove} onPointerLeave={handlePanelPointerLeave} />
     </motion.article>
   );
@@ -256,6 +257,7 @@ function EditorPanel() {
             </div>
           ))}
         </div>
+      </div>
       <div className="absolute inset-0 !z-50 cursor-default" onPointerMove={handlePanelPointerMove} onPointerLeave={handlePanelPointerLeave} />
     </motion.article>
   );
