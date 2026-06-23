@@ -310,25 +310,14 @@
 .glass-dash-panel::before {
   content: "";
   position: absolute;
-  inset: -1px; /* Pull out to cover the border exactly */
+  inset: 0;
   border-radius: inherit;
-  padding: 1px; /* Mask out everything but the border */
-  background: radial-gradient(
-    250px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
-    rgba(255, 255, 255, 0.8),
-    transparent 40%
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 10;
-}
-
-.glass-dash-panel:hover::before {
-  opacity: 1;
+  background:
+    radial-gradient(46% 28% at var(--glass-glare-x) var(--glass-glare-y), rgb(255 255 255 / 0.15), transparent 70%),
+    radial-gradient(42% 24% at 84% 92%, color-mix(in oklab, var(--accent) 25%, transparent), transparent 70%);
+  opacity: 0.6;
+  mix-blend-mode: screen;
 }
 
 .glass-dash-panel::after {

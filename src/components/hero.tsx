@@ -62,7 +62,7 @@ export function Hero() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  const onLayout = useCallback((l: HeroLayout) => {}, []);
+  const onLayout = useCallback((l: HeroLayout) => { }, []);
   const onStatus = useCallback((status: "ready" | "failed") => {
     if (status === "ready") {
       requestAnimationFrame(() => setWebgl("ready"));
@@ -132,10 +132,8 @@ export function Hero() {
   }, [webgl, PixiMetaballHero]);
 
   // Mobile keeps DOM copy because the WebGL typography is intentionally
-  // suppressed there. Desktop pending state uses a dedicated loader instead of
-  // a fake text-only hero, then crossfades into the full WebGL scene.
+  // suppressed there.
   const showDomCopy = isMobile === true || webgl === "failed";
-  const showLoader = !webglReady && webgl !== "failed" && isMobile !== true;
 
   return (
     <header
@@ -143,7 +141,6 @@ export function Hero() {
       data-screen-label="00 Hero"
     >
       <div aria-hidden="true" className="hero-bg absolute inset-0 z-0" />
-      {showLoader && <HeroLoader />}
 
       {/* full-bleed WebGL scene: ported bg shader + glass cubes. Text is suppressed. */}
       {ThreeHero && (
@@ -200,12 +197,12 @@ function HeroCopy() {
     <div className="relative z-10 mx-auto flex min-h-[calc(92svh-var(--nav-h))] max-w-[1280px] flex-col justify-center px-5 pb-7 pt-6 sm:px-8 xl:px-0 md:pb-32">
       <div className="w-full">
         {/* Subtitle */}
-        <div className="mb-4 font-mono text-[12px] font-semibold uppercase tracking-[0.2em] text-white/80 sm:mb-6 sm:text-[13px]">
+        <div className="mb-1 font-mono text-[12px] font-semibold uppercase tracking-[0.2em] text-white/80  sm:text-[13px]">
           SENIOR FRONTEND ENGINEER
         </div>
 
         {/* Headline */}
-        <h1 className="m-0 mb-8 max-w-[850px] font-sans text-[44px] font-light leading-[1.1] tracking-tight text-white sm:text-[64px] md:text-[72px]">
+        <h1 className="m-0 mb-8 max-w-[850px] font-sans text-[44px] font-light leading-[1.1] tracking-tight text-white sm:text-[64px] md:text-[84px]">
           Ilya Moskovkin
         </h1>
 
@@ -227,7 +224,7 @@ function HeroCopy() {
             <svg className="mt-1 size-4 shrink-0 text-white/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
-            <span><strong className="font-bold text-white">Product Owner Mindset:</strong> I take full ownership of the frontend, from architecture to delivery.</span>
+            <span><strong className="font-bold text-white">Product Owner Mindset:</strong> full ownership of the frontend, from architecture to delivery.</span>
           </li>
         </ul>
 
@@ -259,31 +256,16 @@ function HeroCopy() {
       <div className="mt-8 flex flex-wrap items-center gap-6 border-t border-white/10 pt-5 sm:mt-12 sm:gap-10">
         <div className="flex items-center gap-2.5">
           <div className="font-sans text-2xl font-bold tracking-tighter text-white sm:text-3xl">10+</div>
-          <div className="font-mono text-[9px] uppercase leading-tight tracking-widest text-fg-dim sm:text-[10px]">Years<br/>Experience</div>
+          <div className="font-mono text-[9px] uppercase leading-tight tracking-widest text-fg-dim sm:text-[10px]">Years<br />Experience</div>
         </div>
         <div className="flex items-center gap-2.5">
           <div className="font-sans text-2xl font-bold tracking-tighter text-white sm:text-3xl">50+</div>
-          <div className="font-mono text-[9px] uppercase leading-tight tracking-widest text-fg-dim sm:text-[10px]">Projects<br/>Shipped</div>
+          <div className="font-mono text-[9px] uppercase leading-tight tracking-widest text-fg-dim sm:text-[10px]">Projects<br />Shipped</div>
         </div>
         <div className="flex items-center gap-2.5">
           <div className="font-sans text-2xl font-bold tracking-tighter text-white sm:text-3xl">UTC+7</div>
-          <div className="font-mono text-[9px] uppercase leading-tight tracking-widest text-fg-dim sm:text-[10px]">Remote<br/>Vietnam</div>
+          <div className="font-mono text-[9px] uppercase leading-tight tracking-widest text-fg-dim sm:text-[10px]">Remote<br />Vietnam</div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function HeroLoader() {
-  return (
-    <div
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0 z-10 hidden items-center justify-center sm:flex"
-    >
-      <div className="hero-loader-grid" aria-hidden="true">
-        {Array.from({ length: 9 }, (_, i) => (
-          <span key={i} style={{ "--i": i } as React.CSSProperties} />
-        ))}
       </div>
     </div>
   );
