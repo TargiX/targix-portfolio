@@ -310,18 +310,14 @@
 .glass-dash-panel::before {
   content: "";
   position: absolute;
-  inset: -1px;
+  inset: 0;
   border-radius: inherit;
-  padding: 1px;
-  background: radial-gradient(
-    250px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
-    rgba(255, 255, 255, 0.8),
-    transparent 40%
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+  border: 1px solid transparent;
   pointer-events: none;
+  background:
+    linear-gradient(#000 0 0) padding-box,
+    radial-gradient(150px circle at var(--mouse-x, -500px) var(--mouse-y, -500px), rgba(255, 255, 255, 0.8), transparent 40%) border-box;
+  mix-blend-mode: screen;
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 10;

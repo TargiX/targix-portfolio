@@ -13,9 +13,12 @@ const workflowNodes = [
 ];
 
 const handlePanelPointerMove = (e: React.PointerEvent<HTMLElement>) => {
-  const rect = e.currentTarget.getBoundingClientRect();
-  e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
-  e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+  if (e.target !== e.currentTarget) return;
+  const parent = e.currentTarget.parentElement;
+  if (parent) {
+    parent.style.setProperty("--mouse-x", `${e.nativeEvent.offsetX}px`);
+    parent.style.setProperty("--mouse-y", `${e.nativeEvent.offsetY}px`);
+  }
 };
 
 function MetricsPanel() {
@@ -62,7 +65,6 @@ function MetricsPanel() {
       initial={{ opacity: 0, y: 30, scale: 0.95, z: -40 }}
       animate={{ opacity: 1, y: 0, scale: 1, z: -40 }}
       transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-      onPointerMove={handlePanelPointerMove}
     >
       <div className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: "radial-gradient(400px circle at var(--mouse-x, -200px) var(--mouse-y, -200px), rgba(255,255,255,0.06), transparent 40%)" }} />
       <div className="glass-dash-head relative z-10">
@@ -122,6 +124,7 @@ function MetricsPanel() {
           </svg>
         </div>
       </div>
+      <div className="absolute inset-0 !z-50 cursor-default" onPointerMove={handlePanelPointerMove} />
     </motion.article>
   );
 }
@@ -133,7 +136,6 @@ function WorkflowPanel() {
       initial={{ opacity: 0, y: 30, scale: 0.95, z: 30 }}
       animate={{ opacity: 1, y: 0, scale: 1, z: 30 }}
       transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      onPointerMove={handlePanelPointerMove}
     >
       <div className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: "radial-gradient(400px circle at var(--mouse-x, -200px) var(--mouse-y, -200px), rgba(255,255,255,0.06), transparent 40%)" }} />
       <div className="glass-dash-head relative z-10">
@@ -158,6 +160,7 @@ function WorkflowPanel() {
           </div>
         ))}
       </div>
+      <div className="absolute inset-0 !z-50 cursor-default" onPointerMove={handlePanelPointerMove} />
     </motion.article>
   );
 }
@@ -169,7 +172,6 @@ function EditorPanel() {
       initial={{ opacity: 0, y: 30, scale: 0.95, z: 100 }}
       animate={{ opacity: 1, y: 0, scale: 1, z: 100 }}
       transition={{ duration: 0.8, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      onPointerMove={handlePanelPointerMove}
     >
       <div className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: "radial-gradient(400px circle at var(--mouse-x, -200px) var(--mouse-y, -200px), rgba(255,255,255,0.06), transparent 40%)" }} />
       <div className="glass-dash-head relative z-10">
@@ -215,6 +217,7 @@ function EditorPanel() {
           ))}
         </div>
       </div>
+      <div className="absolute inset-0 !z-50 cursor-default" onPointerMove={handlePanelPointerMove} />
     </motion.article>
   );
 }
