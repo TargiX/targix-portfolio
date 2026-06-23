@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const workflowNodes = [
   { label: "User input", x: 14, y: 50, w: 18 },
@@ -12,6 +12,29 @@ const workflowNodes = [
 ];
 
 function MetricsPanel() {
+  const [metrics, setMetrics] = useState([
+    { label: "Users", value: 28400, delta: "+12.4%", format: (v: number) => `${(v / 1000).toFixed(1)}K` },
+    { label: "Sessions", value: 62700, delta: "+8.4%", format: (v: number) => `${(v / 1000).toFixed(1)}K` },
+    { label: "Conversion", value: 3.21, delta: "+2.1%", format: (v: number) => `${v.toFixed(2)}%` },
+  ]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMetrics((prev) =>
+        prev.map((m) => {
+          if (m.label === "Conversion") {
+            const change = (Math.random() - 0.5) * 0.06;
+            return { ...m, value: Math.max(0, m.value + change) };
+          } else {
+            const change = Math.floor((Math.random() - 0.5) * 18);
+            return { ...m, value: Math.max(0, m.value + change) };
+          }
+        })
+      );
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <article className="glass-dash-panel glass-dash-panel--metrics">
       <div className="glass-dash-head">
@@ -21,16 +44,12 @@ function MetricsPanel() {
       </div>
       <div className="mt-3 grid grid-cols-[72px_minmax(0,1fr)] gap-3">
         <div className="grid gap-2">
-          {[
-            ["Users", "28.4K", "+12.4%"],
-            ["Sessions", "62.7K", "+8.4%"],
-            ["Conversion", "3.21%", "+2.1%"],
-          ].map(([label, value, delta]) => (
-            <div key={label} className="rounded-md border border-white/8 bg-white/[0.035] px-2 py-1.5">
-              <div className="text-[7px] text-fg-dim">{label}</div>
+          {metrics.map((m) => (
+            <div key={m.label} className="rounded-md border border-white/8 bg-white/[0.035] px-2 py-1.5">
+              <div className="text-[7px] text-fg-dim">{m.label}</div>
               <div className="mt-0.5 flex items-baseline justify-between gap-1">
-                <span className="text-[10px] text-fg">{value}</span>
-                <span className="text-[7px] text-[var(--accent)]">{delta}</span>
+                <span className="text-[10px] text-fg transition-all duration-300">{m.format(m.value)}</span>
+                <span className="text-[7px] text-[var(--accent)]">{m.delta}</span>
               </div>
             </div>
           ))}
@@ -47,9 +66,9 @@ function MetricsPanel() {
             <path fill="url(#metricFill)">
               <animate
                 attributeName="d"
-                values="M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52 L256 124 L4 124 Z;
-                        M4 104 C28 68 42 48 60 82 C82 120 100 48 124 64 C142 74 148 104 170 86 C192 60 206 28 224 44 C238 56 238 96 256 60 L256 124 L4 124 Z;
-                        M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52 L256 124 L4 124 Z"
+                values="M 4 104 C 28 60, 42 42, 60 76 C 82 116, 100 38, 124 54 C 142 66, 148 98, 170 76 C 192 52, 206 18, 224 34 C 238 48, 238 88, 256 52 L 256 124 L 4 124 Z;
+                        M 4 104 C 28 68, 42 48, 60 76 C 82 120, 100 48, 124 54 C 142 74, 148 104, 170 76 C 192 60, 206 28, 224 34 C 238 56, 238 96, 256 52 L 256 124 L 4 124 Z;
+                        M 4 104 C 28 60, 42 42, 60 76 C 82 116, 100 38, 124 54 C 142 66, 148 98, 170 76 C 192 52, 206 18, 224 34 C 238 48, 238 88, 256 52 L 256 124 L 4 124 Z"
                 dur="8s"
                 repeatCount="indefinite"
               />
@@ -62,31 +81,24 @@ function MetricsPanel() {
             >
               <animate
                 attributeName="d"
-                values="M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52;
-                        M4 104 C28 68 42 48 60 82 C82 120 100 48 124 64 C142 74 148 104 170 86 C192 60 206 28 224 44 C238 56 238 96 256 60;
-                        M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52"
+                values="M 4 104 C 28 60, 42 42, 60 76 C 82 116, 100 38, 124 54 C 142 66, 148 98, 170 76 C 192 52, 206 18, 224 34 C 238 48, 238 88, 256 52;
+                        M 4 104 C 28 68, 42 48, 60 76 C 82 120, 100 48, 124 54 C 142 74, 148 104, 170 76 C 192 60, 206 28, 224 34 C 238 56, 238 96, 256 52;
+                        M 4 104 C 28 60, 42 42, 60 76 C 82 116, 100 38, 124 54 C 142 66, 148 98, 170 76 C 192 52, 206 18, 224 34 C 238 48, 238 88, 256 52"
                 dur="8s"
                 repeatCount="indefinite"
               />
             </path>
             {[4, 60, 124, 170, 224, 256].map((x, i) => {
-              const yVals1 = [104, 76, 54, 76, 34, 52];
-              const yVals2 = [104, 82, 64, 86, 44, 60];
+              const yVals = [104, 76, 54, 76, 34, 52];
               return (
                 <circle 
                   key={x} 
                   cx={x} 
+                  cy={yVals[i]}
                   r="2.4" 
                   fill="rgb(var(--accent-rgb))"
                   style={{ animation: `point-pulse ${2 + i * 0.5}s ease-in-out infinite alternate` }}
-                >
-                  <animate 
-                    attributeName="cy" 
-                    values={`${yVals1[i]}; ${yVals2[i]}; ${yVals1[i]}`} 
-                    dur="8s" 
-                    repeatCount="indefinite" 
-                  />
-                </circle>
+                />
               );
             })}
           </svg>
