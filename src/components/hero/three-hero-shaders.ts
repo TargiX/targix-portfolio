@@ -88,7 +88,7 @@ void main(){
   
   vec3 spotColor = mix(accHover, spotColorLight, uLight);
   float spotAlpha = mGlow * uMouseActive;
-  col += accHover * spotAlpha * mix(0.42, 0.0, uLight); // keep original in dark mode
+  col += accHover * spotAlpha * mix(0.12, 0.0, uLight); // keep original in dark mode
   col += (grain(p+uTime*13.0)-0.5) * 0.006;
   vec2 vc = p/uResolution - 0.5;
   float vd = length(vc);

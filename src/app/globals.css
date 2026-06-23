@@ -284,19 +284,6 @@
   transform: rotateX(10deg) rotateY(-22deg) rotateZ(-2deg);
 }
 
-.hero-caustic-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 11;
-  pointer-events: none;
-  opacity: var(--hero-caustic-o, 0.2);
-  mix-blend-mode: screen;
-  background:
-    radial-gradient(260px 130px at var(--hero-glass-x, 70%) var(--hero-glass-y, 38%), color-mix(in oklab, var(--accent) 12%, transparent), transparent 70%),
-    conic-gradient(from 118deg at var(--hero-glass-x, 70%) var(--hero-glass-y, 38%), transparent 0 16%, rgb(255 255 255 / 0.1) 18%, transparent 22% 43%, color-mix(in oklab, var(--accent) 7%, transparent) 46%, transparent 51% 100%);
-  filter: blur(18px);
-  transition: opacity 0.5s ease;
-}
 
 .glass-dash-panel {
   position: absolute;
@@ -431,8 +418,8 @@
 }
 
 @keyframes point-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); filter: brightness(1) drop-shadow(0 0 12px color-mix(in oklab, var(--accent) 38%, transparent)); }
-  50% { opacity: 0.7; transform: scale(0.8); filter: brightness(0.8) drop-shadow(0 0 4px transparent); }
+  0%, 100% { opacity: 1; filter: brightness(1) drop-shadow(0 0 12px color-mix(in oklab, var(--accent) 38%, transparent)); }
+  50% { opacity: 0.5; filter: brightness(0.6) drop-shadow(0 0 2px transparent); }
 }
 
 @keyframes slider-drift {
