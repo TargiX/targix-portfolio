@@ -188,7 +188,7 @@ export function Hero() {
         }}
       />
 
-          (WebGL draws the visible text; this keeps it a real, focusable anchor). */}
+      {/* (WebGL draws the visible text; this keeps it a real, focusable anchor). */}
       {webglReady && !isMobile && linkRect && (
         <a
           href="#work"
