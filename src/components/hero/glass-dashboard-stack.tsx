@@ -18,6 +18,15 @@ function MetricsPanel() {
     { label: "Conversion", value: 3.21, delta: "+2.1%", format: (v: number) => `${v.toFixed(2)}%` },
   ]);
 
+  const [points, setPoints] = useState([
+    { x: 4, y: 104 },
+    { x: 60, y: 76 },
+    { x: 124, y: 54 },
+    { x: 170, y: 76 },
+    { x: 224, y: 34 },
+    { x: 256, y: 52 },
+  ]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setMetrics((prev) =>
@@ -31,9 +40,33 @@ function MetricsPanel() {
           }
         })
       );
+      setPoints((prev) =>
+        prev.map((p, i) => {
+          // Keep the first and last points pinned to edges, but allow them to move vertically slightly
+          const maxShift = i === 0 || i === prev.length - 1 ? 8 : 18;
+          let newY = p.y + (Math.random() - 0.5) * maxShift;
+          newY = Math.max(20, Math.min(110, newY)); // clamp
+          return { ...p, y: newY };
+        })
+      );
     }, 2500);
     return () => clearInterval(interval);
   }, []);
+
+  // Catmull-Rom spline path generation for perfect C1 continuous smoothing
+  let smoothPath = `M ${points[0].x} ${points[0].y}`;
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[i === 0 ? 0 : i - 1];
+    const p1 = points[i];
+    const p2 = points[i + 1];
+    const p3 = points[i + 2 >= points.length ? i + 1 : i + 2];
+    const cp1x = p1.x + (p2.x - p0.x) / 6;
+    const cp1y = p1.y + (p2.y - p0.y) / 6;
+    const cp2x = p2.x - (p3.x - p1.x) / 6;
+    const cp2y = p2.y - (p3.y - p1.y) / 6;
+    smoothPath += ` C ${cp1x.toFixed(2)} ${cp1y.toFixed(2)}, ${cp2x.toFixed(2)} ${cp2y.toFixed(2)}, ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
+  }
+  const fillPath = smoothPath + ` L 256 124 L 4 124 Z`;
 
   return (
     <article className="glass-dash-panel glass-dash-panel--metrics">
@@ -64,43 +97,34 @@ function MetricsPanel() {
               </linearGradient>
             </defs>
             <path 
-              d="M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52 L256 124 L4 124 Z" 
+              d={fillPath} 
               fill="url(#metricFill)"
-            >
-              <animate
-                attributeName="d"
-                values="M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52 L256 124 L4 124 Z;M4 104 C28 56 42 46 60 76 C82 112 100 42 124 54 C142 62 148 94 170 76 C192 56 206 22 224 34 C238 44 238 84 256 52 L256 124 L4 124 Z;M4 104 C28 64 42 38 60 76 C82 120 100 34 124 54 C142 70 148 102 170 76 C192 48 206 14 224 34 C238 52 238 92 256 52 L256 124 L4 124 Z;M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52 L256 124 L4 124 Z"
-                dur="8s"
-                repeatCount="indefinite"
-              />
-            </path>
+              className="transition-all ease-linear"
+              style={{ transitionDuration: "2500ms" }}
+            />
             <path
-              d="M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52"
+              d={smoothPath}
               fill="none"
               stroke="rgb(var(--accent-rgb))"
               strokeWidth="2"
               strokeLinecap="round"
-            >
-              <animate
-                attributeName="d"
-                values="M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52;M4 104 C28 56 42 46 60 76 C82 112 100 42 124 54 C142 62 148 94 170 76 C192 56 206 22 224 34 C238 44 238 84 256 52;M4 104 C28 64 42 38 60 76 C82 120 100 34 124 54 C142 70 148 102 170 76 C192 48 206 14 224 34 C238 52 238 92 256 52;M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52"
-                dur="8s"
-                repeatCount="indefinite"
+              className="transition-all ease-linear"
+              style={{ transitionDuration: "2500ms" }}
+            />
+            {points.map((p, i) => (
+              <circle 
+                key={p.x} 
+                cx={p.x} 
+                cy={p.y}
+                r="2.4" 
+                fill="rgb(var(--accent-rgb))"
+                className="transition-all ease-linear"
+                style={{ 
+                  transitionDuration: "2500ms",
+                  animation: `point-pulse ${2 + i * 0.5}s ease-in-out infinite alternate` 
+                }}
               />
-            </path>
-            {[4, 60, 124, 170, 224, 256].map((x, i) => {
-              const yVals = [104, 76, 54, 76, 34, 52];
-              return (
-                <circle 
-                  key={x} 
-                  cx={x} 
-                  cy={yVals[i]}
-                  r="2.4" 
-                  fill="rgb(var(--accent-rgb))"
-                  style={{ animation: `point-pulse ${2 + i * 0.5}s ease-in-out infinite alternate` }}
-                />
-              );
-            })}
+            ))}
           </svg>
         </div>
       </div>
