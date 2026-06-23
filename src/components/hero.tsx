@@ -198,50 +198,47 @@ export function Hero() {
 function HeroCopy() {
   return (
     <div className="relative z-10 mx-auto flex min-h-[calc(92svh-var(--nav-h))] max-w-[1280px] flex-col justify-center px-5 pb-7 pt-6 sm:px-8 md:pb-32">
-      <div className="max-w-[700px]">
-        {/* Pill */}
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 font-mono text-[10px] tracking-[0.15em] text-fg sm:text-[11px]">
-          <span className="size-1.5 rounded-full bg-[var(--accent)] shadow-[0_0_8px_var(--accent)]" />
+      <div>
+        {/* Subtitle */}
+        <div className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-fg-muted sm:mb-6 sm:text-[12px]">
           SENIOR FRONTEND ENGINEER
         </div>
 
         {/* Headline */}
-        <h1 className="m-0 mb-6 font-sans text-[44px] font-bold leading-[1.05] tracking-tight text-white sm:text-[64px]">
+        <h1 className="m-0 mb-8 max-w-[800px] font-sans text-[44px] font-bold leading-[1.05] tracking-tight text-white sm:text-[64px]">
           BUILDING HIGH-PERFORMANCE WEB EXPERIENCES
         </h1>
 
         {/* Value Props Bullets */}
-        <ul className="mb-10 flex flex-col gap-4 font-mono text-[13px] leading-relaxed text-fg-muted sm:text-[15px]">
+        <ul className="mb-10 flex max-w-[600px] flex-col gap-4 font-mono text-[13px] leading-relaxed text-fg-muted sm:text-[15px]">
           <li className="flex items-start gap-3">
-            <svg className="mt-0.5 size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="mt-[3px] size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
             </svg>
             <span><strong className="font-semibold text-white">Proactive Architect:</strong> I suggest architectures that actually scale and save time.</span>
           </li>
           <li className="flex items-start gap-3">
-            <svg className="mt-0.5 size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="mt-[3px] size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
             </svg>
             <span><strong className="font-semibold text-white">Cutting Edge:</strong> Always utilizing modern tech (React 19, Vue 3, AI Workflows).</span>
           </li>
           <li className="flex items-start gap-3">
-            <svg className="mt-0.5 size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="mt-[3px] size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
-            <span><strong className="font-semibold text-white">Reliable Partner:</strong> Transparent communication, remote from Vietnam (UTC+7).</span>
+            <span><strong className="font-semibold text-white">Product Owner Mindset:</strong> I take full ownership of the frontend, from architecture to delivery.</span>
           </li>
         </ul>
 
         {/* CTAs */}
         <div className="flex flex-wrap items-center gap-4">
-          <a
-            href="https://t.me/placeholder_username"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-11 items-center justify-center rounded-md bg-[var(--accent)] px-6 font-mono text-[13px] font-semibold tracking-wide text-black transition-transform hover:scale-[1.02] active:scale-[0.98]"
+          <button
+            type="button"
+            className="inline-flex h-11 items-center justify-center rounded-md bg-[var(--accent)] px-6 font-mono text-[14px] font-bold tracking-wide text-[#000] transition-transform hover:scale-[1.02] active:scale-[0.98]"
           >
-            Contact on Telegram
-          </a>
+            Contact Me
+          </button>
           <a
             href="#work"
             className="group inline-flex h-11 items-center justify-center gap-2 rounded-md px-4 font-mono text-[13px] tracking-wide text-fg transition-colors hover:text-white"
