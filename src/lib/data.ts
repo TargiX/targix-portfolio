@@ -120,7 +120,7 @@ export const MORE: Project[] = [
     role: "Solo · Product Design + Eng",
     title: "Roomboard",
     blurb:
-      "A live realtime collaboration room for moodboards, landing-page reviews, and creative decisions, open at roomboard.online. Drop images, write notes, add comments, link cards, and share one lockable room URL.",
+      "A private-by-default visual decision room for landing-page reviews, moodboards, and creative feedback. Open a room, invite editors or viewers, comment on cards, and close the loop.",
     tags: ["Next.js 16", "React 19", "Pixi.js", "Elixir/Phoenix", "Supabase", "Realtime", "Canvas UX"],
     links: [
       { label: "roomboard.online", href: "https://roomboard.online" },

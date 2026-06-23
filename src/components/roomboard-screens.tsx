@@ -8,7 +8,7 @@ const SCREENS = {
     src: "/work/roomboard/landing-hero.png",
     aspect: "aspect-[16/9]",
     caption:
-      "The landing page explains the product through the real object: a room, a shared board, and the promise of no-account visual collaboration.",
+      "The landing page explains the product through the real object: a private room, a shared board, and role-specific invite links.",
   },
   canvas: {
     src: "/work/roomboard/canvas-room.png",
