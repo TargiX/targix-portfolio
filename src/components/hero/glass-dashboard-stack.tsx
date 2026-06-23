@@ -121,13 +121,10 @@ function WorkflowPanel() {
       </div>
       <div className="relative mt-4 h-[148px] overflow-hidden rounded-md border border-white/8 bg-black/10">
         <svg className="absolute inset-0 size-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M 23 50 L 28.5 30
-                   M 23 50 L 27 70
-                   M 47.5 30 L 50.5 30
-                   M 49 70 L 52 70
-                   M 73.5 30 L 78 50
-                   M 72 70 L 78 50"
-                stroke="rgba(125,249,174,.45)" strokeWidth="1" vectorEffect="non-scaling-stroke" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          <path 
+            d="M 23 50 L 28.5 30 M 23 50 L 27 70 M 47.5 30 L 50.5 30 M 49 70 L 52 70 M 73.5 30 L 78 50 M 72 70 L 78 50"
+            stroke="rgba(125,249,174,.45)" strokeWidth="1" vectorEffect="non-scaling-stroke" fill="none" strokeLinecap="round" strokeLinejoin="round" 
+          />
         </svg>
         {workflowNodes.map((node) => (
           <div
