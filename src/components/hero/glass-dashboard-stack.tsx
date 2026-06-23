@@ -268,18 +268,33 @@ export function GlassDashboardStack() {
         <EditorPanel />
       </div>
 
-      <div className="hero-dashboard-label hero-dashboard-label--one">
+      <motion.div 
+        className="hero-dashboard-label hero-dashboard-label--one"
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+      >
         <span />
         <div>01 /<br />Data dashboard</div>
-      </div>
-      <div className="hero-dashboard-label hero-dashboard-label--two">
+      </motion.div>
+      <motion.div 
+        className="hero-dashboard-label hero-dashboard-label--two"
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      >
         <span />
         <div>02 /<br />AI workflow</div>
-      </div>
-      <div className="hero-dashboard-label hero-dashboard-label--three">
+      </motion.div>
+      <motion.div 
+        className="hero-dashboard-label hero-dashboard-label--three"
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      >
         <span />
         <div>03 /<br />Visual editor</div>
-      </div>
+      </motion.div>
     </div>
   );
 }

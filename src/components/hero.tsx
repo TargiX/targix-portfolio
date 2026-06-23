@@ -200,13 +200,13 @@ function HeroCopy() {
     <div className="relative z-10 mx-auto flex min-h-[calc(92svh-var(--nav-h))] max-w-[1280px] flex-col justify-center px-5 pb-7 pt-6 sm:px-8 xl:px-0 md:pb-32">
       <div className="w-full">
         {/* Subtitle */}
-        <div className="mb-2 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-fg-muted sm:mb-3 sm:text-[12px]">
-          SENIOR FRONTEND ENGINEER
+        <div className="mb-4 font-mono text-[12px] font-medium tracking-[0.1em] text-[var(--accent)] sm:mb-6 sm:text-[13px]">
+          — Senior Frontend Engineer
         </div>
 
         {/* Headline */}
-        <h1 className="m-0 mb-6 max-w-[850px] font-sans text-[36px] font-bold leading-[1.05] tracking-tighter text-white sm:text-[48px] md:text-[56px]">
-          ILYA MOSKOVKIN
+        <h1 className="m-0 mb-8 max-w-[850px] font-sans text-[44px] font-light leading-[1.1] tracking-tight text-white sm:text-[64px] md:text-[72px]">
+          Ilya Moskovkin
         </h1>
 
         {/* Value Props Bullets */}
