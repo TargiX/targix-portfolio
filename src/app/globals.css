@@ -347,7 +347,7 @@
 }
 
 .glass-dash-panel--metrics {
-  right: 6%;
+  right: -2%;
   top: 0;
   width: 61%;
   min-height: 210px;
@@ -356,7 +356,7 @@
 }
 
 .glass-dash-panel--workflow {
-  right: 8%;
+  right: 0%;
   top: 26%;
   width: 72%;
   min-height: 238px;
@@ -365,7 +365,7 @@
 }
 
 .glass-dash-panel--editor {
-  right: 2%;
+  right: -6%;
   bottom: 8%;
   width: 88%;
   min-height: 236px;
@@ -410,20 +410,20 @@
 }
 
 .hero-dashboard-label--one {
-  right: -2%;
+  right: -22%;
   top: 10%;
 }
 
 .hero-dashboard-label--two {
-  left: -2%;
+  left: 8%;
   top: 36%;
   flex-direction: row-reverse;
   text-align: right;
 }
 
 .hero-dashboard-label--three {
-  right: -5%;
-  bottom: 12%;
+  right: -22%;
+  bottom: 58%;
 }
 
 @media (max-width: 1023px) {
