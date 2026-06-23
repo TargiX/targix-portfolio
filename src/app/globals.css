@@ -255,33 +255,65 @@
 }
 
 .hero-dashboard-stack {
+  --glass-rx: 0deg;
+  --glass-ry: 0deg;
+  --glass-glare-x: 50%;
+  --glass-glare-y: 50%;
   position: absolute;
   z-index: 12;
-  inset: 6% max(16px, calc((100vw - 1280px) / 2 - 70px)) 19% auto;
+  inset: 7% max(18px, calc((100vw - 1280px) / 2 + 18px)) 20% auto;
   width: min(48vw, 740px);
   pointer-events: none;
-  perspective: 1400px;
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
   transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+  transform: rotateX(var(--glass-rx)) rotateY(var(--glass-ry));
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-dashboard-panels-wrapper {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+  transform: rotateX(10deg) rotateY(-22deg) rotateZ(-2deg);
+}
+
+.hero-caustic-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 11;
+  pointer-events: none;
+  opacity: var(--hero-caustic-o, 0.2);
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(260px 130px at var(--hero-glass-x, 70%) var(--hero-glass-y, 38%), color-mix(in oklab, var(--accent) 12%, transparent), transparent 70%),
+    conic-gradient(from 118deg at var(--hero-glass-x, 70%) var(--hero-glass-y, 38%), transparent 0 16%, rgb(255 255 255 / 0.1) 18%, transparent 22% 43%, color-mix(in oklab, var(--accent) 7%, transparent) 46%, transparent 51% 100%);
+  filter: blur(18px);
+  transition: opacity 0.5s ease;
 }
 
 .glass-dash-panel {
   position: absolute;
   overflow: hidden;
-  border: 1px solid rgb(255 255 255 / 0.13);
+  border: 1px solid rgb(255 255 255 / 0.11);
   border-radius: 18px;
   background:
-    linear-gradient(135deg, rgb(255 255 255 / 0.11), rgb(255 255 255 / 0.025) 44%, rgb(45 212 191 / 0.055)),
-    rgb(7 14 17 / 0.55);
+    linear-gradient(135deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.02) 46%, color-mix(in oklab, var(--accent) 5%, transparent)),
+    rgb(7 14 15 / 0.4);
   color: var(--fg);
   font-family: var(--font-mono);
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.14),
-    inset 0 -1px 0 rgb(45 212 191 / 0.18),
-    0 0 0 1px color-mix(in oklab, var(--accent-2) 15%, transparent),
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    inset 0 -1px 0 color-mix(in oklab, var(--accent) 16%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--accent) 7%, transparent),
     0 18px 54px rgb(0 0 0 / 0.34),
-    0 0 42px color-mix(in oklab, var(--accent-2) 13%, transparent);
-  backdrop-filter: blur(18px) saturate(1.35);
-  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+    0 0 28px color-mix(in oklab, var(--accent) 6%, transparent);
+  backdrop-filter: blur(20px) saturate(1.1) contrast(1.03);
+  -webkit-backdrop-filter: blur(20px) saturate(1.1) contrast(1.03);
+  transform-origin: 82% 48%;
+  transform-style: preserve-3d;
 }
 
 .glass-dash-panel::before {
@@ -290,9 +322,11 @@
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(42% 24% at 84% 92%, color-mix(in oklab, var(--accent) 38%, transparent), transparent 70%),
-    linear-gradient(110deg, transparent 0%, rgb(255 255 255 / 0.12) 46%, transparent 56%);
-  opacity: 0.62;
+    radial-gradient(46% 28% at var(--glass-glare-x) var(--glass-glare-y), rgb(255 255 255 / 0.18), transparent 70%),
+    radial-gradient(42% 24% at 84% 92%, color-mix(in oklab, var(--accent) 20%, transparent), transparent 70%),
+    linear-gradient(108deg, transparent 0%, rgb(255 255 255 / 0.1) 46%, transparent 56%);
+  opacity: 0.46;
+  mix-blend-mode: screen;
 }
 
 .glass-dash-panel::after {
@@ -302,9 +336,9 @@
   border-radius: inherit;
   pointer-events: none;
   box-shadow:
-    14px 0 28px -22px color-mix(in oklab, var(--accent-2) 80%, transparent) inset,
-    -14px 0 28px -22px color-mix(in oklab, var(--accent) 75%, transparent) inset,
-    0 -18px 34px -26px color-mix(in oklab, var(--accent-2) 85%, transparent) inset;
+    14px 0 28px -23px color-mix(in oklab, white 54%, transparent) inset,
+    -14px 0 28px -23px color-mix(in oklab, var(--accent) 38%, transparent) inset,
+    0 -18px 34px -26px color-mix(in oklab, var(--accent) 42%, transparent) inset;
 }
 
 .glass-dash-panel > * {
@@ -313,30 +347,30 @@
 }
 
 .glass-dash-panel--metrics {
-  right: 4%;
+  right: 6%;
   top: 0;
-  width: 58%;
+  width: 61%;
   min-height: 210px;
   padding: 16px;
-  transform: rotateX(10deg) rotateY(-13deg) rotateZ(-3deg);
+  transform: translateZ(-40px);
 }
 
 .glass-dash-panel--workflow {
   right: 8%;
-  top: 27%;
-  width: 70%;
+  top: 26%;
+  width: 72%;
   min-height: 238px;
   padding: 16px;
-  transform: rotateX(8deg) rotateY(-9deg) rotateZ(-1deg);
+  transform: translateZ(30px);
 }
 
 .glass-dash-panel--editor {
-  right: 0;
-  bottom: 0;
-  width: 86%;
+  right: 2%;
+  bottom: 8%;
+  width: 88%;
   min-height: 236px;
   padding: 16px;
-  transform: rotateX(7deg) rotateY(-10deg) rotateZ(1deg);
+  transform: translateZ(100px);
 }
 
 .glass-dash-head {
@@ -352,7 +386,7 @@
   height: 6px;
   border-radius: 999px;
   background: var(--accent);
-  box-shadow: 0 0 16px color-mix(in oklab, var(--accent) 60%, transparent);
+  box-shadow: 0 0 12px color-mix(in oklab, var(--accent) 38%, transparent);
 }
 
 .hero-dashboard-label {
@@ -372,22 +406,24 @@
   margin-top: 7px;
   width: 36px;
   height: 1px;
-  background: color-mix(in oklab, var(--accent) 70%, transparent);
+  background: color-mix(in oklab, var(--accent) 50%, transparent);
 }
 
 .hero-dashboard-label--one {
-  right: -8%;
-  top: 20%;
+  right: -2%;
+  top: 10%;
 }
 
 .hero-dashboard-label--two {
-  left: -8%;
-  top: 43%;
+  left: -2%;
+  top: 36%;
+  flex-direction: row-reverse;
+  text-align: right;
 }
 
 .hero-dashboard-label--three {
-  right: -11%;
-  bottom: 17%;
+  right: -5%;
+  bottom: 12%;
 }
 
 @media (max-width: 1023px) {
