@@ -12,6 +12,12 @@ const workflowNodes = [
   { label: "Response", x: 86, y: 50, w: 16 },
 ];
 
+const handlePanelPointerMove = (e: React.PointerEvent<HTMLElement>) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+  e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+};
+
 function MetricsPanel() {
   const [metrics, setMetrics] = useState([
     { label: "Users", value: 28400, delta: "+12.4%", format: (v: number) => `${(v / 1000).toFixed(1)}K` },
@@ -52,12 +58,14 @@ function MetricsPanel() {
 
   return (
     <motion.article 
-      className="glass-dash-panel glass-dash-panel--metrics"
+      className="glass-dash-panel glass-dash-panel--metrics group"
       initial={{ opacity: 0, y: 30, scale: 0.95, z: -40 }}
       animate={{ opacity: 1, y: 0, scale: 1, z: -40 }}
       transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+      onPointerMove={handlePanelPointerMove}
     >
-      <div className="glass-dash-head">
+      <div className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" style={{ background: "radial-gradient(400px circle at var(--mouse-x, -200px) var(--mouse-y, -200px), rgba(255,255,255,0.06), transparent 40%)" }} />
+      <div className="glass-dash-head relative z-10">
         <span className="glass-dash-dot" />
         <span>Metrics Overview</span>
         <span className="ml-auto text-[8px] text-fg-dim">Last 7 days</span>
@@ -121,12 +129,14 @@ function MetricsPanel() {
 function WorkflowPanel() {
   return (
     <motion.article 
-      className="glass-dash-panel glass-dash-panel--workflow"
+      className="glass-dash-panel glass-dash-panel--workflow group"
       initial={{ opacity: 0, y: 30, scale: 0.95, z: 30 }}
       animate={{ opacity: 1, y: 0, scale: 1, z: 30 }}
       transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      onPointerMove={handlePanelPointerMove}
     >
-      <div className="glass-dash-head">
+      <div className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" style={{ background: "radial-gradient(400px circle at var(--mouse-x, -200px) var(--mouse-y, -200px), rgba(255,255,255,0.06), transparent 40%)" }} />
+      <div className="glass-dash-head relative z-10">
         <span className="glass-dash-dot" />
         <span>AI Workflow</span>
       </div>
@@ -155,12 +165,14 @@ function WorkflowPanel() {
 function EditorPanel() {
   return (
     <motion.article 
-      className="glass-dash-panel glass-dash-panel--editor"
+      className="glass-dash-panel glass-dash-panel--editor group"
       initial={{ opacity: 0, y: 30, scale: 0.95, z: 100 }}
       animate={{ opacity: 1, y: 0, scale: 1, z: 100 }}
       transition={{ duration: 0.8, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      onPointerMove={handlePanelPointerMove}
     >
-      <div className="glass-dash-head">
+      <div className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" style={{ background: "radial-gradient(400px circle at var(--mouse-x, -200px) var(--mouse-y, -200px), rgba(255,255,255,0.06), transparent 40%)" }} />
+      <div className="glass-dash-head relative z-10">
         <span>Visual Editor</span>
         <span className="ml-auto text-fg-dim">x</span>
       </div>
