@@ -200,34 +200,34 @@ function HeroCopy() {
     <div className="relative z-10 mx-auto flex min-h-[calc(92svh-var(--nav-h))] max-w-[1280px] flex-col justify-center px-5 pb-7 pt-6 sm:px-8 md:pb-32">
       <div className="w-full">
         {/* Subtitle */}
-        <div className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-fg-muted sm:mb-6 sm:text-[12px]">
+        <div className="mb-2 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-fg-muted sm:mb-3 sm:text-[12px]">
           SENIOR FRONTEND ENGINEER
         </div>
 
         {/* Headline */}
-        <h1 className="m-0 mb-8 max-w-[950px] font-sans text-[44px] font-bold leading-[1.05] tracking-tight text-white sm:text-[64px] md:text-[72px]">
+        <h1 className="m-0 mb-6 max-w-[850px] font-sans text-[36px] font-bold leading-[1.05] tracking-tighter text-white sm:text-[48px] md:text-[56px]">
           BUILDING HIGH-PERFORMANCE WEB EXPERIENCES
         </h1>
 
         {/* Value Props Bullets */}
-        <ul className="mb-10 flex max-w-[850px] flex-col gap-4 font-mono text-[13px] leading-relaxed text-fg-muted sm:text-[15px]">
-          <li className="flex items-start gap-3">
-            <svg className="mt-[3px] size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <ul className="mb-8 flex max-w-[850px] flex-col gap-3 font-sans text-[13px] leading-relaxed text-white/80 sm:text-[15px]">
+          <li className="flex items-start gap-2.5">
+            <svg className="mt-1 size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
             </svg>
-            <span><strong className="font-semibold text-white">Proactive Architect:</strong> I suggest architectures that actually scale and save time.</span>
+            <span><strong className="font-bold text-white">Proactive Architect:</strong> I suggest architectures that actually scale and save time.</span>
           </li>
-          <li className="flex items-start gap-3">
-            <svg className="mt-[3px] size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <li className="flex items-start gap-2.5">
+            <svg className="mt-1 size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
             </svg>
-            <span><strong className="font-semibold text-white">Cutting Edge:</strong> Always utilizing modern tech (React 19, Vue 3, AI Workflows).</span>
+            <span><strong className="font-bold text-white">Cutting Edge:</strong> Always utilizing modern tech (React 19, Vue 3, AI Workflows).</span>
           </li>
-          <li className="flex items-start gap-3">
-            <svg className="mt-[3px] size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <li className="flex items-start gap-2.5">
+            <svg className="mt-1 size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
-            <span><strong className="font-semibold text-white">Product Owner Mindset:</strong> I take full ownership of the frontend, from architecture to delivery.</span>
+            <span><strong className="font-bold text-white">Product Owner Mindset:</strong> I take full ownership of the frontend, from architecture to delivery.</span>
           </li>
         </ul>
 
@@ -256,18 +256,18 @@ function HeroCopy() {
       </div>
 
       {/* Bottom Stats Row */}
-      <div className="mt-12 flex flex-wrap items-center gap-8 border-t border-white/10 pt-6 sm:mt-16 sm:gap-12">
-        <div className="flex items-center gap-3">
-          <div className="font-sans text-3xl font-bold tracking-tighter text-white">10+</div>
-          <div className="font-mono text-[10px] uppercase leading-tight tracking-widest text-fg-dim">Years<br/>Experience</div>
+      <div className="mt-8 flex flex-wrap items-center gap-6 border-t border-white/10 pt-5 sm:mt-12 sm:gap-10">
+        <div className="flex items-center gap-2.5">
+          <div className="font-sans text-2xl font-bold tracking-tighter text-white sm:text-3xl">10+</div>
+          <div className="font-mono text-[9px] uppercase leading-tight tracking-widest text-fg-dim sm:text-[10px]">Years<br/>Experience</div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="font-sans text-3xl font-bold tracking-tighter text-white">50+</div>
-          <div className="font-mono text-[10px] uppercase leading-tight tracking-widest text-fg-dim">Projects<br/>Shipped</div>
+        <div className="flex items-center gap-2.5">
+          <div className="font-sans text-2xl font-bold tracking-tighter text-white sm:text-3xl">50+</div>
+          <div className="font-mono text-[9px] uppercase leading-tight tracking-widest text-fg-dim sm:text-[10px]">Projects<br/>Shipped</div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="font-sans text-3xl font-bold tracking-tighter text-white">UTC+7</div>
-          <div className="font-mono text-[10px] uppercase leading-tight tracking-widest text-fg-dim">Remote<br/>Vietnam</div>
+        <div className="flex items-center gap-2.5">
+          <div className="font-sans text-2xl font-bold tracking-tighter text-white sm:text-3xl">UTC+7</div>
+          <div className="font-mono text-[9px] uppercase leading-tight tracking-widest text-fg-dim sm:text-[10px]">Remote<br/>Vietnam</div>
         </div>
       </div>
     </div>
