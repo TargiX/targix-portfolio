@@ -12,18 +12,18 @@
   --nav-h: 56px;
 
   /* surfaces */
-  --bg:         oklch(0.985 0.003 250);
-  --bg-2:       oklch(0.955 0.004 250);
-  --bg-3:       oklch(0.925 0.006 250);
+  --bg: oklch(0.985 0.003 250);
+  --bg-2: oklch(0.955 0.004 250);
+  --bg-3: oklch(0.925 0.006 250);
 
   /* text */
-  --fg:         oklch(0.18  0.006 250);
-  --fg-muted:   oklch(0.43  0.006 250);
-  --fg-dim:     oklch(0.62  0.006 250);
+  --fg: oklch(0.18 0.006 250);
+  --fg-muted: oklch(0.43 0.006 250);
+  --fg-dim: oklch(0.62 0.006 250);
 
   /* lines */
-  --line:       oklch(0.78  0.006 250);
-  --line-soft:  oklch(0.86  0.005 250);
+  --line: oklch(0.78 0.006 250);
+  --line-soft: oklch(0.86 0.005 250);
 
   /* zone text colors (fallback to dark mode defaults since color-scheme is dynamic) */
   --zone-subject: var(--color-violet-200);
@@ -32,10 +32,10 @@
   --zone-aesthetic: var(--color-emerald-200);
 
   /* accent (overridable) */
-  --accent:     #166534;
+  --accent: #166534;
   --accent-rgb: 22 101 52;
   /* teal companion — blends with --accent for the blue-green flow */
-  --accent-2:     #047857;
+  --accent-2: #047857;
   --accent-2-rgb: 4 120 87;
 
   /* shadcn-compat tokens (mapped) */
@@ -64,18 +64,18 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* surfaces */
-    --bg:         oklch(0.135 0.005 250);
-    --bg-2:       oklch(0.165 0.006 250);
-    --bg-3:       oklch(0.19  0.007 250);
+    --bg: oklch(0.135 0.005 250);
+    --bg-2: oklch(0.165 0.006 250);
+    --bg-3: oklch(0.19 0.007 250);
 
     /* text */
-    --fg:         oklch(0.96  0.005 250);
-    --fg-muted:   oklch(0.62  0.005 250);
-    --fg-dim:     oklch(0.45  0.005 250);
+    --fg: oklch(0.96 0.005 250);
+    --fg-muted: oklch(0.62 0.005 250);
+    --fg-dim: oklch(0.45 0.005 250);
 
     /* lines */
-    --line:       oklch(0.26  0.005 250);
-    --line-soft:  oklch(0.22  0.005 250);
+    --line: oklch(0.26 0.005 250);
+    --line-soft: oklch(0.22 0.005 250);
 
     --zone-subject: var(--color-violet-200);
     --zone-setting: var(--color-cyan-200);
@@ -83,9 +83,9 @@
     --zone-aesthetic: var(--color-emerald-200);
 
     /* accent */
-    --accent:     #a3e635;
+    --accent: #a3e635;
     --accent-rgb: 163 230 53;
-    --accent-2:     #2dd4bf;
+    --accent-2: #2dd4bf;
     --accent-2-rgb: 45 212 191;
 
     --destructive: oklch(0.6 0.2 25);
@@ -96,24 +96,24 @@
 :root[data-theme="light"] {
   color-scheme: light;
 
-  --bg:         oklch(0.985 0.003 250);
-  --bg-2:       oklch(0.955 0.004 250);
-  --bg-3:       oklch(0.925 0.006 250);
-  --fg:         oklch(0.18  0.006 250);
-  --fg-muted:   oklch(0.43  0.006 250);
-  --fg-dim:     oklch(0.62  0.006 250);
-  --line:       oklch(0.78  0.006 250);
-  --line-soft:  oklch(0.86  0.005 250);
+  --bg: oklch(0.985 0.003 250);
+  --bg-2: oklch(0.955 0.004 250);
+  --bg-3: oklch(0.925 0.006 250);
+  --fg: oklch(0.18 0.006 250);
+  --fg-muted: oklch(0.43 0.006 250);
+  --fg-dim: oklch(0.62 0.006 250);
+  --line: oklch(0.78 0.006 250);
+  --line-soft: oklch(0.86 0.005 250);
   --zone-subject: var(--color-violet-800);
   --zone-setting: var(--color-cyan-800);
   --zone-mood: var(--color-amber-800);
   --zone-aesthetic: var(--color-emerald-800);
-  --accent:     #166534;
+  --accent: #166534;
   --accent-rgb: 22 101 52;
-  --accent-2:     #047857;
+  --accent-2: #047857;
   --accent-2-rgb: 4 120 87;
   /* sticky header bg — milky, not pure white, so it sits a step off the page bg */
-  --nav-bg:     lab(97 -0.4 -1.21);
+  --nav-bg: lab(97 -0.4 -1.21);
   --destructive: oklch(0.58 0.2 25);
   --destructive-foreground: var(--bg);
 }
@@ -121,26 +121,26 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --bg:         oklch(0.135 0.005 250);
-  --bg-2:       oklch(0.165 0.006 250);
-  --bg-3:       oklch(0.19  0.007 250);
-  --fg:         oklch(0.96  0.005 250);
-  --fg-muted:   oklch(0.62  0.005 250);
-  --fg-dim:     oklch(0.45  0.005 250);
-  --line:       oklch(0.26  0.005 250);
-  --line-soft:  oklch(0.22  0.005 250);
+  --bg: oklch(0.135 0.005 250);
+  --bg-2: oklch(0.165 0.006 250);
+  --bg-3: oklch(0.19 0.007 250);
+  --fg: oklch(0.96 0.005 250);
+  --fg-muted: oklch(0.62 0.005 250);
+  --fg-dim: oklch(0.45 0.005 250);
+  --line: oklch(0.26 0.005 250);
+  --line-soft: oklch(0.22 0.005 250);
   --zone-subject: var(--color-violet-200);
   --zone-setting: var(--color-cyan-200);
   --zone-mood: var(--color-amber-200);
   --zone-aesthetic: var(--color-emerald-200);
-  --accent:     #a3e635;
+  --accent: #a3e635;
   --accent-rgb: 163 230 53;
-  --accent-2:     #2dd4bf;
+  --accent-2: #2dd4bf;
   --accent-2-rgb: 45 212 191;
   /* sticky header bg — solid (opaque) so scrolling content doesn't bleed
      through; before this was 5% transparent and the header read as a bare
      overlay floating over the work. */
-  --nav-bg:     color-mix(in oklab, var(--bg), var(--bg-2) 30%);
+  --nav-bg: color-mix(in oklab, var(--bg), var(--bg-2) 30%);
   --destructive: oklch(0.6 0.2 25);
   --destructive-foreground: var(--fg);
 }
@@ -194,14 +194,18 @@
 }
 
 @keyframes hero-loader-wave {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.22;
     transform: scale(0.72);
   }
+
   38% {
     opacity: 1;
     transform: scale(1);
   }
+
   66% {
     opacity: 0.48;
     transform: scale(0.84);
@@ -341,7 +345,7 @@
     0 -18px 34px -26px color-mix(in oklab, var(--accent) 42%, transparent) inset;
 }
 
-.glass-dash-panel > * {
+.glass-dash-panel>* {
   position: relative;
   z-index: 1;
 }
@@ -415,15 +419,15 @@
 }
 
 .hero-dashboard-label--two {
-  left: 8%;
-  top: 36%;
+  left: 12%;
+  top: 40%;
   flex-direction: row-reverse;
   text-align: right;
 }
 
 .hero-dashboard-label--three {
-  right: -22%;
-  bottom: 58%;
+  right: -30%;
+  bottom: 30%;
 }
 
 @media (max-width: 1023px) {
@@ -521,7 +525,8 @@
   border-color: var(--border);
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   background: var(--bg);
@@ -538,9 +543,15 @@ body {
   min-height: 100svh;
 }
 
-::selection { background: var(--accent); color: var(--bg); }
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
 
-a { color: inherit; text-decoration: none; }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
 button:not(:disabled) {
   cursor: pointer;
@@ -552,14 +563,17 @@ button:not(:disabled) {
   scrollbar-width: thin;
   scrollbar-color: color-mix(in oklab, var(--fg) 20%, transparent) transparent;
 }
+
 /* WebKit (Chrome / Safari / Edge) */
 ::-webkit-scrollbar {
   width: 9px;
   height: 9px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   /* 3px transparent border + padding-box clip makes the visible thumb thin
      and floating instead of edge-to-edge. Soft neutral grey, not brand accent. */
@@ -569,10 +583,12 @@ button:not(:disabled) {
   background-clip: padding-box;
   transition: background-color 0.2s;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background-color: color-mix(in oklab, var(--fg) 36%, transparent);
   background-clip: padding-box;
 }
+
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
@@ -586,21 +602,25 @@ button:not(:disabled) {
   aspect-ratio: 1 / 1;
   perspective: 240px;
 }
+
 .contrib-flip {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
   transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
+
 .contrib-cell.flipped .contrib-flip {
   transform: rotateX(180deg);
 }
+
 .contrib-face {
   position: absolute;
   inset: 0;
   border-radius: 2px;
   backface-visibility: hidden;
 }
+
 .contrib-back {
   transform: rotateX(180deg);
 }
@@ -626,6 +646,7 @@ button:not(:disabled) {
   transition: opacity 0.14s ease;
   z-index: 50;
 }
+
 .contrib-tip::after {
   content: "";
   position: absolute;
@@ -640,22 +661,33 @@ button:not(:disabled) {
 }
 
 /* utility for accent-tinted spans */
-.hi { color: var(--fg); }
-.muted { color: var(--fg-dim); }
+.hi {
+  color: var(--fg);
+}
+
+.muted {
+  color: var(--fg-dim);
+}
 
 /* animated gradient for article headings (in-palette: lime → teal → soft lime) */
 @keyframes heading-gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
 }
+
 .heading-gradient {
-  background-image: linear-gradient(
-    110deg,
-    var(--accent),
-    #5eead4 35%,
-    #bef264 60%,
-    var(--accent)
-  );
+  background-image: linear-gradient(110deg,
+      var(--accent),
+      #5eead4 35%,
+      #bef264 60%,
+      var(--accent));
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -663,12 +695,19 @@ button:not(:disabled) {
   color: transparent;
   animation: heading-gradient-shift 6s ease-in-out infinite;
 }
+
 @media (prefers-reduced-motion: reduce) {
-  .heading-gradient { animation: none; }
+  .heading-gradient {
+    animation: none;
+  }
 }
 
 /* project-card title: lime→teal gradient sweeps in on card hover */
-.card-title { color: var(--fg); transition: color 0.3s; }
+.card-title {
+  color: var(--fg);
+  transition: color 0.3s;
+}
+
 .group\/card:hover .card-title {
   background-image: linear-gradient(110deg, var(--accent), var(--accent-2) 55%, var(--accent));
   -webkit-background-clip: text;
@@ -679,15 +718,17 @@ button:not(:disabled) {
 
 /* lab section title: same case-study gradient, but it only lights up + animates
    while the section is hovered — a cue for where one experiment starts and ends */
-.section-title { color: var(--fg); transition: color 0.3s; }
+.section-title {
+  color: var(--fg);
+  transition: color 0.3s;
+}
+
 .group\/section:hover .section-title {
-  background-image: linear-gradient(
-    110deg,
-    var(--accent),
-    #5eead4 35%,
-    #bef264 60%,
-    var(--accent)
-  );
+  background-image: linear-gradient(110deg,
+      var(--accent),
+      #5eead4 35%,
+      #bef264 60%,
+      var(--accent));
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -695,8 +736,11 @@ button:not(:disabled) {
   color: transparent;
   animation: heading-gradient-shift 6s ease-in-out infinite;
 }
+
 @media (prefers-reduced-motion: reduce) {
-  .group\/section:hover .section-title { animation: none; }
+  .group\/section:hover .section-title {
+    animation: none;
+  }
 }
 
 /* Light theme overrides: calm solid green instead of gradients */
@@ -708,7 +752,9 @@ button:not(:disabled) {
   color: var(--accent);
   animation: none;
 }
+
 @media (prefers-color-scheme: light) {
+
   :root:not([data-theme="dark"]) .group\/card:hover .card-title,
   :root:not([data-theme="dark"]) .group\/section:hover .section-title,
   :root:not([data-theme="dark"]) .heading-gradient {
@@ -734,15 +780,24 @@ button:not(:disabled) {
   background-size: 100% 100%, 200% 200%;
   background-position: 0% 50%;
 }
+
 .btn-gradient-border:hover {
   animation: heading-gradient-shift 6s ease-in-out infinite;
 }
+
 @media (prefers-reduced-motion: reduce) {
-  .btn-gradient-border:hover { animation: none; }
+  .btn-gradient-border:hover {
+    animation: none;
+  }
 }
 
 /* blinking caret */
-@keyframes blink { 50% { opacity: 0; } }
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
 .caret {
   display: inline-block;
   width: 0.5ch;
@@ -765,40 +820,42 @@ button:not(:disabled) {
   background-size: 22px 22px;
   background-position: 0 0;
   opacity: 0.07;
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    transparent 60vh,
-    black 95vh,
-    black calc(100% - 240px),
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    transparent 60vh,
-    black 95vh,
-    black calc(100% - 240px),
-    transparent 100%
-  );
+  -webkit-mask-image: linear-gradient(to bottom,
+      transparent 0%,
+      transparent 60vh,
+      black 95vh,
+      black calc(100% - 240px),
+      transparent 100%);
+  mask-image: linear-gradient(to bottom,
+      transparent 0%,
+      transparent 60vh,
+      black 95vh,
+      black calc(100% - 240px),
+      transparent 100%);
 }
 
 /* Light theme: the 7% accent dots vanish on a pale field — give the grid a
    denser, slightly darker dot so the texture still reads (light theme only). */
 :root[data-theme="light"] .body-dots {
-  background-image: radial-gradient(
-    circle,
-    color-mix(in oklab, var(--accent) 55%, #475569) 0.8px,
-    transparent 1.5px
-  );
+  background-image: radial-gradient(circle,
+      color-mix(in oklab, var(--accent) 55%, #475569) 0.8px,
+      transparent 1.5px);
   opacity: 0.18;
 }
 
 /* status dot pulse */
 @keyframes status-pulse {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
+
 .status-dot {
   width: 6px;
   height: 6px;
@@ -813,20 +870,45 @@ button:not(:disabled) {
    soft color glows, and a few slow twinkling specks. */
 
 @keyframes stage-blob-drift {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50%      { transform: translate3d(4%, -3%, 0) scale(1.08); }
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(4%, -3%, 0) scale(1.08);
+  }
 }
+
 @keyframes stage-dust-float {
-  0%   { transform: translateY(0)   translateX(0); opacity: 0; }
-  15%  { opacity: var(--dust-o, 0.5); }
-  85%  { opacity: var(--dust-o, 0.5); }
-  100% { transform: translateY(-40px) translateX(8px); opacity: 0; }
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: var(--dust-o, 0.5);
+  }
+
+  85% {
+    opacity: var(--dust-o, 0.5);
+  }
+
+  100% {
+    transform: translateY(-40px) translateX(8px);
+    opacity: 0;
+  }
 }
+
 @keyframes stage-grid-shimmer {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.14;
     transform: translate3d(0, 0, 0);
   }
+
   50% {
     opacity: 0.24;
     transform: translate3d(8px, -6px, 0);
@@ -852,8 +934,9 @@ button:not(:disabled) {
     radial-gradient(ellipse 48% 38% at var(--stage-grid-secondary, 70% 70%), rgb(0 0 0 / 0.68) 0%, rgb(0 0 0 / 0.24) 40%, transparent 76%),
     linear-gradient(180deg, transparent 0%, black 18%, black 82%, transparent 100%);
   -webkit-mask-composite: source-over, source-over, source-in;
-          mask-composite: add, add, intersect;
+  mask-composite: add, add, intersect;
 }
+
 .stage-blob {
   position: absolute;
   border-radius: 50%;
@@ -862,6 +945,7 @@ button:not(:disabled) {
   animation: stage-blob-drift 18s ease-in-out infinite;
   will-change: transform;
 }
+
 .stage-dust {
   position: absolute;
   width: 2px;
@@ -873,8 +957,16 @@ button:not(:disabled) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stage-blob, .stage-grid, .stage-dust { animation: none; }
-  .stage-dust { opacity: 0; }
+
+  .stage-blob,
+  .stage-grid,
+  .stage-dust {
+    animation: none;
+  }
+
+  .stage-dust {
+    opacity: 0;
+  }
 }
 
 html {
@@ -894,7 +986,10 @@ html {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
-.ribbon-track::-webkit-scrollbar { display: none; }
+
+.ribbon-track::-webkit-scrollbar {
+  display: none;
+}
 
 @media (prefers-reduced-motion: reduce) {
   html {

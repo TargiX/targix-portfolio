@@ -207,7 +207,7 @@ export function ThreeHero({
     };
 
     function layout() {
-      const padLeft = Math.max(24, (W - 1280) / 2 + 32);
+      const padLeft = Math.max(24, (W - 1280) / 2 - 68);
       const colLeft = -W / 2 + padLeft;
       // Editorial display scale — "Ilya Moskovkin" fits one line, cube floats
       // over it on the right (unchanged) and refracts the giant glyphs.
@@ -220,7 +220,7 @@ export function ThreeHero({
       const gapPara = 34;
       const total = fontH1 + gapH1 + paraH + gapPara + 18;
 
-      let y = total / 2;
+      let y = total / 2 + Math.min(92, H * 0.1);
       const place = (t: { position: THREE.Object3D["position"] }, h: number, gap: number) => {
         t.position.set(colLeft, y, 0);
         y -= h + gap;

@@ -188,6 +188,7 @@ export function Hero() {
         }}
       />
 
+      <div className="hero-caustic-layer" aria-hidden="true" />
 
       {/* transparent, clickable overlay for the "jump to work" link - desktop only
           (WebGL draws the visible text; this keeps it a real, focusable anchor). */}
