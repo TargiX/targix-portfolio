@@ -8,7 +8,7 @@ export function RoomboardShowcase() {
         alt="Roomboard private room landing preview"
         fill
         sizes="(min-width: 1024px) 620px, 100vw"
-        className="scale-[1.02] object-cover object-top transition duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/card:scale-[1.07]"
+        className="object-cover object-top"
       />
 
       {/* subtle edge vignette only — the title + description live below the card */}

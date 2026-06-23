@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 
 const workflowNodes = [
   { label: "User input", x: 14, y: 50, w: 18 },
@@ -12,55 +12,7 @@ const workflowNodes = [
   { label: "Response", x: 86, y: 50, w: 16 },
 ];
 
-const getCenterOfElement = (el: HTMLElement) => {
-  return [el.offsetWidth / 2, el.offsetHeight / 2];
-};
-
-const getEdgeProximity = (el: HTMLElement, x: number, y: number) => {
-  const [cx, cy] = getCenterOfElement(el);
-  const dx = x - cx;
-  const dy = y - cy;
-  let kx = Infinity;
-  let ky = Infinity;
-  if (dx !== 0) kx = cx / Math.abs(dx);
-  if (dy !== 0) ky = cy / Math.abs(dy);
-  return Math.min(Math.max(1 / Math.min(kx, ky), 0), 1);
-};
-
-const getCursorAngle = (el: HTMLElement, x: number, y: number) => {
-  const [cx, cy] = getCenterOfElement(el);
-  const dx = x - cx;
-  const dy = y - cy;
-  if (dx === 0 && dy === 0) return 0;
-  const radians = Math.atan2(dy, dx);
-  let degrees = radians * (180 / Math.PI) + 90;
-  if (degrees < 0) degrees += 360;
-  return degrees;
-};
-
-const handlePanelPointerMove = (e: React.PointerEvent<HTMLElement>) => {
-  if (e.target !== e.currentTarget) return;
-  const parent = e.currentTarget.parentElement;
-  if (!parent) return;
-
-  const x = e.nativeEvent.offsetX;
-  const y = e.nativeEvent.offsetY;
-
-  const edge = getEdgeProximity(parent, x, y);
-  const angle = getCursorAngle(parent, x, y);
-  const glowOpacity = Math.max(0, (edge * 100 - 60) / 40);
-
-  parent.style.setProperty('--glow-opacity', glowOpacity.toFixed(3));
-  parent.style.setProperty('--cursor-angle', `${angle.toFixed(3)}deg`);
-};
-
-const handlePanelPointerLeave = (e: React.PointerEvent<HTMLElement>) => {
-  if (e.target !== e.currentTarget) return;
-  const parent = e.currentTarget.parentElement;
-  if (parent) {
-    parent.style.setProperty('--glow-opacity', '0');
-  }
-};
+/* glow tracking is done at window level in GlassDashboardStack.useEffect */
 
 function MetricsPanel() {
   const [metrics, setMetrics] = useState([
@@ -165,7 +117,6 @@ function MetricsPanel() {
           </svg>
         </div>
       </div>
-      <div className="absolute inset-0 !z-50 cursor-default" onPointerMove={handlePanelPointerMove} onPointerLeave={handlePanelPointerLeave} />
     </motion.article>
   );
 }
@@ -201,12 +152,28 @@ function WorkflowPanel() {
           </div>
         ))}
       </div>
-      <div className="absolute inset-0 !z-50 cursor-default" onPointerMove={handlePanelPointerMove} onPointerLeave={handlePanelPointerLeave} />
     </motion.article>
   );
 }
 
 function EditorPanel() {
+  const reduce = useReducedMotion();
+  const selectionMotion = reduce
+    ? {}
+    : {
+        animate: {
+          x: [0, 10, -4, 7, 0],
+          y: [0, 7, -3, 4, 0],
+          scaleX: [1, 0.94, 1.04, 0.98, 1],
+          scaleY: [1, 1.08, 0.96, 1.04, 1],
+        },
+        transition: {
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut" as const,
+        },
+      };
+
   return (
     <motion.article 
       className="glass-dash-panel glass-dash-panel--editor"
@@ -236,8 +203,13 @@ function EditorPanel() {
             {Array.from({ length: 7 }, (_, i) => (
               <path key={i} d={`M0 ${138 - i * 8} C80 ${98 - i * 9} 108 ${154 - i * 7} 178 ${102 - i * 5} S286 ${72 + i * 6} 360 ${82 - i * 4}`} fill="none" stroke="rgba(204,255,218,.08)" strokeWidth="1" />
             ))}
-            <rect x="32" y="22" width="286" height="118" fill="none" stroke="rgb(var(--accent-rgb))" strokeWidth="1.8" />
-            {[32, 318].map((x) => [22, 140].map((y) => <circle key={`${x}-${y}`} cx={x} cy={y} r="3" fill="rgb(var(--accent-rgb))" />))}
+            <motion.g
+              {...selectionMotion}
+              style={{ transformBox: "fill-box", transformOrigin: "center" }}
+            >
+              <rect x="32" y="22" width="286" height="118" fill="none" stroke="rgb(var(--accent-rgb))" strokeWidth="1.8" />
+              {[32, 318].map((x) => [22, 140].map((y) => <circle key={`${x}-${y}`} cx={x} cy={y} r="3" fill="rgb(var(--accent-rgb))" />))}
+            </motion.g>
           </svg>
         </div>
         <div className="rounded-md border border-white/8 bg-white/[0.035] p-2">
@@ -258,7 +230,6 @@ function EditorPanel() {
           ))}
         </div>
       </div>
-      <div className="absolute inset-0 !z-50 cursor-default" onPointerMove={handlePanelPointerMove} onPointerLeave={handlePanelPointerLeave} />
     </motion.article>
   );
 }
@@ -275,9 +246,16 @@ export function GlassDashboardStack() {
     let raf = 0;
     let nextX = 0;
     let nextY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
+
+    /** Detection radius in px — glow starts appearing this far from the panel edge */
+    const DETECT_RADIUS = 120;
 
     const paint = () => {
       raf = 0;
+
+      /* ---- existing tilt / glare ---- */
       const rx = (-nextY * 3.2).toFixed(2);
       const ry = (nextX * 4.8).toFixed(2);
       const glowX = (50 + nextX * 18).toFixed(1);
@@ -290,6 +268,56 @@ export function GlassDashboardStack() {
       hero.style.setProperty("--hero-glass-x", `${glowX}%`);
       hero.style.setProperty("--hero-glass-y", `${glowY}%`);
       hero.style.setProperty("--hero-caustic-o", "0.46");
+
+      /* ---- per-panel edge glow ---- */
+      const panels = stack.querySelectorAll<HTMLElement>('.glass-dash-panel');
+      panels.forEach((panel) => {
+        const r = panel.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0) return;
+
+        const pcx = r.left + r.width / 2;
+        const pcy = r.top + r.height / 2;
+
+        // signed distance from cursor to panel center
+        const dcx = cursorX - pcx;
+        const dcy = cursorY - pcy;
+
+        // distance from cursor to nearest panel edge (0 when inside)
+        const outsideDx = Math.max(0, Math.abs(cursorX - pcx) - r.width / 2);
+        const outsideDy = Math.max(0, Math.abs(cursorY - pcy) - r.height / 2);
+        const distToEdge = Math.sqrt(outsideDx * outsideDx + outsideDy * outsideDy);
+
+        let glowOpacity: number;
+
+        if (distToEdge > 0) {
+          // OUTSIDE the panel — fade in as cursor approaches
+          glowOpacity = Math.max(0, 1 - distToEdge / DETECT_RADIUS);
+          // Ease it so the outer approach feels smooth
+          glowOpacity = glowOpacity * glowOpacity * 0.7;
+        } else {
+          // INSIDE the panel — use classic edge-proximity formula
+          const lx = cursorX - r.left;
+          const ly = cursorY - r.top;
+          const cx = r.width / 2;
+          const cy = r.height / 2;
+          const ldx = lx - cx;
+          const ldy = ly - cy;
+          let kx = Infinity, ky = Infinity;
+          if (ldx !== 0) kx = cx / Math.abs(ldx);
+          if (ldy !== 0) ky = cy / Math.abs(ldy);
+          const edge = Math.min(Math.max(1 / Math.min(kx, ky), 0), 1);
+          // At edge → 1.0, at center → ~0.15 (always show a faint glow inside)
+          glowOpacity = 0.15 + edge * 0.85;
+        }
+
+        // Angle from panel center to cursor (0° = top, clockwise)
+        const angleRad = Math.atan2(dcy, dcx);
+        let angle = angleRad * (180 / Math.PI) + 90;
+        if (angle < 0) angle += 360;
+
+        panel.style.setProperty('--glow-opacity', glowOpacity.toFixed(3));
+        panel.style.setProperty('--cursor-angle', `${angle.toFixed(3)}deg`);
+      });
     };
 
     const onPointerMove = (event: PointerEvent) => {
@@ -297,6 +325,8 @@ export function GlassDashboardStack() {
       const rect = hero.getBoundingClientRect();
       nextX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
       nextY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+      cursorX = event.clientX;
+      cursorY = event.clientY;
       if (!raf) raf = window.requestAnimationFrame(paint);
     };
 
@@ -304,6 +334,9 @@ export function GlassDashboardStack() {
       nextX = 0;
       nextY = 0;
       hero.style.setProperty("--hero-caustic-o", "0.24");
+      // Reset glow on all panels
+      const panels = stack.querySelectorAll<HTMLElement>('.glass-dash-panel');
+      panels.forEach((p) => p.style.setProperty('--glow-opacity', '0'));
       if (!raf) raf = window.requestAnimationFrame(paint);
     };
 

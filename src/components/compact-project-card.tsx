@@ -27,7 +27,7 @@ export function CompactProjectCard({ project }: { project: Project }) {
   const secondaryLinks = (links ?? []).filter((l) => l.href !== href);
 
   return (
-    <article className="group/card relative flex h-full flex-col overflow-hidden rounded-xl border border-line-soft bg-bg-2/30 transition-colors duration-300 hover:border-[color:color-mix(in_oklab,var(--accent)_30%,var(--line))]">
+    <article className="group/card relative flex h-full min-h-[360px] w-full flex-col overflow-hidden rounded-xl border border-line-soft bg-bg-2/30 transition-colors duration-300 hover:border-[color:color-mix(in_oklab,var(--accent)_30%,var(--line))]">
       {/* Media stage — same treatment as the big card, scaled down */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-bg-2">
         <div
@@ -84,7 +84,7 @@ export function CompactProjectCard({ project }: { project: Project }) {
         )}
 
         {/* Footer: primary CTA + secondary link icons */}
-        <div className="mt-3 flex items-center gap-2">
+        <div className="mt-auto flex items-center gap-2 pt-3">
           <span
             aria-hidden
             className="font-mono text-[10px] lowercase tracking-[0.06em] text-fg-dim transition-colors group-hover/card:text-[color:var(--accent)]"

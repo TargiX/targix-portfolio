@@ -10,7 +10,7 @@ import { Reveal } from "@/components/reveal";
 import { WorkStage } from "@/components/work-stage";
 import { WorkScrollController } from "@/components/work-scroll-controller";
 import { MoreWorkRibbon } from "@/components/more-work-ribbon";
-import { CONTACT, FEATURED, MORE, STACK } from "@/lib/data";
+import { CONTACT, FEATURED, MORE } from "@/lib/data";
 import { getHomeJsonLd } from "@/lib/seo";
 
 // One shared outer container width across the whole page — no more "wide here,
@@ -137,45 +137,121 @@ export default function Home() {
               </p>
             </section>
 
-            <figure className="relative w-[240px] justify-self-end overflow-hidden rounded-full border border-line-soft bg-bg-2/40">
+            <figure className="relative aspect-[4/5] w-full max-w-[280px] justify-self-start overflow-hidden rounded-md border border-line-soft bg-bg-2/40 sm:w-[260px] sm:justify-self-end">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/about/ilya.jpg"
+                src="/about/ilya-2026.jpg"
                 alt="Ilya Moskovkin"
-                width={240}
-                height={240}
+                width={1122}
+                height={1402}
                 loading="lazy"
-                className="block size-[240px] select-none object-cover grayscale [transition:filter_.4s_ease] hover:grayscale-0"
+                className="block size-full select-none object-cover object-[50%_45%]"
               />
             </figure>
           </div>
         </Section>
 
-        <Section id="stack" n="03" title="Stack">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
-            {STACK.map((col) => (
-              <div key={col.label}>
-                <div className="mb-3 text-[10px] lowercase tracking-[0.12em] text-fg-dim">
+        <Section id="stack" n="03" title="Product AI">
+          <div className="grid gap-x-4 gap-y-6 lg:grid-cols-9 lg:items-start">
+            <div className="min-w-0 lg:col-span-3">
+              <p className="max-w-[52ch] text-[15px] leading-relaxed text-fg-muted">
+                I build AI-powered SaaS features where the model has to work inside a real business
+                workflow: structured inputs, review states, failure handling, permissions, and
+                production UI around the generation.
+              </p>
+              <p className="mt-4 max-w-[52ch] text-[13px] leading-relaxed text-fg-muted">
+                The useful part is not adding a chatbot. It is turning messy work into an interface
+                people can trust, correct, approve, and ship through.
+              </p>
+            </div>
+
+            {[
+              {
+                label: "AI SaaS features",
+                items: [
+                  "document scanning",
+                  "structured extraction",
+                  "dynamic forms",
+                  "AI-assisted review",
+                  "workflow builders",
+                ],
+              },
+              {
+                label: "Integration layer",
+                items: [
+                  "LLM orchestration",
+                  "RAG and retrieval",
+                  "structured outputs",
+                  "async generation UX",
+                  "cost and failure states",
+                ],
+              },
+              {
+                label: "Product delivery",
+                items: [
+                  "Figma to production",
+                  "frontend plus API glue",
+                  "validation and edge cases",
+                  "loading and error states",
+                  "clean handoff quality",
+                ],
+              },
+            ].map((col) => (
+              <div
+                key={col.label}
+                className="min-w-0 rounded-md border border-line-soft bg-bg-2/35 p-4 lg:col-span-2"
+              >
+                <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.12em] text-fg-dim">
                   {col.label}
                 </div>
-                <ul className="flex flex-col gap-1">
+                <ul className="flex flex-col gap-2">
                   {col.items.map((item) => (
-                    <li key={item} className="text-[13px] text-fg">
-                      {item}
+                    <li key={item} className="flex gap-2 text-[12px] leading-relaxed text-fg-muted">
+                      <span
+                        aria-hidden
+                        className="mt-[0.58em] size-1.5 shrink-0 rounded-full bg-[var(--accent)]"
+                      />
+                      <span>{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             ))}
-          </div>
 
-          <div className="mt-10 space-y-4">
-            <Suspense fallback={<GitHubFallback />}>
-              <GitHubContributions username="TargiX" />
-            </Suspense>
-            <Suspense fallback={<GitHubFallback />}>
-              <GitHubActivity username="TargiX" />
-            </Suspense>
+            {[
+              {
+                value: "business UI",
+                body: "dashboards, admin panels, CRMs, data grids, filters, and multi-step flows",
+              },
+              {
+                value: "human in the loop",
+                body: "review screens where users approve, correct, retry, or explain AI output",
+              },
+              {
+                value: "full feature slices",
+                body: "frontend, backend glue, database shape, deployment, and quality checks",
+              },
+            ].map((item) => (
+              <div key={item.value} className="min-w-0 border-t border-line-soft pt-4 lg:col-span-3">
+                <div className="font-sans text-[18px] font-medium tracking-[-0.01em] text-fg">
+                  {item.value}
+                </div>
+                <p className="mt-1 max-w-[44ch] text-[12px] leading-relaxed text-fg-muted">
+                  {item.body}
+                </p>
+              </div>
+            ))}
+
+            <div className="min-w-0 lg:col-span-6">
+              <Suspense fallback={<GitHubFallback />}>
+                <GitHubContributions username="TargiX" />
+              </Suspense>
+            </div>
+            <div className="min-w-0 lg:col-span-3">
+              <Suspense fallback={<GitHubFallback />}>
+                <GitHubActivity username="TargiX" />
+              </Suspense>
+            </div>
           </div>
         </Section>
 

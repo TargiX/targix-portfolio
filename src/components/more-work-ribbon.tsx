@@ -38,18 +38,18 @@ export function MoreWorkRibbon({ projects }: { projects: Project[] }) {
         </div>
       </Reveal>
 
-      <div className="relative">
+      <div className="relative max-w-full overflow-hidden">
         <div
           ref={trackRef}
-          className="ribbon-track flex snap-x items-start gap-3 overflow-x-auto pb-2"
+          className="ribbon-track flex snap-x items-stretch gap-3 overflow-x-auto pb-2"
           aria-label="More work — scroll horizontally"
         >
           {projects.map((p) => (
             <div
               key={p.title}
-              className="ribbon-item w-[clamp(230px,23vw,278px)] flex-shrink-0"
+              className="ribbon-item flex w-[clamp(230px,23vw,278px)] flex-shrink-0"
             >
-              <div className="relative h-full">
+              <div className="relative flex h-full w-full">
                 <CompactProjectCard project={p} />
                 {/* concept flag — pinned over the card so it can't be missed */}
                 {/concept|fictional/i.test(p.role) && (

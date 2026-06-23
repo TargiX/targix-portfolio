@@ -11,6 +11,7 @@ import { BackToWork } from "@/components/back-to-work";
 import { LightboxProvider } from "@/components/lightbox";
 import { CaseMetaRail } from "@/components/case-meta-rail";
 import { CaseNav } from "@/components/case-nav";
+import { CaseRouteReset } from "@/components/case-route-reset";
 import {
   SITE,
   absoluteUrl,
@@ -68,14 +69,15 @@ export default async function CasePage({ params }: { params: Params }) {
   const { prev, next } = await getAdjacentCases(slug);
 
   return (
-    <main className="relative mx-auto max-w-[1080px] px-5 pb-24 pt-12 sm:px-8">
+    <main key={c.slug} className="relative mx-auto max-w-[1080px] px-5 pb-24 pt-12 sm:px-8">
+      <CaseRouteReset />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify([caseJsonLd, breadcrumbJsonLd]).replace(/</g, "\\u003c"),
         }}
       />
-      <BackToWork />
+      <BackToWork key={c.slug} />
 
       {/* Cover is a full-width band above the article grid — the wide "hero". */}
       {c.cover && (

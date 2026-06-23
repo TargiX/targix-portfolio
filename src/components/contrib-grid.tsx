@@ -39,8 +39,7 @@ export function ContribGrid({
   const weekCount = Math.max(weeks.length, 1);
   const gridStyle = {
     "--contrib-gap": `${GAP}px`,
-    width: "100%",
-    minWidth: gridW,
+    width: gridW,
     paddingTop: topPad,
   } as CSSProperties;
 
@@ -81,7 +80,7 @@ export function ContribGrid({
     <div ref={wrapRef} className="relative" onPointerOver={handleOver} onPointerLeave={handleLeave}>
       <div className="overflow-x-auto py-1.5">
         <div
-          className="relative"
+          className="relative max-w-none"
           style={gridStyle}
           role="img"
           aria-label={ariaLabel}

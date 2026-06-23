@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 
 import type { CaseMeta } from "@/lib/content";
+import { resetCaseScrollNow } from "@/components/case-route-reset";
 
 type Props = {
   prev: CaseMeta | null;
@@ -32,6 +35,8 @@ function NavLink({ direction, c }: { direction: "prev" | "next"; c: CaseMeta }) 
   return (
     <Link
       href={`/work/${c.slug}`}
+      onClickCapture={resetCaseScrollNow}
+      onClick={resetCaseScrollNow}
       className={`group flex flex-col gap-1.5 rounded-lg border border-line-soft p-4 transition-colors hover:border-[color:color-mix(in_oklab,var(--accent)_40%,var(--line))] hover:bg-bg-2/30 ${
         isPrev ? "items-start" : "items-end text-right"
       }`}

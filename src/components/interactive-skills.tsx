@@ -46,7 +46,7 @@ export function InteractiveSkills() {
   return (
     <section
       aria-label="Frontend engineering proof points"
-      className="rounded-lg border border-white/10 bg-[rgba(7,12,15,.34)] px-3 py-2.5 shadow-[0_24px_80px_rgba(0,0,0,.24)] backdrop-blur-xl transition-colors sm:px-4 sm:py-3"
+      className="rounded-lg border border-white/12 bg-white/[0.055] px-3 py-2.5 shadow-[0_16px_44px_rgba(0,0,0,.26),inset_0_1px_0_rgba(255,255,255,.08)] backdrop-blur-xl transition-colors sm:px-4 sm:py-3"
       onMouseLeave={() => setHoveredId(null)}
     >
       <ul className="grid w-full grid-cols-1 items-stretch gap-2 sm:grid-cols-3 lg:grid-cols-5 lg:gap-5">
@@ -74,7 +74,7 @@ export function InteractiveSkills() {
                 {item.skills.map((skill) => (
                   <span
                     key={skill}
-                    className="whitespace-nowrap font-mono text-[10px] text-fg-dim"
+                    className="whitespace-nowrap font-mono text-[10px] text-fg-muted"
                   >
                     {skill}
                   </span>
@@ -97,7 +97,7 @@ export function InteractiveSkills() {
                             key={skill}
                             className={cn(
                               "whitespace-nowrap font-mono text-[10px] transition-colors duration-300",
-                              isHovered ? "text-[var(--accent)]" : "text-fg-dim"
+                              isHovered ? "text-[var(--accent)]" : "text-fg-muted"
                             )}
                           >
                             {skill}

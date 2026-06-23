@@ -29,15 +29,11 @@ const RoomboardShowcase = dynamic(
 type Theme = { primary: number; secondary: number; name: string };
 
 const WORK_THEME: Record<string, Theme> = {
-  // Broker brand blue flowing into a teal-green — the "blue↔green" you liked.
-  "broker-online-exchange": { primary: 230, secondary: 185, name: "blue→teal" },
-  // SignalOps: deep green shifting to teal (ops + signal colors).
-  signalops: { primary: 160, secondary: 195, name: "green→teal" },
-  // Phosphene: violet into magenta — neural-glow richness instead of flat purple.
-  phosphene: { primary: 295, secondary: 330, name: "violet→magenta" },
-  // Roomboard: canvas amber warmed with a coral shift.
-  roomboard: { primary: 38, secondary: 18, name: "amber→coral" },
-  // Anchor: emerald green into a cooler teal — calm + steady.
+  // Complementary hues based on the hero's lime/teal (140-180 range)
+  "broker-online-exchange": { primary: 145, secondary: 165, name: "lime→teal" },
+  signalops: { primary: 155, secondary: 185, name: "green→teal" },
+  phosphene: { primary: 165, secondary: 135, name: "teal→lime" },
+  roomboard: { primary: 140, secondary: 175, name: "lime→teal" },
   anchor: { primary: 150, secondary: 178, name: "emerald→teal" },
 };
 
@@ -104,7 +100,7 @@ export function WorkStage({ project, index }: { project: Project; index: number 
       id={caseSlug}
       data-work-stage
       data-screen-label={`0${index + 1} ${title}`}
-      className="work-stage relative flex min-h-[100svh] items-center"
+      className="work-stage relative flex min-h-[84svh] items-center lg:min-h-[80svh]"
     >
       {/* ambient per-work glow — subtle, two hues fading into the bg. Kept
          quiet on purpose: the hero is calm and restrained, so the stages stay
@@ -119,7 +115,7 @@ export function WorkStage({ project, index }: { project: Project; index: number 
       {/* fills the empty gutters on wide screens: grid ring, color blobs, dust */}
       <StageBackdrop hue={hue} hue2={hue2} flip={flip} />
 
-      <div className="mx-auto grid w-full max-w-[1280px] grid-cols-1 items-stretch gap-8 px-5 py-20 sm:gap-12 sm:px-8 lg:grid-cols-12 lg:py-24">
+      <div className="mx-auto grid w-full max-w-[1280px] grid-cols-1 items-stretch gap-8 px-5 py-12 sm:gap-12 sm:px-8 sm:py-14 lg:grid-cols-12">
         {/* ── Media (left or right) ───────────────────────── */}
         <div
           className={cn(
@@ -130,19 +126,23 @@ export function WorkStage({ project, index }: { project: Project; index: number 
         >
           <motion.div style={reduce ? undefined : { y: drift }} className="will-change-transform">
             <motion.div
-              initial={reduce ? false : { opacity: 0, scale: 1.06, filter: "blur(14px)" }}
-              whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              initial={reduce ? false : { opacity: 0, y: 24, filter: "blur(14px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             >
               <div
                 className={cn(
-                  "group/phosphene group/card group/stage relative w-full overflow-hidden rounded-2xl border bg-bg-2",
+                  "group/phosphene group/card group/stage relative w-full",
+                  isSignalOps
+                    ? "overflow-visible rounded-none border-0 bg-transparent"
+                    : "overflow-hidden rounded-2xl border bg-bg-2",
+                  href && "cursor-pointer",
                 )}
                 style={{
                   aspectRatio: mediaAspect,
                   // hairline tinted border, barely there — matches the calm hero.
-                  borderColor: accent(hue, 0.5, 0.02, 0.25),
+                  borderColor: isSignalOps ? "transparent" : accent(hue, 0.5, 0.02, 0.25),
                 }}
               >
                 {isBroker ? (
@@ -189,6 +189,17 @@ export function WorkStage({ project, index }: { project: Project; index: number 
                     </span>
                   </div>
                 )}
+                {href && (
+                  <Link
+                    href={href}
+                    prefetch={false}
+                    aria-label={`${title} — open case study`}
+                    className={cn(
+                      "absolute inset-0 z-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+                      isSignalOps ? "rounded-lg" : "rounded-2xl",
+                    )}
+                  />
+                )}
               </div>
             </motion.div>
           </motion.div>
@@ -203,18 +214,28 @@ export function WorkStage({ project, index }: { project: Project; index: number 
           )}
         >
           <Reveal>
-            <div className="mb-3 flex items-center gap-2 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim">
+            <div className="mb-3 flex flex-wrap items-center gap-2 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim">
               <span style={{ color: accent(hue, 0.7, 0.16) }}>{mark}</span>
               <span className="text-fg-muted/60">·</span>
-              <span>{year}</span>
-              <span className="text-fg-muted/60">·</span>
-              <span className="truncate">{role}</span>
+              <span className="whitespace-nowrap">{year}</span>
+              <span className="text-fg-muted/60 hidden sm:inline">·</span>
+              <span className="w-full sm:w-auto">{role.replace(' · ', '\n')}</span>
             </div>
           </Reveal>
 
           <Reveal delay={0.05}>
             <h2 className="m-0 mb-4 font-sans text-[clamp(24px,3.2vw,36px)] font-medium leading-[1.08] tracking-[-0.02em] text-fg">
-              {title}
+              {href ? (
+                <Link
+                  href={href}
+                  prefetch={false}
+                  className="transition-colors hover:text-[var(--accent)]"
+                >
+                  {title}
+                </Link>
+              ) : (
+                title
+              )}
             </h2>
           </Reveal>
           {tags && tags.length > 0 && (
@@ -223,7 +244,7 @@ export function WorkStage({ project, index }: { project: Project; index: number 
                 {tags.map((t) => (
                   <li
                     key={t}
-                    className="whitespace-nowrap rounded-full border border-line px-2 py-0.5 font-mono text-[11px] text-fg-muted"
+                    className="whitespace-nowrap rounded-full border border-line px-2 py-0.5 font-mono text-[11px] text-fg-muted transition-colors duration-500 ease-out hover:border-brand hover:text-brand cursor-default"
                   >
                     {t}
                   </li>

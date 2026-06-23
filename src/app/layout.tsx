@@ -66,11 +66,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  colorScheme: "light dark",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
-    { media: "(prefers-color-scheme: dark)", color: "#101114" },
-  ],
+  colorScheme: "dark",
+  themeColor: "#15171d",
 };
 
 export default function RootLayout({
@@ -81,6 +78,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="dark"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
@@ -88,7 +86,7 @@ export default function RootLayout({
         <script
           id="theme-init"
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('portfolio-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t}else{document.documentElement.removeAttribute('data-theme')}}catch(e){}`,
+            __html: `try{localStorage.removeItem('portfolio-theme');document.documentElement.dataset.theme='dark'}catch(e){document.documentElement.dataset.theme='dark'}`,
           }}
         />
       </head>

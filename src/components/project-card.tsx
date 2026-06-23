@@ -143,7 +143,7 @@ export function ProjectCard({
           )}
 
           {/* top-left index chip */}
-          <span className="absolute left-3 top-3 z-20 rounded-full border border-white/10 bg-black/30 px-2 py-0.5 font-mono text-[10px] tracking-[0.06em] text-white/70 backdrop-blur">
+          <span className="absolute left-3 top-3 z-20 whitespace-nowrap rounded-full border border-white/10 bg-black/30 px-2 py-0.5 font-mono text-[10px] tracking-[0.06em] text-white/70 backdrop-blur">
             {index} · {year}
           </span>
         </div>
@@ -151,7 +151,7 @@ export function ProjectCard({
 
       {/* Text */}
       <div className="flex flex-1 flex-col p-5">
-        <div className="mb-1.5 text-[11px] lowercase tracking-[0.06em] text-fg-muted">{role}</div>
+        <div className="mb-1.5 whitespace-pre-wrap text-[11px] lowercase tracking-[0.06em] text-fg-muted">{role.replace(' · ', '\n')}</div>
 
         <div className="mb-2 inline-block self-start">
           <h3 className="card-title m-0 font-sans text-[22px] font-medium tracking-[-0.015em]">
@@ -172,7 +172,7 @@ export function ProjectCard({
             {tags.map((t) => (
               <li
                 key={t}
-                className="whitespace-nowrap rounded-full border border-line px-2 py-0.5 text-[11px] text-fg-muted transition-colors duration-300 group-hover/card:border-[color:color-mix(in_oklab,var(--accent)_30%,var(--line))]"
+                className="whitespace-nowrap rounded-full border border-line px-2 py-0.5 text-[11px] text-fg-muted transition-colors duration-500 ease-out group-hover/card:border-[color:color-mix(in_oklab,var(--accent)_30%,var(--line))] hover:!border-brand hover:!text-brand cursor-default"
               >
                 {t}
               </li>

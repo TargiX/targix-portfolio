@@ -37,7 +37,7 @@ export const FEATURED: Project[] = [
       { label: "case study", href: "/work/broker-online-exchange" },
     ],
     caseSlug: "broker-online-exchange",
-    demo: "broker",
+    thumb: "/work/broker/banner.webp",
   },
   {
     index: "②",
@@ -72,25 +72,19 @@ export const FEATURED: Project[] = [
   },
   {
     index: "④",
-    year: "2026 – now",
+    year: "2025",
     role: "Solo · Design + Eng",
-    title: "Anchor",
+    title: "Roomboard",
     blurb:
-      "A calm daily-ritual app for mood, sleep, intention, and journaling. Live at anchorapp.cc, built from one Next.js codebase that ships to web, iOS/Android (Capacitor), and desktop (Electron).",
-    tags: ["Next.js 16", "React 19", "Capacitor", "Electron", "Framer Motion"],
+      "A private-by-default visual decision room for landing-page reviews, moodboards, and creative feedback. Open a room, invite editors or viewers, comment on cards, and close the loop.",
+    tags: ["Next.js 16", "React 19", "Pixi.js", "Elixir/Phoenix", "Supabase", "Realtime", "Canvas UX"],
     links: [
-      ...(ANCHOR_DEPLOYED ? [{ label: "anchorapp.cc", href: ANCHOR_URL }] : []),
-      { label: "github", href: ANCHOR_REPO_URL },
-      { label: "case study", href: "/work/anchor" },
+      { label: "roomboard.online", href: "https://roomboard.online" },
+      { label: "case study", href: "/work/roomboard" },
     ],
-    caseSlug: "anchor",
-    thumb: "/work/anchor/dashboard.png",
-    screens: [
-      "/work/anchor/landing.png",
-      "/work/anchor/dashboard.png",
-      "/work/anchor/sleep.png",
-      "/work/anchor/evening.png",
-    ],
+    caseSlug: "roomboard",
+    thumb: "/work/roomboard/landing-hero.png",
+    demo: "roomboard",
   },
 ];
 
@@ -116,19 +110,25 @@ export const MORE: Project[] = [
   },
   {
     index: "⑥",
-    year: "2025",
+    year: "2026 – now",
     role: "Solo · Product Design + Eng",
-    title: "Roomboard",
+    title: "Anchor",
     blurb:
-      "A private-by-default visual decision room for landing-page reviews, moodboards, and creative feedback. Open a room, invite editors or viewers, comment on cards, and close the loop.",
-    tags: ["Next.js 16", "React 19", "Pixi.js", "Elixir/Phoenix", "Supabase", "Realtime", "Canvas UX"],
+      "A calm daily-ritual app for mood, sleep, intention, and journaling. Live at anchorapp.cc, built from one Next.js codebase that ships to web, iOS/Android (Capacitor), and desktop (Electron).",
+    tags: ["Next.js 16", "React 19", "Capacitor", "Electron", "Framer Motion"],
     links: [
-      { label: "roomboard.online", href: "https://roomboard.online" },
-      { label: "case study", href: "/work/roomboard" },
+      ...(ANCHOR_DEPLOYED ? [{ label: "anchorapp.cc", href: ANCHOR_URL }] : []),
+      { label: "github", href: ANCHOR_REPO_URL },
+      { label: "case study", href: "/work/anchor" },
     ],
-    caseSlug: "roomboard",
-    thumb: "/work/roomboard/landing-hero.png",
-    demo: "roomboard",
+    caseSlug: "anchor",
+    thumb: "/work/anchor/dashboard.png",
+    screens: [
+      "/work/anchor/landing.png",
+      "/work/anchor/dashboard.png",
+      "/work/anchor/sleep.png",
+      "/work/anchor/evening.png",
+    ],
   },
   {
     index: "⑦",

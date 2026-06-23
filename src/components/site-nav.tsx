@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import { useVietnamTime } from "@/lib/use-vietnam-time";
 
 const LINKS = [
@@ -127,7 +126,6 @@ export function SiteNav() {
             <span className="status-dot" />
             <span>ict {time}</span>
           </div>
-          <ThemeSwitcher />
         </div>
       </div>
     </nav>
