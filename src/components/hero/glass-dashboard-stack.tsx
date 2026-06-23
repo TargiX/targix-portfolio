@@ -18,14 +18,16 @@ function MetricsPanel() {
     { label: "Conversion", value: 3.21, delta: "+2.1%", format: (v: number) => `${v.toFixed(2)}%` },
   ]);
 
-  const [points, setPoints] = useState([
-    { x: 4, y: 104 },
-    { x: 60, y: 76 },
-    { x: 124, y: 54 },
-    { x: 170, y: 76 },
-    { x: 224, y: 34 },
-    { x: 256, y: 52 },
-  ]);
+  const [pathStage, setPathStage] = useState(0);
+
+  const paths = [
+    // 1. Original-like (Smooth, perfectly collinear control points to prevent kinks)
+    "M4 104 C28 60 40 39 60 76 C80 113 100 38 124 54 C142 66 148 98 170 76 C192 54 208 18 224 34 C238 48 238 88 256 52",
+    // 2. Middle & Last peaks higher, First peak shallower
+    "M4 104 C28 80 40 66 60 76 C80 86 100 18 124 54 C142 81 148 87 170 76 C192 65 208 10 224 34 C238 55 238 88 256 52",
+    // 3. First peak highest, others shallower
+    "M4 104 C28 50 40 26 60 76 C80 126 100 49 124 54 C142 59 148 106 170 76 C192 46 208 29 224 34 C238 39 238 88 256 52"
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -40,16 +42,8 @@ function MetricsPanel() {
           }
         })
       );
-      setPoints((prev) =>
-        prev.map((p, i) => {
-          // Keep the first and last points pinned to edges, but allow them to move vertically slightly
-          const maxShift = i === 0 || i === prev.length - 1 ? 8 : 18;
-          let newY = p.y + (Math.random() - 0.5) * maxShift;
-          newY = Math.max(20, Math.min(110, newY)); // clamp
-          return { ...p, y: newY };
-        })
-      );
-    }, 2500);
+      setPathStage((s) => (s + 1) % 3);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
@@ -97,34 +91,33 @@ function MetricsPanel() {
               </linearGradient>
             </defs>
             <path 
-              d={fillPath} 
+              d={`${paths[pathStage]} L 256 124 L 4 124 Z`}
               fill="url(#metricFill)"
-              className="transition-all ease-linear"
-              style={{ transitionDuration: "2500ms" }}
+              className="transition-all ease-in-out"
+              style={{ transitionDuration: "4000ms" }}
             />
             <path
-              d={smoothPath}
+              d={paths[pathStage]}
               fill="none"
               stroke="rgb(var(--accent-rgb))"
               strokeWidth="2"
               strokeLinecap="round"
-              className="transition-all ease-linear"
-              style={{ transitionDuration: "2500ms" }}
+              className="transition-all ease-in-out"
+              style={{ transitionDuration: "4000ms" }}
             />
-            {points.map((p, i) => (
-              <circle 
-                key={p.x} 
-                cx={p.x} 
-                cy={p.y}
-                r="2.4" 
-                fill="rgb(var(--accent-rgb))"
-                className="transition-all ease-linear"
-                style={{ 
-                  transitionDuration: "2500ms",
-                  animation: `point-pulse ${2 + i * 0.5}s ease-in-out infinite alternate` 
-                }}
-              />
-            ))}
+            {[4, 60, 124, 170, 224, 256].map((x, i) => {
+              const yVals = [104, 76, 54, 76, 34, 52];
+              return (
+                <circle 
+                  key={x} 
+                  cx={x} 
+                  cy={yVals[i]}
+                  r="2.4" 
+                  fill="rgb(var(--accent-rgb))"
+                  style={{ animation: `point-pulse ${2 + i * 0.5}s ease-in-out infinite alternate` }}
+                />
+              );
+            })}
           </svg>
         </div>
       </div>
