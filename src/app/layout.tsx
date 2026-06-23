@@ -90,7 +90,7 @@ export default function RootLayout({
           {`try{var t=localStorage.getItem('portfolio-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t}else{document.documentElement.removeAttribute('data-theme')}}catch(e){}`}
         </Script>
       </head>
-      <body className="min-h-full">
+      <body className="min-h-full overflow-x-hidden">
         <PostHogProvider>
           <div className="body-dots" aria-hidden="true" />
           {children}

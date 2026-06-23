@@ -44,20 +44,51 @@ function MetricsPanel() {
                 <stop offset="1" stopColor="rgb(var(--accent-rgb))" stopOpacity="0" />
               </linearGradient>
             </defs>
+            <path fill="url(#metricFill)">
+              <animate
+                attributeName="d"
+                values="M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52 L256 124 L4 124 Z;
+                        M4 104 C28 68 42 48 60 82 C82 120 100 48 124 64 C142 74 148 104 170 86 C192 60 206 28 224 44 C238 56 238 96 256 60 L256 124 L4 124 Z;
+                        M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52 L256 124 L4 124 Z"
+                dur="8s"
+                repeatCount="indefinite"
+              />
+            </path>
             <path
-              d="M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52 L256 124 L4 124 Z"
-              fill="url(#metricFill)"
-            />
-            <path
-              d="M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52"
               fill="none"
               stroke="rgb(var(--accent-rgb))"
               strokeWidth="2"
               strokeLinecap="round"
-            />
-            {[4, 60, 124, 170, 224, 256].map((x, i) => (
-              <circle key={x} cx={x} cy={[104, 76, 54, 76, 34, 52][i]} r="2.4" fill="rgb(var(--accent-rgb))" />
-            ))}
+            >
+              <animate
+                attributeName="d"
+                values="M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52;
+                        M4 104 C28 68 42 48 60 82 C82 120 100 48 124 64 C142 74 148 104 170 86 C192 60 206 28 224 44 C238 56 238 96 256 60;
+                        M4 104 C28 60 42 42 60 76 C82 116 100 38 124 54 C142 66 148 98 170 76 C192 52 206 18 224 34 C238 48 238 88 256 52"
+                dur="8s"
+                repeatCount="indefinite"
+              />
+            </path>
+            {[4, 60, 124, 170, 224, 256].map((x, i) => {
+              const yVals1 = [104, 76, 54, 76, 34, 52];
+              const yVals2 = [104, 82, 64, 86, 44, 60];
+              return (
+                <circle 
+                  key={x} 
+                  cx={x} 
+                  r="2.4" 
+                  fill="rgb(var(--accent-rgb))"
+                  style={{ animation: `point-pulse ${2 + i * 0.5}s ease-in-out infinite alternate` }}
+                >
+                  <animate 
+                    attributeName="cy" 
+                    values={`${yVals1[i]}; ${yVals2[i]}; ${yVals1[i]}`} 
+                    dur="8s" 
+                    repeatCount="indefinite" 
+                  />
+                </circle>
+              );
+            })}
           </svg>
         </div>
       </div>
@@ -131,7 +162,13 @@ function EditorPanel() {
             <div key={item} className="border-t border-white/8 py-2 first:border-t-0">
               <div className="mb-1 text-[7px] text-fg-dim">{item}</div>
               <div className="h-1 rounded-full bg-white/10">
-                <div className="h-full rounded-full bg-[var(--accent)]" style={{ width: `${[36, 74, 54, 88][i]}%` }} />
+                <div 
+                  className="h-full rounded-full bg-[var(--accent)] origin-left" 
+                  style={{ 
+                    width: `${[36, 74, 54, 88][i]}%`,
+                    animation: `slider-drift ${3 + i * 0.5}s ease-in-out ${i * 0.7}s infinite alternate`
+                  }} 
+                />
               </div>
             </div>
           ))}
