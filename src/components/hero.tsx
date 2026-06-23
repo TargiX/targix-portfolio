@@ -198,19 +198,19 @@ export function Hero() {
 function HeroCopy() {
   return (
     <div className="relative z-10 mx-auto flex min-h-[calc(92svh-var(--nav-h))] max-w-[1280px] flex-col justify-center px-5 pb-7 pt-6 sm:px-8 md:pb-32">
-      <div>
+      <div className="w-full">
         {/* Subtitle */}
         <div className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-fg-muted sm:mb-6 sm:text-[12px]">
           SENIOR FRONTEND ENGINEER
         </div>
 
         {/* Headline */}
-        <h1 className="m-0 mb-8 max-w-[800px] font-sans text-[44px] font-bold leading-[1.05] tracking-tight text-white sm:text-[64px]">
+        <h1 className="m-0 mb-8 max-w-[950px] font-sans text-[44px] font-bold leading-[1.05] tracking-tight text-white sm:text-[64px] md:text-[72px]">
           BUILDING HIGH-PERFORMANCE WEB EXPERIENCES
         </h1>
 
         {/* Value Props Bullets */}
-        <ul className="mb-10 flex max-w-[600px] flex-col gap-4 font-mono text-[13px] leading-relaxed text-fg-muted sm:text-[15px]">
+        <ul className="mb-10 flex max-w-[850px] flex-col gap-4 font-mono text-[13px] leading-relaxed text-fg-muted sm:text-[15px]">
           <li className="flex items-start gap-3">
             <svg className="mt-[3px] size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
@@ -256,7 +256,7 @@ function HeroCopy() {
       </div>
 
       {/* Bottom Stats Row */}
-      <div className="mt-16 flex flex-wrap items-center gap-8 border-t border-white/10 pt-6 sm:mt-24 sm:gap-12">
+      <div className="mt-12 flex flex-wrap items-center gap-8 border-t border-white/10 pt-6 sm:mt-16 sm:gap-12">
         <div className="flex items-center gap-3">
           <div className="font-sans text-3xl font-bold tracking-tighter text-white">10+</div>
           <div className="font-mono text-[10px] uppercase leading-tight tracking-widest text-fg-dim">Years<br/>Experience</div>
