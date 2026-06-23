@@ -28,7 +28,6 @@ export function Hero() {
   // for the link. On mobile and in light mode the SDF typography is suppressed,
   // so DOM copy can use the active CSS palette and stay readable.
   const [webgl, setWebgl] = useState<"pending" | "ready" | "failed">("pending");
-  const [linkRect, setLinkRect] = useState<HeroLayout["link"] | null>(null);
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("dark");
   const [ThreeHero, setThreeHero] = useState<ThreeHeroComponent | null>(null);
@@ -63,7 +62,7 @@ export function Hero() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  const onLayout = useCallback((l: HeroLayout) => setLinkRect(l.link), []);
+  const onLayout = useCallback((l: HeroLayout) => {}, []);
   const onStatus = useCallback((status: "ready" | "failed") => {
     if (status === "ready") {
       requestAnimationFrame(() => setWebgl("ready"));
@@ -146,8 +145,7 @@ export function Hero() {
       <div aria-hidden="true" className="hero-bg absolute inset-0 z-0" />
       {showLoader && <HeroLoader />}
 
-      {/* full-bleed WebGL scene: ported bg shader + glass cubes (+ SDF typography
-          on desktop). On mobile, text is suppressed and the copy lives in the DOM. */}
+      {/* full-bleed WebGL scene: ported bg shader + glass cubes. Text is suppressed. */}
       {ThreeHero && (
         <ThreeHero
           accent={lightHero ? "#15803d" : "#a3e635"}
@@ -157,7 +155,7 @@ export function Hero() {
           time={time}
           onLayout={onLayout}
           mobile={isMobile ?? false}
-          suppressText={isMobile ?? false}
+          suppressText={true}
           suppressGlass
           className={[
             "transition-opacity duration-700 ease-out will-change-opacity",
@@ -165,16 +163,6 @@ export function Hero() {
           ].join(" ")}
         />
       )}
-
-      {/* SEO / a11y: the hero copy always lives in the DOM, even when WebGL paints it */}
-      <div className="sr-only">
-        <h1>Ilya Moskovkin, Senior Frontend Engineer</h1>
-        <p>
-          I build production-grade product interfaces: dashboards, workflow-heavy
-          SaaS, visual editors, and AI-assisted tools across React, Vue, and Node.
-          10+ years, remote from Vietnam (UTC+7).
-        </p>
-      </div>
 
       {/* soft fade into the bg at the bottom + radial highlight.
           In light the grey radial would muddy the SDF text, so light gets only a
@@ -188,29 +176,13 @@ export function Hero() {
         }}
       />
 
-      {/* (WebGL draws the visible text; this keeps it a real, focusable anchor). */}
-      {webglReady && !isMobile && linkRect && (
-        <a
-          href="#work"
-          aria-label="jump to selected work"
-          className="absolute z-20 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
-          style={{
-            left: linkRect.x,
-            top: linkRect.y,
-            width: linkRect.w,
-            height: linkRect.h,
-            color: "transparent",
-          }}
-        >
-          jump to work
-        </a>
-      )}
+
 
       {/* Pixi 2D bg only when the 3D scene can't initialise at all */}
       {webgl === "failed" && PixiMetaballHero && <PixiMetaballHero accent="#a3e635" />}
 
-      {/* DOM copy - mobile (over the live 3D bg) + WebGL-failure fallback */}
-      <HeroCopy visible={showDomCopy} />
+      {/* DOM copy - always visible now for crisp text */}
+      <HeroCopy />
 
       <GlassDashboardStack />
 
@@ -223,33 +195,82 @@ export function Hero() {
   );
 }
 
-function HeroCopy({ visible }: { visible: boolean }) {
+function HeroCopy() {
   return (
-    <div
-      aria-hidden={visible ? undefined : true}
-      className={[
-        "relative z-10 mx-auto flex min-h-[calc(92svh-var(--nav-h))] max-w-[1280px] flex-col justify-center px-5 pb-7 pt-6 transition-opacity duration-700 ease-out will-change-opacity sm:px-8 md:pb-40",
-        visible ? "opacity-100" : "opacity-100 sm:pointer-events-none sm:opacity-0",
-      ].join(" ")}
-    >
-      <div>
-        <div className="mb-7 inline-flex items-center gap-2.5 font-mono text-[11px] tracking-[0.3em] text-fg-dim">
-          <span className="h-px w-5 bg-line" />
-          IM / portfolio · v1.0
+    <div className="relative z-10 mx-auto flex min-h-[calc(92svh-var(--nav-h))] max-w-[1280px] flex-col justify-center px-5 pb-7 pt-6 sm:px-8 md:pb-32">
+      <div className="max-w-[700px]">
+        {/* Pill */}
+        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 font-mono text-[10px] tracking-[0.15em] text-fg sm:text-[11px]">
+          <span className="size-1.5 rounded-full bg-[var(--accent)] shadow-[0_0_8px_var(--accent)]" />
+          SENIOR FRONTEND ENGINEER
         </div>
 
-        <h1 className="m-0 mb-6 font-sans text-[40px] font-medium leading-none tracking-[-0.025em] sm:text-[60px]">
-          <Typed text="Ilya Moskovkin" />
+        {/* Headline */}
+        <h1 className="m-0 mb-6 font-sans text-[44px] font-bold leading-[1.05] tracking-tight text-white sm:text-[64px]">
+          BUILDING HIGH-PERFORMANCE WEB EXPERIENCES
         </h1>
 
-        <p className="m-0 max-w-[54ch] font-mono text-[14px] leading-[1.6] text-fg-muted sm:text-[16px]">
-          I build <span className="text-fg">production-grade product interfaces</span>:
-          dashboards, <span className="text-fg">workflow-heavy SaaS</span>, visual editors,
-          and <span className="text-fg">AI-assisted tools</span> across React, Vue, and Node.
-        </p>
+        {/* Value Props Bullets */}
+        <ul className="mb-10 flex flex-col gap-4 font-mono text-[13px] leading-relaxed text-fg-muted sm:text-[15px]">
+          <li className="flex items-start gap-3">
+            <svg className="mt-0.5 size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+            <span><strong className="font-semibold text-white">Proactive Architect:</strong> I suggest architectures that actually scale and save time.</span>
+          </li>
+          <li className="flex items-start gap-3">
+            <svg className="mt-0.5 size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg>
+            <span><strong className="font-semibold text-white">Cutting Edge:</strong> Always utilizing modern tech (React 19, Vue 3, AI Workflows).</span>
+          </li>
+          <li className="flex items-start gap-3">
+            <svg className="mt-0.5 size-4 shrink-0 text-[var(--accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            <span><strong className="font-semibold text-white">Reliable Partner:</strong> Transparent communication, remote from Vietnam (UTC+7).</span>
+          </li>
+        </ul>
 
-        <div className="mt-5 md:hidden">
+        {/* CTAs */}
+        <div className="flex flex-wrap items-center gap-4">
+          <a
+            href="https://t.me/placeholder_username"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-11 items-center justify-center rounded-md bg-[var(--accent)] px-6 font-mono text-[13px] font-semibold tracking-wide text-black transition-transform hover:scale-[1.02] active:scale-[0.98]"
+          >
+            Contact on Telegram
+          </a>
+          <a
+            href="#work"
+            className="group inline-flex h-11 items-center justify-center gap-2 rounded-md px-4 font-mono text-[13px] tracking-wide text-fg transition-colors hover:text-white"
+          >
+            <span className="flex size-6 items-center justify-center rounded-full bg-white/10 transition-colors group-hover:bg-white/20">
+              <svg className="size-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+            </span>
+            View My Projects
+          </a>
+        </div>
+
+        <div className="mt-8 md:hidden">
           <InteractiveSkills />
+        </div>
+      </div>
+
+      {/* Bottom Stats Row */}
+      <div className="mt-16 flex flex-wrap items-center gap-8 border-t border-white/10 pt-6 sm:mt-24 sm:gap-12">
+        <div className="flex items-center gap-3">
+          <div className="font-sans text-3xl font-bold tracking-tighter text-white">10+</div>
+          <div className="font-mono text-[10px] uppercase leading-tight tracking-widest text-fg-dim">Years<br/>Experience</div>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="font-sans text-3xl font-bold tracking-tighter text-white">50+</div>
+          <div className="font-mono text-[10px] uppercase leading-tight tracking-widest text-fg-dim">Projects<br/>Shipped</div>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="font-sans text-3xl font-bold tracking-tighter text-white">UTC+7</div>
+          <div className="font-mono text-[10px] uppercase leading-tight tracking-widest text-fg-dim">Remote<br/>Vietnam</div>
         </div>
       </div>
     </div>
