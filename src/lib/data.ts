@@ -30,10 +30,10 @@ export const FEATURED: Project[] = [
     role: "Lead Frontend · Broker Online Exchange",
     title: "Broker Online Exchange",
     blurb:
-      "Nearly five years leading the frontend team at Broker Online Exchange (acquired by AppDirect along the way). Mentored juniors and built MyServiceCloud, a B2B energy-brokerage platform, then led a full design-system re-theme to AppDirect's design language (Mantine) and built new feature areas in React. Flagship: Bill Scan to Quote, scanned bills turned into structured quotes via Gemini Vision OCR.",
+      "Nearly five years leading the frontend behind MyServiceCloud, Broker Online Exchange's private B2B energy-brokerage platform. Public access is restricted, so the case study uses walkthroughs and redacted screenshots to show the dashboards, quoting flows, AppDirect/Mantine re-theme, and Gemini Vision Bill Scan to Quote work I led.",
     tags: ["Vue 3", "React", "TypeScript", "Design systems", "Mantine", "Zustand", "Laravel", "Team lead"],
     links: [
-      { label: "brokeronlinexchange.com", href: "https://www.brokeronlinexchange.com/" },
+      { label: "public company site", href: "https://www.brokeronlinexchange.com/" },
       { label: "case study", href: "/work/broker-online-exchange" },
     ],
     caseSlug: "broker-online-exchange",

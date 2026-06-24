@@ -25,7 +25,7 @@ const RoomboardShowcase = dynamic(
 // Per-work ambient theme. Each stage wears a two-hue identity (primary +
 // secondary) so the glow reads as a rich gradient, not a flat single color.
 // Hue values are in degrees (oklch L C H). The two blobs in the backdrop take
-// the two hues, and the media frame border + index mark blend them.
+// the two hues, while UI marks stay on the global accent.
 type Theme = { primary: number; secondary: number; name: string };
 
 const WORK_THEME: Record<string, Theme> = {
@@ -56,7 +56,7 @@ const accent = (hue: number, lightness = 0.72, chroma = 0.16, alpha = 1) =>
  * interactive showcases, Anchor keeps its ScreenFan.
  */
 export function WorkStage({ project, index }: { project: Project; index: number }) {
-  const { index: mark, year, role, title, blurb, tags, links, caseSlug, screens, thumb, demo } =
+  const { year, role, title, blurb, tags, links, caseSlug, screens, thumb, demo } =
     project;
   const href = caseSlug ? `/work/${caseSlug}` : undefined;
   const fan = screens && screens.length > 0 ? screens : null;
@@ -215,10 +215,10 @@ export function WorkStage({ project, index }: { project: Project; index: number 
         >
           <Reveal>
             <div className="mb-3 flex flex-wrap items-center gap-2 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim">
-              <span style={{ color: accent(hue, 0.7, 0.16) }}>{mark}</span>
-              <span className="text-fg-muted/60">·</span>
+              <span className="text-[var(--accent)]">{String(index + 1).padStart(2, "0")}</span>
+              <span className="text-fg-muted/60">/</span>
               <span className="whitespace-nowrap">{year}</span>
-              <span className="text-fg-muted/60 hidden sm:inline">·</span>
+              <span className="text-fg-muted/60 hidden sm:inline">/</span>
               <span className="w-full sm:w-auto">{role.replace(' · ', '\n')}</span>
             </div>
           </Reveal>

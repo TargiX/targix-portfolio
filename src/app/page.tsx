@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { LayoutDashboard, PackageCheck, UserCheck } from "lucide-react";
 
 import { Hero } from "@/components/hero";
 import { Section } from "@/components/section";
@@ -151,7 +152,7 @@ export default function Home() {
           </div>
         </Section>
 
-        <Section id="stack" n="03" title="Product AI">
+        <Section id="stack" n="03" title="Product Workflow">
           <div className="grid gap-x-4 gap-y-6 lg:grid-cols-9 lg:items-start">
             <div className="min-w-0 lg:col-span-3">
               <p className="max-w-[52ch] text-[15px] leading-relaxed text-fg-muted">
@@ -222,32 +223,47 @@ export default function Home() {
               {
                 value: "business UI",
                 body: "dashboards, admin panels, CRMs, data grids, filters, and multi-step flows",
+                icon: LayoutDashboard,
               },
               {
                 value: "human in the loop",
                 body: "review screens where users approve, correct, retry, or explain AI output",
+                icon: UserCheck,
               },
               {
                 value: "full feature slices",
                 body: "frontend, backend glue, database shape, deployment, and quality checks",
+                icon: PackageCheck,
               },
-            ].map((item) => (
-              <div key={item.value} className="min-w-0 border-t border-line-soft pt-4 lg:col-span-3">
-                <div className="font-sans text-[18px] font-medium tracking-[-0.01em] text-fg">
-                  {item.value}
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.value} className="min-w-0 border-t border-line-soft pt-4 lg:col-span-3">
+                  <div className="mb-2 flex items-center gap-2.5">
+                    <span className="grid size-7 shrink-0 place-items-center rounded-md border border-line-soft bg-bg-2/45 text-[var(--accent)]">
+                      <Icon className="size-3.5" aria-hidden="true" />
+                    </span>
+                    <div className="font-sans text-[18px] font-medium tracking-[-0.01em] text-fg">
+                      {item.value}
+                    </div>
+                  </div>
+                  <p className="max-w-[44ch] text-[12px] leading-relaxed text-fg-muted">
+                    {item.body}
+                  </p>
                 </div>
-                <p className="mt-1 max-w-[44ch] text-[12px] leading-relaxed text-fg-muted">
-                  {item.body}
-                </p>
-              </div>
-            ))}
+              );
+            })}
+          </div>
+        </Section>
 
-            <div className="min-w-0 lg:col-span-6">
+        <Section id="github" n="04" title="GitHub Pulse" kicker="public signal">
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)] lg:items-start">
+            <div className="min-w-0">
               <Suspense fallback={<GitHubFallback />}>
                 <GitHubContributions username="TargiX" />
               </Suspense>
             </div>
-            <div className="min-w-0 lg:col-span-3">
+            <div className="min-w-0">
               <Suspense fallback={<GitHubFallback />}>
                 <GitHubActivity username="TargiX" />
               </Suspense>

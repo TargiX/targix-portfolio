@@ -3,9 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
-  Building2,
   BriefcaseBusiness,
   Code2,
+  Cpu,
   ExternalLink,
   FileText,
   Mail,
@@ -230,7 +230,7 @@ function HeroCopy() {
         {/* Value Props Bullets */}
         <ul className="mb-8 flex max-w-[850px] flex-col gap-3 font-sans text-[13px] leading-relaxed text-fg-muted sm:text-[15px]">
           <li className="flex items-start gap-2.5">
-            <Building2 className="mt-1 size-4 shrink-0 text-fg-muted" aria-hidden="true" />
+            <Cpu className="mt-1 size-4 shrink-0 text-fg-muted" aria-hidden="true" />
             <span>
               <strong className="font-bold text-fg">
                 Proactive Architect:
