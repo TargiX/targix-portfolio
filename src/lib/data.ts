@@ -100,9 +100,9 @@ export const MORE: Project[] = [
       "A compact HR/social discovery workspace for matching profiles, reviewing compatibility, sending signals, and handling trust workflows across a Nuxt frontend and NestJS API.",
     tags: ["Nuxt 4", "Vue 3", "NestJS", "MySQL", "Redis", "DynamoDB", "OpenSearch"],
     links: [
-      { label: "live demo", href: "https://charforge-web.vercel.app" },
+      { label: "live demo", href: "https://talentsignal.us" },
       { label: "github", href: "https://github.com/TargiX/talentsignal-demo" },
-      { label: "api docs", href: "https://charforge-api.vercel.app/docs" },
+      { label: "api docs", href: "https://api.talentsignal.us/docs" },
       { label: "case study", href: "/work/talentsignal" },
     ],
     caseSlug: "talentsignal",
