@@ -27,9 +27,9 @@ export function CompactProjectCard({ project }: { project: Project }) {
   const secondaryLinks = (links ?? []).filter((l) => l.href !== href);
 
   return (
-    <article className="group/card relative flex h-full min-h-[360px] w-full flex-col overflow-hidden rounded-xl border border-line-soft bg-bg-2/30 transition-colors duration-300 hover:border-[color:color-mix(in_oklab,var(--accent)_30%,var(--line))]">
+    <article className="group/card relative flex h-full min-h-[360px] w-full flex-col overflow-hidden rounded-xl bg-bg-2/30 transition-colors duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-bg-2/35">
       {/* Media stage — same treatment as the big card, scaled down */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-bg-2">
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-bg-2 [perspective:900px]">
         <div
           aria-hidden
           className="absolute inset-0 [background:radial-gradient(120%_110%_at_50%_-10%,color-mix(in_oklab,var(--accent)_22%,transparent),transparent_60%),linear-gradient(180deg,oklch(0.2_0.006_250),oklch(0.16_0.006_250))]"
@@ -45,7 +45,7 @@ export function CompactProjectCard({ project }: { project: Project }) {
             alt={title}
             loading="lazy"
             decoding="async"
-            className="absolute inset-0 h-full w-full object-cover object-top"
+            className="compact-card-media absolute inset-0 h-full w-full object-cover object-top"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
@@ -104,7 +104,7 @@ export function CompactProjectCard({ project }: { project: Project }) {
                     rel="noreferrer"
                     aria-label={link.label}
                     onClick={(e) => e.stopPropagation()}
-                    className="relative z-20 flex size-6 items-center justify-center rounded-md border border-line-soft text-fg-dim transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                    className="relative z-20 flex size-6 items-center justify-center rounded-md bg-bg-2/35 text-fg-dim transition-[background-color,color] duration-300 ease-out hover:bg-bg-2/70 hover:text-fg"
                   >
                     {gh ? (
                       <Code className="size-3" />

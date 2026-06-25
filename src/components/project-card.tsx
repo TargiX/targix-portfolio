@@ -100,7 +100,7 @@ export function ProjectCard({
       >
       {/* Media stage (static showcase images — the whole card is the link) */}
       <div>
-        <div className="relative aspect-[16/10] w-full overflow-hidden bg-bg-2">
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-bg-2 [perspective:900px]">
           {/* gradient backdrop */}
           <div
             aria-hidden
@@ -127,13 +127,19 @@ export function ProjectCard({
           ) : shown && fan ? (
             <ScreenFan screens={fan} alt={title} />
           ) : shown && imagePreview ? (
-            <Image
-              src={imagePreview}
-              alt={`${title} product preview`}
-              fill
-              sizes="(min-width: 1024px) 620px, 100vw"
-              className="scale-[1.01] object-cover object-top transition duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/card:scale-[1.055]"
-            />
+            <>
+              <Image
+                src={imagePreview}
+                alt={`${title} product preview`}
+                fill
+                sizes="(min-width: 1024px) 620px, 100vw"
+                className="scale-[1.035] object-cover object-top transition-[transform,filter] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform group-hover/card:translate-y-1.5 group-hover/card:scale-[0.985] group-hover/card:brightness-[0.92] group-hover/card:saturate-[0.94]"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-0 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),inset_0_22px_54px_rgba(0,0,0,0.32),inset_0_-18px_42px_rgba(0,0,0,0.24)] transition-opacity duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/card:opacity-100"
+              />
+            </>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="font-sans text-[64px] font-medium tracking-[-0.03em] text-white/12">

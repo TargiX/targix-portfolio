@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
  */
 export function WorkScrollController({ children }: { children: ReactNode }) {
   return (
-    <div className="work-scroll-rail">
+    <div className="work-scroll-rail relative isolate overflow-visible">
       {children}
     </div>
   );

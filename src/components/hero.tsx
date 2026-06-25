@@ -3,15 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
+  ArrowRight,
   BriefcaseBusiness,
   Code2,
-  Cpu,
   ExternalLink,
   FileText,
   Mail,
-  ShieldCheck,
   X,
-  Zap,
 } from "lucide-react";
 import { InteractiveSkills } from "@/components/interactive-skills";
 import { GlassDashboardStack } from "@/components/hero/glass-dashboard-stack";
@@ -161,7 +159,7 @@ export function Hero() {
 
   return (
     <header
-      className="relative isolate min-h-[calc(92svh-var(--nav-h))] w-full overflow-hidden"
+      className="hero-shell relative isolate w-full overflow-hidden"
       data-screen-label="00 Hero"
     >
       <div aria-hidden="true" className="hero-bg absolute inset-0 z-0" />
@@ -215,66 +213,56 @@ function HeroCopy() {
   const [contactOpen, setContactOpen] = useState(false);
 
   return (
-    <div className="relative z-10 mx-auto flex min-h-[calc(92svh-var(--nav-h))] max-w-[1280px] flex-col justify-center px-5 pb-7 pt-6 sm:px-8 xl:px-0 md:pb-32">
+    <div className="hero-copy-shell relative z-10 mx-auto flex max-w-[1280px] flex-col justify-center px-5 pb-7 pt-6 sm:px-8 xl:px-0 md:pb-32">
       <div className="w-full">
         {/* Subtitle */}
-        <div className="mb-1 font-mono text-[12px] font-semibold uppercase tracking-[0.2em] text-fg-muted sm:text-[13px]">
-          SENIOR FRONTEND ENGINEER
+        <div className="mb-5 font-mono text-[15px] font-semibold uppercase tracking-[1.8px] text-fg-muted">
+          SENIOR FRONT END DEVELOPER
         </div>
 
-        {/* Headline */}
-        <h1 className="m-0 mb-8 max-w-[850px] font-sans text-[44px] font-light leading-[1.1] tracking-tight text-fg sm:text-[64px] md:text-[84px]">
-          Ilya Moskovkin
+        <h1 className="m-0 max-w-[760px] font-sans text-[64px] font-light leading-[0.95] tracking-tight text-fg sm:text-[88px] md:text-[104px] md:leading-[111px] lg:text-[96px] xl:text-[108px]">
+          Ilya
+          <br />
+          Moskovkin
         </h1>
 
-        {/* Value Props Bullets */}
-        <ul className="mb-8 flex max-w-[850px] flex-col gap-3 font-sans text-[13px] leading-relaxed text-fg-muted sm:text-[15px]">
-          <li className="flex items-start gap-2.5">
-            <Cpu className="mt-1 size-4 shrink-0 text-fg-muted" aria-hidden="true" />
-            <span>
-              <strong className="font-bold text-fg">
-                Proactive Architect:
-              </strong>{" "}
-              I suggest architectures that actually scale and save time.
-            </span>
-          </li>
-          <li className="flex items-start gap-2.5">
-            <Zap className="mt-1 size-4 shrink-0 text-fg-muted" aria-hidden="true" />
-            <span>
-              <strong className="font-bold text-fg">Cutting Edge:</strong>{" "}
-              Always utilizing modern tech (React 19, Vue 3, AI Workflows).
-            </span>
-          </li>
-          <li className="flex items-start gap-2.5">
-            <ShieldCheck className="mt-1 size-4 shrink-0 text-fg-muted" aria-hidden="true" />
-            <span>
-              <strong className="font-bold text-fg">
-                Product Owner Mindset:
-              </strong>{" "}
-              full ownership of the frontend, from architecture to delivery.
-            </span>
-          </li>
-        </ul>
+        <div
+          className="mx-[5px] my-[26px] h-[3px] w-[47px] rounded-full bg-[var(--accent)] shadow-[0_0_22px_color-mix(in_oklab,var(--accent)_42%,transparent)]"
+          aria-hidden="true"
+        />
+
+        <p className="m-0 max-w-[780px] font-sans text-[32px] font-light leading-[1.18] tracking-tight text-fg sm:text-[36px]">
+          I architect{" "}
+          <span className="text-[var(--accent)]">
+            scalable interfaces
+          </span>
+          <br className="hidden sm:block" />
+          {" "}and ship AI-powered products.
+        </p>
+
+        <p className="mt-[18px] max-w-[510px] font-sans text-[20px] font-light leading-[1.55] text-[lab(52_0_-0.01)]">
+          From system design to polished UI - I turn complexity into products
+          people rely on.
+        </p>
 
         {/* CTAs */}
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="mt-9 flex flex-wrap items-center gap-5 sm:gap-16">
           <button
             type="button"
             onClick={() => setContactOpen(true)}
-            className="inline-flex h-11 items-center justify-center rounded-md bg-[var(--accent)] px-6 font-mono text-[14px] font-bold tracking-wide text-black shadow-[0_14px_34px_color-mix(in_oklab,var(--accent)_20%,transparent)] transition-transform hover:scale-[1.02] active:scale-[0.98]"
+            className="inline-flex h-14 items-center justify-center gap-5 rounded-md bg-[var(--accent)] px-7 font-mono text-[15px] font-bold tracking-wide text-black shadow-[0_18px_42px_color-mix(in_oklab,var(--accent)_28%,transparent)] transition-transform hover:scale-[1.02] active:scale-[0.98]"
           >
             Contact Me
+            <ArrowRight className="size-5" aria-hidden="true" />
           </button>
           <a
             href="#work"
-            className="group inline-flex h-11 items-center justify-center gap-2 rounded-md px-4 font-mono text-[13px] tracking-wide text-fg transition-colors hover:text-[var(--accent)]"
+            className="group inline-flex h-14 items-center justify-center gap-3 rounded-md px-1 font-mono text-[13px] font-semibold tracking-[0.05em] text-fg transition-colors hover:text-[var(--accent)] sm:text-[14px]"
           >
-            <span className="flex size-6 items-center justify-center rounded-full bg-bg-2/70 transition-colors group-hover:bg-[color-mix(in_oklab,var(--accent)_18%,transparent)]">
-              <svg className="size-3" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z" />
-              </svg>
+            View selected work
+            <span className="text-fg-dim transition-colors group-hover:text-[var(--accent)]">
+              ::
             </span>
-            View My Projects
           </a>
         </div>
         <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
@@ -308,12 +296,12 @@ function HeroCopy() {
         </div>
         <div className="flex items-center gap-2.5">
           <div className="font-sans text-2xl font-bold tracking-tighter text-fg sm:text-3xl">
-            100%
+            10845
           </div>
           <div className="font-mono text-[9px] uppercase leading-tight tracking-widest text-fg-dim sm:text-[10px]">
-            Client
+            Coffee cups
             <br />
-            Satisfaction
+            consumed
           </div>
         </div>
       </div>

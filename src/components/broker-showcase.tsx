@@ -6,13 +6,17 @@ import { useLightbox, type LightboxImage } from "@/components/lightbox";
 /** Card media: the isometric platform render. */
 export function BrokerShowcase() {
   return (
-    <div className="relative h-full overflow-hidden bg-[#1f9ed6]">
+    <div className="relative h-full overflow-hidden bg-[#1f9ed6] [perspective:900px]">
       <Image
         src="/work/broker/banner.webp"
         alt="MyServiceCloud platform — Broker Online Exchange"
         fill
         sizes="(min-width: 1024px) 620px, 100vw"
-        className="scale-[1.02] object-cover object-center transition duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/card:scale-[1.07]"
+        className="scale-[1.035] object-cover object-center transition-[transform,filter] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform group-hover/card:translate-y-1.5 group-hover/card:scale-[0.985] group-hover/card:brightness-[0.92] group-hover/card:saturate-[0.94]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-0 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),inset_0_22px_54px_rgba(0,0,0,0.32),inset_0_-18px_42px_rgba(0,0,0,0.24)] transition-opacity duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/card:opacity-100"
       />
       <div
         aria-hidden="true"

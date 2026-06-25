@@ -5,6 +5,9 @@ const VERCEL_APP_HOST = ".+\\.vercel\\.app";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  images: {
+    qualities: [75, 95],
+  },
   async redirects() {
     return [
       {

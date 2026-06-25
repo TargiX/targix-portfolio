@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useVietnamTime } from "@/lib/use-vietnam-time";
 
 const LINKS = [
@@ -15,60 +15,54 @@ const LINKS = [
  * smooth-scroll to the named zones on a single continuous page. The logo
  * scrolls back to top.
  *
- * Scroll-spy: an IntersectionObserver watches the named sections and marks the
- * matching link active (accent color), so the user always knows where they are
- * on the page — the cue the old tabbed nav gave for free.
+ * Scroll-spy marks the matching link active (accent color), so the user always
+ * knows where they are on the page — the cue the old tabbed nav gave for free.
  */
 export function SiteNav() {
   const time = useVietnamTime();
   const [active, setActive] = useState<string>("top");
-  const [scrolled, setScrolled] = useState(false);
+  const activeRef = useRef("top");
 
   useEffect(() => {
+    let raf = 0;
+
     const update = () => {
-      const y = window.scrollY;
+      raf = 0;
       const work = document.getElementById("work");
       const about = document.getElementById("about");
       const workTop = work?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY;
       const aboutTop = about?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY;
 
-      setScrolled(y > 12);
-      if (aboutTop <= window.innerHeight * 0.82) {
-        setActive("about");
-      } else if (workTop <= window.innerHeight * 0.72) {
-        setActive("work");
-      } else {
-        setActive("top");
+      const next =
+        aboutTop <= window.innerHeight * 0.82
+          ? "about"
+          : workTop <= window.innerHeight * 0.72
+            ? "work"
+            : "top";
+
+      if (activeRef.current !== next) {
+        activeRef.current = next;
+        setActive(next);
       }
     };
 
+    const schedule = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(update);
+    };
+
     update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
     return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (raf) window.cancelAnimationFrame(raf);
     };
   }, []);
 
   return (
-    <nav
-      data-scrolled={scrolled ? "true" : "false"}
-      className="sticky top-0 z-[120] border-b transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300"
-      style={{
-        backgroundColor: scrolled
-          ? "color-mix(in oklab, var(--bg) 72%, transparent)"
-          : "color-mix(in oklab, var(--bg) 34%, transparent)",
-        borderBottomColor: scrolled
-          ? "color-mix(in oklab, var(--fg) 14%, transparent)"
-          : "color-mix(in oklab, var(--fg) 9%, transparent)",
-        backdropFilter: scrolled ? "blur(20px) saturate(1.45)" : "blur(16px) saturate(1.24)",
-        WebkitBackdropFilter: scrolled ? "blur(20px) saturate(1.45)" : "blur(16px) saturate(1.24)",
-        boxShadow: scrolled
-          ? "0 18px 44px color-mix(in oklab, black 18%, transparent)"
-          : "none",
-      }}
-    >
+    <nav className="sticky top-0 z-[120] border-b border-line-soft/60 bg-[color-mix(in_oklab,var(--nav-bg)_88%,transparent)] shadow-[0_12px_30px_rgb(0_0_0_/_0.12)]">
       <div className="flex w-full items-center gap-5 overflow-visible px-5 py-3 sm:gap-7 sm:px-8">
         <a
           href="#top"
@@ -118,7 +112,7 @@ export function SiteNav() {
             href="/Ilya_Moskovkin_CV.pdf"
             target="_blank"
             rel="noreferrer"
-            className="hidden rounded-md border border-white/14 bg-white/[0.035] px-3 py-1.5 text-fg-muted shadow-[inset_0_1px_0_rgba(255,255,255,.08)] backdrop-blur transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] sm:inline-flex"
+            className="hidden rounded-md border border-white/14 bg-white/[0.035] px-3 py-1.5 text-fg-muted shadow-[inset_0_1px_0_rgba(255,255,255,.08)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] sm:inline-flex"
           >
             Résumé ↗
           </a>

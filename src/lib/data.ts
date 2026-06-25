@@ -53,7 +53,7 @@ export const FEATURED: Project[] = [
       { label: "case study", href: "/work/signalops" },
     ],
     caseSlug: "signalops",
-    thumb: "/work/signalops/cockpit.png",
+    thumb: "/work/signalops/landing.png",
   },
   {
     index: "③",

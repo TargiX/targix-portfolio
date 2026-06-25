@@ -7,7 +7,8 @@ export function RoomboardShowcase() {
         src="/work/roomboard/landing-hero.png"
         alt="Roomboard private room landing preview"
         fill
-        sizes="(min-width: 1024px) 620px, 100vw"
+        sizes="(min-width: 1280px) 920px, (min-width: 1024px) 820px, 100vw"
+        quality={95}
         className="object-cover object-top"
       />
 

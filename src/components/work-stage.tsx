@@ -30,11 +30,31 @@ type Theme = { primary: number; secondary: number; name: string };
 
 const WORK_THEME: Record<string, Theme> = {
   // Complementary hues based on the hero's lime/teal (140-180 range)
-  "broker-online-exchange": { primary: 145, secondary: 165, name: "lime→teal" },
-  signalops: { primary: 155, secondary: 185, name: "green→teal" },
-  phosphene: { primary: 165, secondary: 135, name: "teal→lime" },
-  roomboard: { primary: 140, secondary: 175, name: "lime→teal" },
-  anchor: { primary: 150, secondary: 178, name: "emerald→teal" },
+  "broker-online-exchange": {
+    primary: 145,
+    secondary: 165,
+    name: "lime→teal",
+  },
+  signalops: {
+    primary: 155,
+    secondary: 185,
+    name: "green→teal",
+  },
+  phosphene: {
+    primary: 165,
+    secondary: 135,
+    name: "teal→lime",
+  },
+  roomboard: {
+    primary: 140,
+    secondary: 175,
+    name: "lime→teal",
+  },
+  anchor: {
+    primary: 150,
+    secondary: 178,
+    name: "emerald→teal",
+  },
 };
 
 const accent = (hue: number, lightness = 0.72, chroma = 0.16, alpha = 1) =>
@@ -100,7 +120,7 @@ export function WorkStage({ project, index }: { project: Project; index: number 
       id={caseSlug}
       data-work-stage
       data-screen-label={`0${index + 1} ${title}`}
-      className="work-stage relative flex min-h-[84svh] items-center lg:min-h-[80svh]"
+      className="work-stage relative flex items-center"
     >
       {/* ambient per-work glow — subtle, two hues fading into the bg. Kept
          quiet on purpose: the hero is calm and restrained, so the stages stay
@@ -115,12 +135,14 @@ export function WorkStage({ project, index }: { project: Project; index: number 
       {/* fills the empty gutters on wide screens: grid ring, color blobs, dust */}
       <StageBackdrop hue={hue} hue2={hue2} flip={flip} />
 
-      <div className="mx-auto grid w-full max-w-[1280px] grid-cols-1 items-stretch gap-8 px-5 py-12 sm:gap-12 sm:px-8 sm:py-14 lg:grid-cols-12">
+      <div className="relative z-10 mx-auto grid w-full max-w-[1280px] grid-cols-1 items-stretch gap-8 px-5 py-12 sm:gap-12 sm:px-8 sm:py-14 lg:grid-cols-12">
         {/* ── Media (left or right) ───────────────────────── */}
         <div
           className={cn(
             "relative",
-            flip ? "lg:order-2 lg:col-start-5" : "lg:order-1 lg:col-start-1",
+            flip
+              ? "lg:order-2 lg:col-start-5 lg:ml-2 lg:w-[calc(100%+2rem)] xl:ml-4 xl:w-[calc(100%+2.5rem)]"
+              : "lg:order-1 lg:col-start-1",
             "lg:col-span-8 lg:self-start",
           )}
         >
@@ -150,13 +172,11 @@ export function WorkStage({ project, index }: { project: Project; index: number 
                 ) : isSignalOps ? (
                   <DualImageParallax
                     hero={{
-                      src: "/work/signalops/incident.png",
-                      label: "incident detail",
-                      alt: "SignalOps incident drill-down view",
+                      src: "/work/signalops/landing.png",
+                      alt: "SignalOps landing page hero",
                     }}
                     dashboard={{
                       src: "/work/signalops/cockpit.png",
-                      label: "operations cockpit",
                       alt: "SignalOps operations cockpit dashboard",
                     }}
                   />
@@ -263,7 +283,7 @@ export function WorkStage({ project, index }: { project: Project; index: number 
                 <Link
                   href={href}
                   prefetch={false}
-                  className="group/case inline-flex items-center gap-1.5 rounded-md border border-line bg-bg-2 px-3.5 py-2 font-mono text-[12px] text-fg transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                  className="btn-hover-gradient-border group/case inline-flex items-center gap-1.5 rounded-md border border-line bg-bg-2 px-3.5 py-2 font-mono text-[12px] text-fg transition-colors hover:text-[var(--accent)]"
                 >
                   View case study
                   <span className="text-[var(--accent)] transition-transform group-hover/case:translate-x-0.5">→</span>

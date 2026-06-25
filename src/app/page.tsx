@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { LayoutDashboard, PackageCheck, UserCheck } from "lucide-react";
+import { ArrowUpRight, LayoutDashboard, PackageCheck, UserCheck } from "lucide-react";
 
 import { Hero } from "@/components/hero";
 import { Section } from "@/components/section";
@@ -40,24 +40,26 @@ export default function Home() {
       {/* ── FEATURED WORK ── native scroll through full-screen project stages.
           The header sits in the shared container; stages are full-bleed so
           each project owns its own inner container and visual background. */}
-      <div className={PAGE}>
-        <div id="work" className="flex items-baseline gap-3 pt-8 scroll-mt-20">
-          <span className="font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim">01</span>
-          <span className="font-sans text-[20px] font-medium tracking-[-0.01em] text-fg">
-            Selected Work
-          </span>
-          <span className="font-mono text-[11px] lowercase tracking-[0.08em] text-fg-muted">
-            {FEATURED.length} projects
-          </span>
-          <span className="h-px flex-1 bg-gradient-to-r from-line to-transparent" aria-hidden />
+      <div className="work-continuum relative overflow-hidden">
+        <div className={`${PAGE} relative z-10`}>
+          <div id="work" className="flex items-baseline gap-3 pt-8 scroll-mt-20">
+            <span className="font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim">01</span>
+            <span className="font-sans text-[20px] font-medium tracking-[-0.01em] text-fg">
+              Selected Work
+            </span>
+            <span className="font-mono text-[11px] lowercase tracking-[0.08em] text-fg-muted">
+              {FEATURED.length} projects
+            </span>
+            <span className="h-px flex-1 bg-gradient-to-r from-line to-transparent" aria-hidden />
+          </div>
         </div>
-      </div>
 
-      <WorkScrollController>
-        {FEATURED.map((p, i) => (
-          <WorkStage key={p.title} project={p} index={i} />
-        ))}
-      </WorkScrollController>
+        <WorkScrollController>
+          {FEATURED.map((p, i) => (
+            <WorkStage key={p.title} project={p} index={i} />
+          ))}
+        </WorkScrollController>
+      </div>
 
       {/* ── MORE WORK ── horizontal ribbon of lighter builds */}
       <section className={`${PAGE} border-t border-line-soft py-16`}>
@@ -67,7 +69,7 @@ export default function Home() {
       {/* ── ABOUT ────────────────────────────────────────────── */}
       <main className={`${PAGE} pb-24 pt-16`}>
         <Section id="about" n="02" title="About">
-          <div className="grid gap-8 sm:grid-cols-[minmax(0,820px)_auto] sm:items-start">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,720px)_minmax(360px,420px)] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,760px)_minmax(380px,430px)]">
             <section className="[&>p]:mb-4 [&>p]:text-fg-muted [&>p:last-child]:mb-0">
               <p>
                 Designer-turned-frontend engineer focused on complex product UI: dashboards,
@@ -122,7 +124,7 @@ export default function Home() {
                   <li key={item.label} className="flex gap-3 text-fg-muted">
                     <span
                       aria-hidden
-                      className="mt-[0.55em] size-1.5 shrink-0 rotate-45 rounded-[1px] bg-[color-mix(in_oklab,var(--accent)_75%,transparent)]"
+                      className="mt-[0.72em] h-px w-5 shrink-0 bg-[color-mix(in_oklab,var(--accent)_72%,transparent)]"
                     />
                     <span>
                       <strong className="font-medium text-fg">{item.label}</strong> {item.body}
@@ -138,17 +140,36 @@ export default function Home() {
               </p>
             </section>
 
-            <figure className="relative aspect-[4/5] w-full max-w-[280px] justify-self-start overflow-hidden rounded-md border border-line-soft bg-bg-2/40 sm:w-[260px] sm:justify-self-end">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/about/ilya-2026.jpg"
-                alt="Ilya Moskovkin"
-                width={1122}
-                height={1402}
-                loading="lazy"
-                className="block size-full select-none object-cover object-[50%_45%]"
-              />
-            </figure>
+            <aside className="lg:sticky lg:top-24 lg:-mt-2">
+              <figure className="group/portrait relative mx-auto aspect-[4/5] w-full max-w-[390px] justify-self-center">
+                <div className="relative aspect-[4/5] w-full overflow-hidden rounded-sm bg-bg-2/30 shadow-[0_28px_80px_rgba(0,0,0,.28)]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/about/ilya-2026.jpg"
+                    alt="Ilya Moskovkin"
+                    width={1122}
+                    height={1402}
+                    loading="lazy"
+                    className="block size-full select-none object-cover object-[50%_38%] grayscale saturate-[0.35] contrast-[1.08] brightness-[0.92]"
+                  />
+                </div>
+                {/* green corner-bracket (crop-mark) framing the top-right edge */}
+                <span aria-hidden className="pointer-events-none absolute -right-2.5 -top-2.5 z-30 flex size-6 flex-col items-end justify-start">
+                  <span className="block h-px w-6 bg-[var(--accent)]" />
+                  <span className="block h-6 w-px bg-[var(--accent)]" />
+                </span>
+                {/* decorative corner chip — lifts and warms on portrait hover */}
+                <span
+                  aria-hidden
+                  className="group/btt absolute right-3 top-3 z-20 grid size-10 place-items-center rounded-sm border border-line-soft/80 bg-bg/70 text-fg-muted backdrop-blur-sm transition-all duration-300 group-hover/portrait:-translate-y-0.5 group-hover/portrait:border-[var(--accent)] group-hover/portrait:text-[var(--accent)]"
+                >
+                  <ArrowUpRight className="size-6 transition-transform duration-300 group-hover/portrait:-translate-y-px group-hover/portrait:translate-x-px" />
+                </span>
+              </figure>
+              <figcaption className="mx-auto mt-3 max-w-[390px] text-right font-mono text-[10px] lowercase tracking-[0.1em] text-fg-dim">
+                ilya moskovkin · frontend & design-eng
+              </figcaption>
+            </aside>
           </div>
         </Section>
 
