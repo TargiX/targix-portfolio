@@ -10,6 +10,7 @@ import { SiteNav } from "@/components/site-nav";
 import { Reveal } from "@/components/reveal";
 import { WorkStage } from "@/components/work-stage";
 import { WorkScrollController } from "@/components/work-scroll-controller";
+import { WorkScrollMemory } from "@/components/work-scroll-memory";
 import { MoreWorkRibbon } from "@/components/more-work-ribbon";
 import { CONTACT, FEATURED, MORE } from "@/lib/data";
 import { getHomeJsonLd } from "@/lib/seo";
@@ -33,6 +34,7 @@ export default function Home() {
       />
 
       <div id="top" />
+      <WorkScrollMemory />
       <SiteNav />
 
       <Hero />
