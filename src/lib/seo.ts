@@ -1,5 +1,5 @@
 import type { CaseDoc } from "@/lib/content";
-import { CONTACT } from "@/lib/data";
+import { CONTACT, type Project } from "@/lib/data";
 
 export const SITE = {
   url: "https://ilyamoskovkin.com",
@@ -41,7 +41,42 @@ export function getProjectImageUrl(cover?: string) {
   return absoluteUrl(cover);
 }
 
-export function getHomeJsonLd() {
+function getProjectUrl(project: Project) {
+  const caseStudyLink = project.links.find((link) => link.href.startsWith("/work/"));
+  const externalLink = project.links.find((link) => /^https?:\/\//.test(link.href));
+
+  return absoluteUrl(caseStudyLink?.href ?? externalLink?.href ?? "/#work");
+}
+
+function getProjectListJsonLd(projects: readonly Project[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": absoluteUrl("/#selected-work"),
+    name: "Selected portfolio case studies",
+    description: "Recruiter-facing portfolio projects by Ilya Moskovkin.",
+    itemListElement: projects.map((project, index) => {
+      const url = getProjectUrl(project);
+
+      return {
+        "@type": "ListItem",
+        position: index + 1,
+        url,
+        item: {
+          "@type": "CreativeWork",
+          name: project.title,
+          description: project.blurb,
+          url,
+          creator: { "@id": absoluteUrl("/#person") },
+          keywords: project.tags,
+          ...(project.thumb ? { image: getProjectImageUrl(project.thumb) } : {}),
+        },
+      };
+    }),
+  };
+}
+
+export function getHomeJsonLd(projects: readonly Project[] = []) {
   const person = {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -76,6 +111,7 @@ export function getHomeJsonLd() {
       mainEntity: { "@id": absoluteUrl("/#person") },
       isPartOf: { "@id": absoluteUrl("/#website") },
     },
+    ...(projects.length ? [getProjectListJsonLd(projects)] : []),
   ];
 }
 
