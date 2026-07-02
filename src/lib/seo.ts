@@ -69,7 +69,7 @@ function getProjectListJsonLd(projects: readonly Project[]) {
           url,
           creator: { "@id": absoluteUrl("/#person") },
           keywords: project.tags,
-          ...(project.thumb ? { image: getProjectImageUrl(project.thumb) } : {}),
+          image: getProjectImageUrl(project.thumb),
         },
       };
     }),
