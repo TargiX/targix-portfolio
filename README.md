@@ -26,7 +26,7 @@ Run the development server:
 pnpm run dev
 ```
 
-The dev script uses port `3010`, so open `http://localhost:3010`.
+By default the dev server starts at `http://localhost:3010`. If that port is busy, `scripts/start-next.mjs` automatically falls forward to the next open port and logs the fallback before Next.js prints the final local URL.
 
 ## Environment
 
