@@ -68,7 +68,7 @@ export const FEATURED: Project[] = [
       { label: "case study", href: "/work/phosphene" },
     ],
     caseSlug: "phosphene",
-    demo: "phosphene",
+    thumb: "/work/phosphene/phosphene-landing-showcase.jpg",
   },
   {
     index: "④",
@@ -122,7 +122,7 @@ export const MORE: Project[] = [
       { label: "case study", href: "/work/anchor" },
     ],
     caseSlug: "anchor",
-    thumb: "/work/anchor/dashboard.png",
+    thumb: "/work/anchor/anchor-laptop-hero.jpg",
     screens: [
       "/work/anchor/landing.png",
       "/work/anchor/dashboard.png",

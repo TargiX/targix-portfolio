@@ -24,7 +24,7 @@ const BrokerShowcase = dynamic(
 
 const cardVariants: Variants = {
   rest: { y: 0 },
-  hover: { y: -4, transition: { type: "spring", stiffness: 220, damping: 24, mass: 0.6 } },
+  hover: { y: -2, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
 };
 
 const underlineVariants: Variants = {
@@ -133,7 +133,7 @@ export function ProjectCard({
                 alt={`${title} product preview`}
                 fill
                 sizes="(min-width: 1024px) 620px, 100vw"
-                className="scale-[1.035] object-cover object-top transition-[transform,filter] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform group-hover/card:translate-y-1.5 group-hover/card:scale-[0.985] group-hover/card:brightness-[0.92] group-hover/card:saturate-[0.94]"
+                className="work-card-media object-cover object-top"
               />
               <div
                 aria-hidden

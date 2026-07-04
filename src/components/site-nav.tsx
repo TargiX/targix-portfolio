@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { useVietnamTime } from "@/lib/use-vietnam-time";
+import { SECTION_SEQUENCE, useActiveSection } from "@/lib/use-active-section";
 
-const LINKS = [
-  { id: "top", href: "#top", label: "Top" },
-  { id: "work", href: "#work", label: "Work" },
-  { id: "about", href: "#about", label: "About" },
-];
+const LINKS = SECTION_SEQUENCE.map((section) => ({
+  id: section.id,
+  href: `#${section.id}`,
+  label: section.shortLabel,
+}));
 
 /**
  * Sticky header — the quiet version of the old ViewSwitcher. No tabs, no
@@ -20,46 +20,7 @@ const LINKS = [
  */
 export function SiteNav() {
   const time = useVietnamTime();
-  const [active, setActive] = useState<string>("top");
-  const activeRef = useRef("top");
-
-  useEffect(() => {
-    let raf = 0;
-
-    const update = () => {
-      raf = 0;
-      const work = document.getElementById("work");
-      const about = document.getElementById("about");
-      const workTop = work?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY;
-      const aboutTop = about?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY;
-
-      const next =
-        aboutTop <= window.innerHeight * 0.82
-          ? "about"
-          : workTop <= window.innerHeight * 0.72
-            ? "work"
-            : "top";
-
-      if (activeRef.current !== next) {
-        activeRef.current = next;
-        setActive(next);
-      }
-    };
-
-    const schedule = () => {
-      if (raf) return;
-      raf = window.requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
-    return () => {
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-      if (raf) window.cancelAnimationFrame(raf);
-    };
-  }, []);
+  const active = useActiveSection();
 
   return (
     <nav className="sticky top-0 z-[120] border-b border-line-soft/60 bg-[color-mix(in_oklab,var(--nav-bg)_88%,transparent)] shadow-[0_12px_30px_rgb(0_0_0_/_0.12)]">
@@ -88,12 +49,8 @@ export function SiteNav() {
                 key={l.href}
                 href={l.href}
                 aria-current={isActive ? "true" : undefined}
-                className={
-                  "rounded-md px-2 py-1 font-mono text-[12px] tracking-[0.02em] transition-colors sm:px-3 " +
-                  (isActive
-                    ? "text-fg"
-                    : "text-fg-dim hover:text-fg")
-                }
+                data-active={isActive ? "true" : undefined}
+                className="site-nav-link"
               >
                 {l.label}
               </a>

@@ -1,6 +1,5 @@
 "use client";
 
-import { useRef } from "react";
 import type { Project } from "@/lib/data";
 import { CompactProjectCard } from "@/components/compact-project-card";
 import { Reveal } from "@/components/reveal";
@@ -16,14 +15,6 @@ import { Reveal } from "@/components/reveal";
  * text on its demo; we surface "concept" up front).
  */
 export function MoreWorkRibbon({ projects }: { projects: Project[] }) {
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  const scrollBy = (dir: 1 | -1) => {
-    const el = trackRef.current;
-    if (!el) return;
-    el.scrollBy({ left: dir * Math.min(360, el.clientWidth * 0.8), behavior: "smooth" });
-  };
-
   return (
     <div className="relative">
       <Reveal>
@@ -40,7 +31,6 @@ export function MoreWorkRibbon({ projects }: { projects: Project[] }) {
 
       <div className="relative max-w-full overflow-hidden">
         <div
-          ref={trackRef}
           className="ribbon-track flex snap-x items-stretch gap-3 overflow-x-auto pb-2"
           aria-label="More work — scroll horizontally"
         >
@@ -61,24 +51,6 @@ export function MoreWorkRibbon({ projects }: { projects: Project[] }) {
             </div>
           ))}
         </div>
-
-        {/* edge hint arrows (desktop) — only when there's overflow to scroll */}
-        <button
-          type="button"
-          onClick={() => scrollBy(-1)}
-          aria-label="scroll left"
-          className="absolute -left-4 top-1/2 z-20 hidden size-9 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/85 text-fg-muted backdrop-blur transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] md:flex"
-        >
-          ←
-        </button>
-        <button
-          type="button"
-          onClick={() => scrollBy(1)}
-          aria-label="scroll right"
-          className="absolute -right-4 top-1/2 z-20 hidden size-9 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/85 text-fg-muted backdrop-blur transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] md:flex"
-        >
-          →
-        </button>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { ArrowUpRight, LayoutDashboard, PackageCheck, UserCheck } from "lucide-react";
+import { LayoutDashboard, PackageCheck, UserCheck } from "lucide-react";
 
 import { Hero } from "@/components/hero";
 import { Section } from "@/components/section";
@@ -12,6 +12,7 @@ import { WorkStage } from "@/components/work-stage";
 import { WorkScrollController } from "@/components/work-scroll-controller";
 import { WorkScrollMemory } from "@/components/work-scroll-memory";
 import { MoreWorkRibbon } from "@/components/more-work-ribbon";
+import { SectionTracker } from "@/components/section-tracker";
 import { CONTACT, FEATURED, MORE } from "@/lib/data";
 import { getHomeJsonLd } from "@/lib/seo";
 
@@ -36,6 +37,7 @@ export default function Home() {
       <div id="top" />
       <WorkScrollMemory />
       <SiteNav />
+      <SectionTracker />
 
       <Hero />
 
@@ -45,7 +47,7 @@ export default function Home() {
       <div className="work-continuum relative overflow-hidden">
         <div className={`${PAGE} relative z-10`}>
           <div id="work" className="flex items-baseline gap-3 pt-8 scroll-mt-20">
-            <span className="font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim">01</span>
+            <span className="font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim">02</span>
             <span className="font-sans text-[20px] font-medium tracking-[-0.01em] text-fg">
               Selected Work
             </span>
@@ -70,7 +72,7 @@ export default function Home() {
 
       {/* ── ABOUT ────────────────────────────────────────────── */}
       <main className={`${PAGE} pb-24 pt-16`}>
-        <Section id="about" n="02" title="About">
+        <Section id="about" n="03" title="About">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,720px)_minmax(360px,420px)] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,760px)_minmax(380px,430px)]">
             <section className="[&>p]:mb-4 [&>p]:text-fg-muted [&>p:last-child]:mb-0">
               <p>
@@ -149,24 +151,17 @@ export default function Home() {
                   <img
                     src="/about/ilya-2026.jpg"
                     alt="Ilya Moskovkin"
-                    width={1122}
-                    height={1402}
+                    width={1540}
+                    height={1924}
                     loading="lazy"
-                    className="block size-full select-none object-cover object-[50%_38%] grayscale saturate-[0.35] contrast-[1.08] brightness-[0.92]"
+                    className="block size-full select-none object-cover object-[50%_38%]"
                   />
                 </div>
-                {/* green corner-bracket (crop-mark) framing the top-right edge */}
-                <span aria-hidden className="pointer-events-none absolute -right-2.5 -top-2.5 z-30 flex size-6 flex-col items-end justify-start">
-                  <span className="block h-px w-6 bg-[var(--accent)]" />
-                  <span className="block h-6 w-px bg-[var(--accent)]" />
-                </span>
-                {/* decorative corner chip — lifts and warms on portrait hover */}
-                <span
-                  aria-hidden
-                  className="group/btt absolute right-3 top-3 z-20 grid size-10 place-items-center rounded-sm border border-line-soft/80 bg-bg/70 text-fg-muted backdrop-blur-sm transition-all duration-300 group-hover/portrait:-translate-y-0.5 group-hover/portrait:border-[var(--accent)] group-hover/portrait:text-[var(--accent)]"
-                >
-                  <ArrowUpRight className="size-6 transition-transform duration-300 group-hover/portrait:-translate-y-px group-hover/portrait:translate-x-px" />
-                </span>
+                {/* green corner-brackets (crop-marks) — real rounded corner where the two sides meet, 1px */}
+                <span aria-hidden className="pointer-events-none absolute -left-3 -top-3 z-30 size-5 rounded-tl-[4px] border-l border-t border-[var(--accent)]" />
+                <span aria-hidden className="pointer-events-none absolute -right-3 -top-3 z-30 size-5 rounded-tr-[4px] border-r border-t border-[var(--accent)]" />
+                <span aria-hidden className="pointer-events-none absolute -right-3 -bottom-3 z-30 size-5 rounded-br-[4px] border-r border-b border-[var(--accent)]" />
+                <span aria-hidden className="pointer-events-none absolute -left-3 -bottom-3 z-30 size-5 rounded-bl-[4px] border-l border-b border-[var(--accent)]" />
               </figure>
               <figcaption className="mx-auto mt-3 max-w-[390px] text-right font-mono text-[10px] lowercase tracking-[0.1em] text-fg-dim">
                 ilya moskovkin · frontend & design-eng

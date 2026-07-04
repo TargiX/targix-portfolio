@@ -12,7 +12,7 @@ export function BrokerShowcase() {
         alt="MyServiceCloud platform — Broker Online Exchange"
         fill
         sizes="(min-width: 1024px) 620px, 100vw"
-        className="scale-[1.035] object-cover object-center transition-[transform,filter] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform group-hover/card:translate-y-1.5 group-hover/card:scale-[0.985] group-hover/card:brightness-[0.92] group-hover/card:saturate-[0.94]"
+        className="work-card-media object-cover object-center"
       />
       <div
         aria-hidden

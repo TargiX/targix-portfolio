@@ -166,16 +166,192 @@
 .hero-bg {
   background:
     radial-gradient(
-      80% 68% at 18% 18%,
-      color-mix(in oklab, var(--accent) 11%, transparent),
+      46% 52% at 72% 42%,
+      color-mix(in oklab, var(--accent) 5%, transparent),
       transparent 70%
     ),
-    radial-gradient(
-      70% 70% at 72% 32%,
-      color-mix(in oklab, var(--accent-2) 10%, transparent),
-      transparent 72%
-    ),
     linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 78%);
+}
+
+/* accent data-field: the page's dot lattice lights up around the cube, so the
+   background speaks the same raster language as the ASCII cluster instead of
+   a smooth SaaS-style glow. Same 22px lattice as .hero-poster-grid::before. */
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--accent) 60%, transparent) 0.5px,
+    transparent 1.25px
+  );
+  background-position: calc(var(--hero-rail) + 40px) 40px;
+  background-size: 22px 22px;
+  opacity: 0.55;
+  -webkit-mask-image: radial-gradient(44% 50% at 72% 42%, black, transparent 74%);
+  mask-image: radial-gradient(44% 50% at 72% 42%, black, transparent 74%);
+}
+
+/* mobile: the cluster floats top-right beside the headline, so the lit-up
+   lattice and the accent wash follow it there */
+@media (max-width: 767px) {
+  .hero-bg {
+    background:
+      radial-gradient(
+        60% 24% at 76% 23%,
+        color-mix(in oklab, var(--accent) 5%, transparent),
+        transparent 70%
+      ),
+      linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 78%);
+  }
+
+  .hero-bg::after {
+    -webkit-mask-image: radial-gradient(56% 22% at 76% 23%, black, transparent 74%);
+    mask-image: radial-gradient(56% 22% at 76% 23%, black, transparent 74%);
+  }
+}
+
+.site-nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  padding: 4px 2px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--fg-dim);
+  transition:
+    color 180ms ease,
+    opacity 180ms ease;
+}
+
+.site-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transform: scaleX(0.35);
+  transform-origin: left center;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.site-nav-link:hover {
+  color: var(--fg);
+}
+
+.site-nav-link[data-active="true"] {
+  color: var(--fg);
+}
+
+.site-nav-link[data-active="true"]::after {
+  opacity: 0.82;
+  transform: scaleX(1);
+}
+
+@media (min-width: 640px) {
+  .site-nav-link {
+    padding-inline: 4px;
+  }
+}
+
+.section-tracker {
+  --section-rail-w: clamp(72px, 5.1vw, 96px);
+  pointer-events: none;
+  position: fixed;
+  left: 0;
+  top: var(--nav-h, 56px);
+  bottom: 0;
+  z-index: 86;
+  display: none;
+  width: var(--section-rail-w);
+  color: var(--fg-dim);
+  border-right: 1px solid color-mix(in oklab, var(--fg) 13%, transparent);
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--bg) 92%, transparent),
+    color-mix(in oklab, var(--bg) 68%, transparent) 64%,
+    transparent
+  );
+}
+
+.section-tracker::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--fg) 9%, transparent),
+    color-mix(in oklab, var(--fg) 17%, transparent) 36%,
+    color-mix(in oklab, var(--accent) 18%, transparent) 52%,
+    color-mix(in oklab, var(--fg) 12%, transparent)
+  );
+}
+
+.section-tracker-current {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  transform: translate(-50%, -50%);
+}
+
+.section-tracker-number {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.section-tracker-label {
+  color: color-mix(in oklab, var(--fg) 62%, transparent);
+  letter-spacing: 0.17em;
+}
+
+.section-tracker-mark {
+  display: inline-block;
+  width: 2px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 14px color-mix(in oklab, var(--accent) 30%, transparent);
+}
+
+@media (min-width: 1180px) {
+  .section-tracker {
+    display: flex;
+  }
+
+  .hero-scroll-wrap .hero-rail-note--left {
+    display: none;
+  }
+}
+
+.hero-scroll-wrap {
+  --hero-base-height: calc(92svh - var(--nav-h, 56px));
+  --hero-video-progress: 0;
+  --hero-parallax-y: 0px;
+  --hero-poster-opacity: 1;
+  --hero-rail: clamp(64px, 5.6vw, 96px);
+  --hero-copy-column: clamp(560px, 42vw, 720px);
+  --hero-bottom-band: clamp(124px, 14svh, 154px);
+  --hero-grid-line: color-mix(in oklab, var(--fg) 15%, transparent);
+  min-height: var(--hero-base-height);
 }
 
 .hero-shell,
@@ -184,6 +360,10 @@
 }
 
 @media (min-width: 768px) {
+  .hero-scroll-wrap {
+    --hero-base-height: clamp(860px, calc(100svh - var(--nav-h, 56px)), 1080px);
+  }
+
   .hero-shell,
   .hero-copy-shell {
     --hero-section-height: clamp(860px, calc(100svh - var(--nav-h, 56px)), 1080px);
@@ -193,6 +373,393 @@
 
   .hero-shell {
     max-height: var(--hero-section-height);
+  }
+}
+
+.hero-shell {
+  background: #050706;
+  border-bottom: 1px solid var(--hero-grid-line);
+}
+
+.hero-video-layer {
+  background: transparent;
+}
+
+.hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center center;
+  transform: translate3d(0, var(--hero-parallax-y), 0)
+    scale(calc(1.04 + (var(--hero-video-progress) * 0.1)));
+  will-change: transform;
+}
+
+.hero-poster-image {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center center;
+  transform: translate3d(0, var(--hero-parallax-y), 0)
+    scale(calc(1.04 + (var(--hero-video-progress) * 0.1)));
+  opacity: var(--hero-poster-opacity, 1);
+  pointer-events: none;
+  user-select: none;
+  will-change: opacity, transform;
+}
+
+.hero-poster-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-anomaly-field {
+  pointer-events: none;
+  opacity: var(--hero-poster-opacity, 1);
+  transform-origin: center center;
+  transform: translate3d(0, var(--hero-parallax-y), 0)
+    scale(calc(1.04 + (var(--hero-video-progress) * 0.1)));
+  will-change: opacity, transform;
+}
+
+.hero-anomaly-field-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-poster-grid {
+  pointer-events: none;
+  color: var(--fg-dim);
+}
+
+.hero-poster-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--fg) 14%, transparent) 0.5px,
+    transparent 1.25px
+  );
+  background-position: calc(var(--hero-rail) + 40px) 40px;
+  background-size: 22px 22px;
+  opacity: 0.72;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    black 0%,
+    black 22%,
+    rgb(0 0 0 / 0.4) 42%,
+    transparent 66%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    black 0%,
+    black 22%,
+    rgb(0 0 0 / 0.4) 42%,
+    transparent 66%
+  );
+}
+
+.hero-grid-line {
+  position: absolute;
+  background: var(--hero-grid-line);
+}
+
+.hero-grid-line--split,
+.hero-grid-line--right {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+
+.hero-grid-line--split {
+  left: calc(var(--hero-rail) + var(--hero-copy-column));
+  opacity: 0.3;
+}
+
+.hero-grid-line--right {
+  right: var(--hero-rail);
+}
+
+.hero-grid-line--bottom {
+  left: 0;
+  right: 0;
+  bottom: var(--hero-bottom-band);
+  height: 1px;
+}
+
+.hero-grid-line--mid {
+  right: var(--hero-rail);
+  top: 52%;
+  width: min(30vw, 460px);
+  height: 1px;
+}
+
+.hero-grid-cross {
+  position: absolute;
+  right: calc(var(--hero-rail) - 6px);
+  width: 13px;
+  height: 13px;
+}
+
+.hero-grid-cross::before,
+.hero-grid-cross::after {
+  content: "";
+  position: absolute;
+  background: color-mix(in oklab, var(--fg) 28%, transparent);
+}
+
+.hero-grid-cross::before {
+  left: 6px;
+  top: 0;
+  width: 1px;
+  height: 13px;
+}
+
+.hero-grid-cross::after {
+  left: 0;
+  top: 6px;
+  width: 13px;
+  height: 1px;
+}
+
+.hero-grid-cross--top {
+  top: 38px;
+}
+
+.hero-grid-cross--mid {
+  top: calc(52% - 6px);
+}
+
+.hero-grid-cross--bottom {
+  bottom: calc(var(--hero-bottom-band) - 6px);
+}
+
+.hero-rail-note {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.hero-rail-number {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.hero-rail-copy {
+  color: color-mix(in oklab, var(--fg) 58%, transparent);
+  letter-spacing: 0.16em;
+  writing-mode: vertical-rl;
+}
+
+.hero-rail-note--left {
+  left: calc(var(--hero-rail) * 0.55);
+  top: 38%;
+  transform: translate(-50%, -50%);
+}
+
+.hero-rail-note--right {
+  right: calc(var(--hero-rail) * 0.55);
+  transform: translate(50%, -50%);
+}
+
+.hero-rail-note--systems {
+  top: 34%;
+}
+
+.hero-rail-note--visual {
+  top: 78%;
+}
+
+.hero-copy-shell {
+  grid-template-columns:
+    var(--hero-rail)
+    minmax(0, var(--hero-copy-column))
+    minmax(0, 1fr)
+    var(--hero-rail);
+  align-items: center;
+  padding-bottom: var(--hero-bottom-band);
+}
+
+.hero-copy-inner {
+  grid-column: 2;
+  max-width: 760px;
+  padding-left: clamp(56px, 5vw, 82px);
+  transform: translateY(-18px);
+}
+
+.hero-sequence-note {
+  letter-spacing: 0.14em;
+}
+
+.hero-poster-stats {
+  height: var(--hero-bottom-band);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding-inline: var(--hero-rail);
+  border-top: 1px solid var(--hero-grid-line);
+  background: color-mix(in oklab, var(--bg) 42%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.hero-stat {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  min-width: 0;
+  font-family: var(--font-mono);
+}
+
+.hero-stat:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 28%;
+  bottom: 28%;
+  width: 1px;
+  background: var(--hero-grid-line);
+}
+
+.hero-stat-token {
+  display: grid;
+  width: 66px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid color-mix(in oklab, var(--fg) 18%, transparent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 31px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.025);
+}
+
+.hero-stat-orbit {
+  display: grid;
+  width: 66px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid color-mix(in oklab, var(--fg) 18%, transparent);
+  border-radius: 999px;
+  color: var(--accent);
+  filter: drop-shadow(
+    0 0 16px color-mix(in oklab, var(--accent) 26%, transparent)
+  );
+}
+
+.hero-stat-label {
+  color: color-mix(in oklab, var(--fg) 72%, transparent);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+@media (min-width: 1280px) {
+  .hero-stat-token,
+  .hero-stat-orbit {
+    width: 74px;
+  }
+
+  .hero-stat-token {
+    font-size: 34px;
+  }
+}
+
+@media (max-width: 899px) {
+  .hero-scroll-wrap {
+    --hero-rail: 22px;
+    --hero-copy-column: 1fr;
+    --hero-bottom-band: 136px;
+  }
+
+  .hero-poster-grid {
+    opacity: 0.58;
+  }
+
+  .hero-poster-grid::before {
+    background-position: 18px 24px;
+    opacity: 0.5;
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      black 0%,
+      black 52%,
+      transparent 86%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      black 0%,
+      black 52%,
+      transparent 86%
+    );
+  }
+
+  .hero-video,
+  .hero-poster-image {
+    object-position: left center;
+  }
+
+  .hero-grid-line--right,
+  .hero-grid-line--mid,
+  .hero-rail-note,
+  .hero-grid-cross {
+    display: none;
+  }
+
+  .hero-grid-line--split {
+    left: 50%;
+    opacity: 0.3;
+  }
+
+  .hero-copy-shell {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    padding: 52px 20px calc(var(--hero-bottom-band) + 34px);
+  }
+
+  .hero-copy-inner {
+    grid-column: 1;
+    padding-left: 0;
+    transform: none;
+  }
+
+  .hero-poster-stats {
+    padding-inline: 14px;
+  }
+
+  .hero-stat {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .hero-stat-token,
+  .hero-stat-orbit {
+    width: 48px;
+  }
+
+  .hero-stat-token {
+    font-size: 23px;
+  }
+
+  .hero-stat-label {
+    font-size: 9px;
+    letter-spacing: 0.08em;
   }
 }
 
@@ -912,6 +1479,68 @@ button:not(:disabled) {
   }
 }
 
+@keyframes work-card-breathe {
+  0%,
+  100% {
+    transform: scale(1.015) translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: scale(1.032) translate3d(0, -5px, 0);
+  }
+}
+
+.work-stage-media-drift {
+  transform: scale(1.035) translate3d(0, 0, 0);
+  transform-origin: center center;
+  transition:
+    transform 1600ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.group\/card:hover .work-stage-media-drift {
+  transform: scale(1.09) translate3d(0, -10px, 0);
+  filter: brightness(0.97) saturate(0.98);
+}
+
+.signalops-panel-image {
+  transform-origin: center top;
+  transition:
+    transform 1700ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.signalops-panel-image--hero {
+  transform: scale(1.035) translate3d(0, 0, 0);
+}
+
+.signalops-panel-image--dashboard {
+  transform: scale(1.025) translate3d(0, 0, 0);
+}
+
+.group\/card:hover .signalops-panel-image--hero {
+  transform: scale(1.105) translate3d(0, -14px, 0);
+  filter: brightness(0.98) saturate(0.98);
+}
+
+.group\/card:hover .signalops-panel-image--dashboard {
+  transform: scale(1.085) translate3d(-9px, -9px, 0);
+  filter: brightness(0.98) saturate(0.98);
+}
+
+.work-card-media {
+  transform: scale(1.015) translate3d(0, 0, 0);
+  transition: filter 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.group\/card:hover .work-card-media {
+  animation: work-card-breathe 7s ease-in-out infinite;
+  filter: brightness(0.96) saturate(0.96);
+}
+
 .compact-card-media {
   transform: scale(1.04) translate3d(0, 0, 0);
   transition: filter 700ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -924,6 +1553,10 @@ button:not(:disabled) {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .group\/card:hover .signalops-panel-image--hero,
+  .group\/card:hover .signalops-panel-image--dashboard,
+  .group\/card:hover .work-stage-media-drift,
+  .group\/card:hover .work-card-media,
   .group\/card:hover .compact-card-media {
     animation: none;
   }
@@ -1127,152 +1760,120 @@ button:not(:disabled) {
   animation: status-pulse 2.4s ease-in-out infinite;
 }
 
-/* ─── ambient stage background ──────────────────────────
-   Full-bleed texture behind each work stage: dotted grid intersections,
-   soft color glows, and a few static specks. Keep these layers still: large
-   animated blur filters tend to shimmer during native scroll. */
+/* ─── work-stage technical backdrop ─────────────────────
+   Neutral construction lines instead of green ambient orbs. The hero cube keeps
+   ownership of the glow; work sections get quieter poster-grid structure. */
 
-@keyframes stage-blob-drift {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-
-  50% {
-    transform: translate3d(4%, -3%, 0) scale(1.08);
-  }
-}
-
-@keyframes stage-dust-float {
-  0% {
-    transform: translateY(0) translateX(0);
-    opacity: 0;
-  }
-
-  15% {
-    opacity: var(--dust-o, 0.5);
-  }
-
-  85% {
-    opacity: var(--dust-o, 0.5);
-  }
-
-  100% {
-    transform: translateY(-40px) translateX(8px);
-    opacity: 0;
-  }
-}
-
-@keyframes stage-grid-shimmer {
-  0%,
-  100% {
-    opacity: 0.14;
-    transform: translate3d(0, 0, 0);
-  }
-
-  50% {
-    opacity: 0.24;
-    transform: translate3d(8px, -6px, 0);
-  }
+.stage-technical-backdrop {
+  --stage-rail: max(22px, calc((100vw - 1280px) / 2 - 42px));
+  --stage-line: color-mix(in oklab, var(--fg) 9%, transparent);
+  --stage-line-strong: color-mix(in oklab, var(--fg) 18%, transparent);
+  --stage-accent-line: color-mix(in oklab, var(--accent) 12%, transparent);
+  overflow: hidden;
 }
 
 .stage-grid {
   background-image:
-    radial-gradient(
-      circle,
-      color-mix(
-          in oklab,
-          var(--stage-dot-primary, var(--accent)) 42%,
-          transparent
-        )
-        0.85px,
-      transparent 1.25px
-    ),
-    radial-gradient(
-      circle,
-      color-mix(
-          in oklab,
-          var(--stage-dot-secondary, var(--accent-2)) 34%,
-          transparent
-        )
-        0.75px,
-      transparent 1.15px
-    );
+    linear-gradient(var(--stage-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--stage-line) 1px, transparent 1px);
   background-position:
-    0 0,
-    20px 20px;
-  background-size: 40px 40px;
-  mix-blend-mode: screen;
+    var(--stage-rail) 0,
+    var(--stage-rail) 0;
+  background-size: 72px 72px;
   opacity: 0.18;
-  -webkit-mask-image:
-    radial-gradient(
-      ellipse 56% 42% at var(--stage-grid-primary, 30% 30%),
-      black 0%,
-      rgb(0 0 0 / 0.35) 36%,
-      transparent 74%
-    ),
-    radial-gradient(
-      ellipse 48% 38% at var(--stage-grid-secondary, 70% 70%),
-      rgb(0 0 0 / 0.68) 0%,
-      rgb(0 0 0 / 0.24) 40%,
-      transparent 76%
-    ),
-    linear-gradient(
-      180deg,
-      transparent 0%,
-      black 18%,
-      black 82%,
-      transparent 100%
-    );
-  mask-image:
-    radial-gradient(
-      ellipse 56% 42% at var(--stage-grid-primary, 30% 30%),
-      black 0%,
-      rgb(0 0 0 / 0.35) 36%,
-      transparent 74%
-    ),
-    radial-gradient(
-      ellipse 48% 38% at var(--stage-grid-secondary, 70% 70%),
-      rgb(0 0 0 / 0.68) 0%,
-      rgb(0 0 0 / 0.24) 40%,
-      transparent 76%
-    ),
-    linear-gradient(
-      180deg,
-      transparent 0%,
-      black 18%,
-      black 82%,
-      transparent 100%
-    );
-  -webkit-mask-composite: source-over, source-over, source-in;
-  mask-composite: add, add, intersect;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    black 18%,
+    black 82%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    black 18%,
+    black 82%,
+    transparent 100%
+  );
 }
 
-.stage-blob {
+.stage-scanline {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(140px);
-  opacity: 0.15;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--stage-line-strong) 18%,
+    var(--stage-accent-line) 50%,
+    var(--stage-line-strong) 82%,
+    transparent
+  );
 }
 
-.stage-dust {
+.stage-scanline--primary {
+  top: 12%;
+  bottom: 14%;
+  width: 1px;
+}
+
+.stage-technical-backdrop[data-flip="false"] .stage-scanline--primary {
+  right: var(--stage-rail);
+}
+
+.stage-technical-backdrop[data-flip="true"] .stage-scanline--primary {
+  left: var(--stage-rail);
+}
+
+.stage-corner {
   position: absolute;
-  width: 2px;
-  height: 2px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: var(--dust-o, 0.45);
+  width: 22px;
+  height: 22px;
+  border-color: var(--stage-line-strong);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .stage-blob,
-  .stage-grid,
-  .stage-dust {
-    animation: none;
+.stage-corner--top {
+  top: 18%;
+  right: var(--stage-rail);
+  border-right-width: 1px;
+  border-top-width: 1px;
+}
+
+.stage-corner--bottom {
+  left: var(--stage-rail);
+  bottom: 18%;
+  border-left-width: 1px;
+  border-bottom-width: 1px;
+}
+
+.work-stage-copy {
+  --stage-title-line: color-mix(in oklab, var(--fg) 17%, transparent);
+  --stage-title-line-accent: color-mix(in oklab, var(--accent) 22%, transparent);
+}
+
+.work-stage-title-rule {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin: 0 0 clamp(14px, 1.5vw, 20px);
+  background: linear-gradient(
+    90deg,
+    var(--stage-title-line),
+    var(--stage-title-line-accent) 38%,
+    transparent
+  );
+  opacity: 0.86;
+}
+
+@media (max-width: 1023px) {
+  .stage-scanline--primary,
+  .stage-corner {
+    display: none;
   }
 
-  .stage-dust {
-    opacity: 0;
+  .stage-grid {
+    background-position:
+      20px 0,
+      20px 0;
+    opacity: 0.12;
   }
 }
 
@@ -1292,21 +1893,11 @@ html {
 .work-continuum {
   background-color: var(--bg);
   background-image:
-    radial-gradient(
-      980px 560px at 78% 380px,
-      color-mix(in oklab, var(--accent-2) 5%, rgb(0 0 0 / 0)),
-      rgb(0 0 0 / 0) 72%
-    ),
-    radial-gradient(
-      920px 620px at 20% 460px,
-      color-mix(in oklab, var(--accent) 6%, rgb(0 0 0 / 0)),
-      rgb(0 0 0 / 0) 74%
-    ),
     linear-gradient(
       180deg,
       var(--bg) 0,
       var(--bg) 150px,
-      color-mix(in oklab, var(--bg-2) 16%, var(--bg) 84%) 360px,
+      color-mix(in oklab, var(--fg) 3%, var(--bg) 97%) 360px,
       var(--bg) 940px
     );
   background-repeat: no-repeat;
