@@ -23,7 +23,7 @@ const PAGE = "mx-auto w-full max-w-[1280px] px-5 sm:px-8";
 
 export default function Home() {
   const EMAIL = CONTACT.find((c) => c.key === "email") ?? CONTACT[0];
-  const homeJsonLd = getHomeJsonLd();
+  const homeJsonLd = getHomeJsonLd([...FEATURED, ...MORE]);
 
   return (
     <>
