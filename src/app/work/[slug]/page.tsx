@@ -12,6 +12,7 @@ import { LightboxProvider } from "@/components/lightbox";
 import { CaseMetaRail } from "@/components/case-meta-rail";
 import { CaseNav } from "@/components/case-nav";
 import { CaseRouteReset } from "@/components/case-route-reset";
+import { CONTACT } from "@/lib/data";
 import {
   SITE,
   absoluteUrl,
@@ -143,6 +144,8 @@ export default async function CasePage({ params }: { params: Params }) {
         </div>
       </div>
 
+      <CaseContactCTA caseTitle={c.title} />
+
       <CaseNav prev={prev} next={next} />
 
       <footer className="mt-20 flex items-center justify-between border-t border-line-soft pt-8 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim">
@@ -156,5 +159,63 @@ export default async function CasePage({ params }: { params: Params }) {
         <span>im / portfolio / case</span>
       </footer>
     </main>
+  );
+}
+
+type ContactKey = (typeof CONTACT)[number]["key"];
+
+function contactHref(key: ContactKey) {
+  return CONTACT.find((item) => item.key === key)?.href;
+}
+
+function CaseContactCTA({ caseTitle }: { caseTitle: string }) {
+  const emailHref = `${contactHref("email") ?? "mailto:hello@ilyamoskovkin.com"}?subject=${encodeURIComponent(
+    `Project inquiry after reading ${caseTitle}`,
+  )}`;
+  const resumeHref = contactHref("résumé") ?? "/Ilya_Moskovkin_CV.pdf";
+  const linkedinHref = contactHref("linkedin") ?? "https://www.linkedin.com/in/ilya-moskovkin-963ab85b/";
+
+  return (
+    <section className="mt-16 overflow-hidden rounded-md border border-line-soft bg-bg-2/70 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] sm:p-8">
+      <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div className="max-w-[58ch]">
+          <p className="mb-3 font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim">
+            available for senior frontend / product engineering
+          </p>
+          <h2 className="m-0 font-sans text-[30px] font-medium leading-[1.08] tracking-[-0.02em] text-fg sm:text-[38px]">
+            Need this level of product UI in your team?
+          </h2>
+          <p className="mt-4 max-w-[52ch] font-mono text-[14px] leading-[1.6] text-fg-muted">
+            I build dense, polished interfaces across React/Next.js and Vue/Nuxt — from ambiguous product brief
+            to shipped, reviewable production code.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 font-mono text-xs lowercase tracking-[0.04em]">
+          <a
+            href={emailHref}
+            className="btn-gradient-border inline-flex items-center gap-2 rounded-md px-3 py-2 font-medium text-fg transition-colors hover:text-[var(--accent)]"
+          >
+            email me <span aria-hidden="true">↗</span>
+          </a>
+          <a
+            href={resumeHref}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-md border border-line px-3 py-2 text-fg-muted transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          >
+            résumé <span aria-hidden="true">↗</span>
+          </a>
+          <a
+            href={linkedinHref}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-md border border-line px-3 py-2 text-fg-muted transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          >
+            linkedin <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
   );
 }
