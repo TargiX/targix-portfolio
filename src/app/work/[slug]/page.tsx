@@ -165,15 +165,19 @@ export default async function CasePage({ params }: { params: Params }) {
 type ContactKey = (typeof CONTACT)[number]["key"];
 
 function contactHref(key: ContactKey) {
-  return CONTACT.find((item) => item.key === key)?.href;
+  const href = CONTACT.find((item) => item.key === key)?.href;
+  if (!href) {
+    throw new Error(`Missing CONTACT entry for key: ${key}`);
+  }
+  return href;
 }
 
 function CaseContactCTA({ caseTitle }: { caseTitle: string }) {
-  const emailHref = `${contactHref("email") ?? "mailto:hello@ilyamoskovkin.com"}?subject=${encodeURIComponent(
+  const emailHref = `${contactHref("email")}?subject=${encodeURIComponent(
     `Project inquiry after reading ${caseTitle}`,
   )}`;
-  const resumeHref = contactHref("résumé") ?? "/Ilya_Moskovkin_CV.pdf";
-  const linkedinHref = contactHref("linkedin") ?? "https://www.linkedin.com/in/ilya-moskovkin-963ab85b/";
+  const resumeHref = contactHref("résumé");
+  const linkedinHref = contactHref("linkedin");
 
   return (
     <section className="mt-16 overflow-hidden rounded-md border border-line-soft bg-bg-2/70 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] sm:p-8">
