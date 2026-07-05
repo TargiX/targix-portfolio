@@ -194,4 +194,4 @@ export const CONTACT = [
     href: "https://www.linkedin.com/in/ilya-moskovkin-963ab85b/",
   },
   { key: "résumé", label: "Ilya_Moskovkin_CV.pdf", href: "/Ilya_Moskovkin_CV.pdf" },
-];
+] as const;
