@@ -8,13 +8,19 @@ const SCREENS = {
     src: "/work/roomboard/landing-hero.png",
     aspect: "aspect-[16/9]",
     caption:
-      "The landing page explains the product through the real object: a private room, a shared board, and role-specific invite links.",
+      "The landing page explains the product through the real object: a private room, a live board preview, and role-specific invite links.",
   },
   canvas: {
     src: "/work/roomboard/canvas-room.png",
     aspect: "aspect-[16/10]",
     caption:
       "The room surface combines Pixi-rendered cards and connectors with DOM controls for inspection, sharing, locking, comments, and uploads.",
+  },
+  editorial: {
+    src: "/work/roomboard/landing-editorial.png",
+    aspect: "aspect-[16/9]",
+    caption:
+      "The landing was rebuilt as a scroll-driven editorial piece — a pinned horizontal walkthrough, animated feature specimens, and a restrained serif-on-navy design system built with Framer Motion and Lenis.",
   },
 } as const;
 

@@ -1,13 +1,13 @@
 ---
 slug: roomboard
 title: Roomboard
-year: "2025"
+year: "2025 — 2026"
 role: Solo · Product Design + Eng
 blurb: "A private-by-default visual decision room for landing-page reviews, moodboards, and creative feedback. Open a room, invite editors or viewers, comment on cards, and close the loop."
-tags: ["Next.js 16", "React 19", "Pixi.js", "Elixir/Phoenix", "Supabase", "Vercel", "Realtime", "Canvas UX"]
+tags: ["Next.js 16", "React 19", "Pixi.js", "Elixir/Phoenix", "Supabase", "Framer Motion", "Realtime", "Design System"]
 links:
   - { label: "roomboard.online", href: "https://roomboard.online" }
-  - { label: "github", href: "https://github.com/TargiX/flux-graph-pixi" }
+  - { label: "github", href: "https://github.com/TargiX/roomboard.online" }
 cover: "/work/roomboard/landing-hero.png"
 order: 4
 featured: false
@@ -16,7 +16,7 @@ featured: false
 <CaseTLDR
   role="Solo · Product Design + Eng"
   line="A private visual room for fast creative review, open at roomboard.online."
-  stack="Next.js 16, React 19, Pixi.js, Elixir/Phoenix, Supabase"
+  stack="Next.js 16, React 19, Pixi.js, Elixir/Phoenix, Supabase, Framer Motion"
 >
 
 - Product-first flow: create a private room, invite editors/viewers, decide together
@@ -41,9 +41,21 @@ The product rule is intentionally simple: **value before signup, access before s
 - **Next.js App Router for the product shell**, room routes, upload endpoints, owner-token actions, and deployable web surface.
 - **Phoenix Channels for realtime presence and board events**, with a Vercel-friendly fallback path for local/offline operation.
 - **Supabase-backed persistence**, so rooms, cards, links, comments, and uploaded images can survive outside the browser.
-- **A design system pass**, including a stronger product-first landing page, glassy inspector panels, responsive controls, and clear private/invite room states.
+- **A design system pass**, including an editorial product landing page, glassy inspector panels, responsive controls, and clear private/invite room states.
 
 <RoomboardScreen screen="canvas" />
+
+## The landing, redesigned
+
+The first landing sold the product, but it looked like every other dark SaaS template — gradient background, gradient headings, boilerplate cards. So I rebuilt everything below the hero as a scroll-driven editorial piece and gave the whole page a real design system.
+
+The system is deliberately narrow: a deep-navy base with subtle "machine" gradients and a topographic texture, an **Agatho** display serif set in uppercase for the hero, and a restrained palette where each colour has one job — bone for text, a seafoam aqua for the live-product accent, periwinkle steel for structure, and brass reserved strictly for numerals. One accent, not three.
+
+The motion is built with **Framer Motion** and **Lenis** smooth scroll: a velocity-reactive marquee, a scroll-filled kinetic statement, a pinned horizontal "how it works" gallery, animated feature specimens (live cursors, role pills, a decision lock), and a sticky use-case deck. Every section reveals on scroll, and `prefers-reduced-motion` turns all of it off.
+
+<RoomboardScreen screen="editorial" />
+
+The harder part was shipping it. The redesign branched from an older commit, and production had moved ~1,600 lines ahead in the meantime (a hardened first-run flow, intent-driven hero copy, a rooms console). Rather than overwrite that work, I reintegrated the visual layer on top of the current codebase — cascading the new styles over main's structural CSS, keeping its hero functionality, and fixing the seams the merge exposed (a `sticky` pin that broke under the production `body` overflow, image mipmaps to stop board screenshots aliasing on zoom-out).
 
 ## Product decisions
 
