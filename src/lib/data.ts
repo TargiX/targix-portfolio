@@ -101,7 +101,7 @@ export const MORE: Project[] = [
     tags: ["Nuxt 4", "Vue 3", "NestJS", "MySQL", "Redis", "DynamoDB", "OpenSearch"],
     links: [
       { label: "live demo", href: "https://talentsignal.us" },
-      { label: "github", href: "https://github.com/TargiX/talentsignal-demo" },
+      { label: "github", href: "https://github.com/TargiX/TalentSignal" },
       { label: "api docs", href: "https://api.talentsignal.us/docs" },
       { label: "case study", href: "/work/talentsignal" },
     ],
@@ -110,6 +110,20 @@ export const MORE: Project[] = [
   },
   {
     index: "⑥",
+    year: "2026",
+    role: "Demo · React dashboard build",
+    title: "NovaFlow",
+    blurb:
+      "A screenshot-faithful analytics dashboard demo with responsive metric cards, chart interactions, transaction search/export, and a mock-backed API deployed as Vercel Functions.",
+    tags: ["React 19", "TypeScript", "Vite", "TanStack Query", "TanStack Table", "Recharts", "Vercel"],
+    links: [
+      { label: "live demo", href: "https://novaflow.signalops.cc" },
+      { label: "github", href: "https://github.com/TargiX/novaflow" },
+    ],
+    thumb: "/work/novaflow/dashboard.png",
+  },
+  {
+    index: "⑦",
     year: "2026 – now",
     role: "Solo · Product Design + Eng",
     title: "Anchor",
@@ -131,7 +145,7 @@ export const MORE: Project[] = [
     ],
   },
   {
-    index: "⑦",
+    index: "⑧",
     year: "2026",
     role: "Solo · Fictional concept demo",
     title: "HelixCare Pulse",
@@ -142,7 +156,7 @@ export const MORE: Project[] = [
     thumb: "/work/helixcare-pulse/hero-device.png",
   },
   {
-    index: "⑧",
+    index: "⑨",
     year: "2023 – 2026",
     role: "Solo · Web3 trading UI",
     title: "Injective Trading Terminal",
