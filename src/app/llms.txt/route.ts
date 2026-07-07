@@ -1,4 +1,5 @@
 import { CONTACT, FEATURED, MORE, type Project } from "@/lib/data";
+import { getAllCases, type CaseDoc } from "@/lib/content";
 import { SITE, absoluteUrl } from "@/lib/seo";
 
 export const dynamic = "force-static";
@@ -23,11 +24,21 @@ function projectLine(project: Project) {
   ].join(" ");
 }
 
+function caseStudyLine(caseStudy: CaseDoc) {
+  const tags = caseStudy.tags.slice(0, 6).join(", ");
+  return [
+    `- ${caseStudy.title} (${caseStudy.year}, ${caseStudy.role}) — ${caseStudy.blurb}`,
+    `URL: ${absoluteUrl(`/work/${caseStudy.slug}`)}.`,
+    `Tags: ${tags}.`,
+  ].join(" ");
+}
+
 function contactLine(key: string) {
   return CONTACT.find((item) => item.key === key)?.href;
 }
 
-export function GET() {
+export async function GET() {
+  const cases = await getAllCases();
   const email = contactLine("email") ?? "mailto:hello@ilyamoskovkin.com";
   const github = contactLine("github") ?? "https://github.com/TargiX";
   const linkedin =
@@ -46,6 +57,9 @@ ${FEATURED.map(projectLine).join("\n")}
 
 ## Additional projects
 ${MORE.map(projectLine).join("\n")}
+
+## Case study index
+${cases.map(caseStudyLine).join("\n")}
 
 ## Contact
 - Email: ${email}
