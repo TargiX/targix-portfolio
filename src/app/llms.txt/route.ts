@@ -27,7 +27,7 @@ function projectLine(project: Project) {
 function caseStudyLine(caseStudy: CaseDoc) {
   const tags = caseStudy.tags.slice(0, 6).join(", ");
   return [
-    `- ${caseStudy.title} (${caseStudy.year}, ${caseStudy.role}) — ${caseStudy.blurb}`,
+    `- ${caseStudy.title} (${caseStudy.role}, ${caseStudy.year}) — ${caseStudy.blurb}`,
     `URL: ${absoluteUrl(`/work/${caseStudy.slug}`)}.`,
     `Tags: ${tags}.`,
   ].join(" ");
