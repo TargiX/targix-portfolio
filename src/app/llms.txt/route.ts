@@ -5,13 +5,17 @@ import { SITE, absoluteUrl } from "@/lib/seo";
 export const dynamic = "force-static";
 
 function toPublicUrl(href: string) {
-  return href.startsWith("http://") || href.startsWith("https://") || href.startsWith("mailto:")
+  return href.startsWith("http://") ||
+    href.startsWith("https://") ||
+    href.startsWith("mailto:")
     ? href
     : absoluteUrl(href);
 }
 
 function projectUrl(project: Project) {
-  const href = project.caseSlug ? `/work/${project.caseSlug}` : (project.links[0]?.href ?? "/#work");
+  const href = project.caseSlug
+    ? `/work/${project.caseSlug}`
+    : (project.links[0]?.href ?? "/#work");
   return toPublicUrl(href);
 }
 
@@ -24,13 +28,26 @@ function projectLine(project: Project) {
   ].join(" ");
 }
 
+function caseStudyLinks(caseStudy: CaseDoc) {
+  if (!caseStudy.links.length) return null;
+
+  return caseStudy.links
+    .map((link) => `${link.label}: ${toPublicUrl(link.href)}`)
+    .join("; ");
+}
+
 function caseStudyLine(caseStudy: CaseDoc) {
   const tags = caseStudy.tags.slice(0, 6).join(", ");
+  const links = caseStudyLinks(caseStudy);
+
   return [
     `- ${caseStudy.title} (${caseStudy.role}, ${caseStudy.year}) — ${caseStudy.blurb}`,
     `URL: ${absoluteUrl(`/work/${caseStudy.slug}`)}.`,
     `Tags: ${tags}.`,
-  ].join(" ");
+    links ? `Links: ${links}.` : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
 }
 
 function contactLine(key: string) {
@@ -42,7 +59,8 @@ export async function GET() {
   const email = contactLine("email") ?? "mailto:hello@ilyamoskovkin.com";
   const github = contactLine("github") ?? "https://github.com/TargiX";
   const linkedin =
-    contactLine("linkedin") ?? "https://www.linkedin.com/in/ilya-moskovkin-963ab85b/";
+    contactLine("linkedin") ??
+    "https://www.linkedin.com/in/ilya-moskovkin-963ab85b/";
   const resume = toPublicUrl(contactLine("résumé") ?? "/Ilya_Moskovkin_CV.pdf");
 
   const body = `# ${SITE.title}
