@@ -36,6 +36,10 @@ function caseStudyLinks(caseStudy: CaseDoc) {
     .join("; ");
 }
 
+function caseStudyTextUrl(caseStudy: CaseDoc) {
+  return absoluteUrl(`/work/${caseStudy.slug}/llms.txt`);
+}
+
 function caseStudyLine(caseStudy: CaseDoc) {
   const tags = caseStudy.tags.slice(0, 6).join(", ");
   const links = caseStudyLinks(caseStudy);
@@ -43,6 +47,7 @@ function caseStudyLine(caseStudy: CaseDoc) {
   return [
     `- ${caseStudy.title} (${caseStudy.role}, ${caseStudy.year}) — ${caseStudy.blurb}`,
     `URL: ${absoluteUrl(`/work/${caseStudy.slug}`)}.`,
+    `LLM text: ${caseStudyTextUrl(caseStudy)}.`,
     `Tags: ${tags}.`,
     links ? `Links: ${links}.` : null,
   ]
