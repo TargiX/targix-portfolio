@@ -52,6 +52,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 1,
     },
+    {
+      url: absoluteUrl("/llms.txt"),
+      lastModified: homepageLastModified,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
     ...slugs.map((slug) => ({
       url: absoluteUrl(`/work/${slug}`),
       lastModified: caseMtimes.get(slug),
