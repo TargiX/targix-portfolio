@@ -190,7 +190,7 @@ export function ProductLaunchSimulator() {
           </ol>
         </aside>
 
-        <main className="min-w-0 bg-bg/35 p-4 backdrop-blur sm:p-5 xl:min-h-[560px]">
+        <div className="min-w-0 bg-bg/35 p-4 backdrop-blur sm:p-5 xl:min-h-[560px]">
           <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
             <div className="max-w-[780px]">
               <div className="inline-flex items-center gap-2 rounded-full border border-line-soft bg-bg-2/45 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">
@@ -200,7 +200,10 @@ export function ProductLaunchSimulator() {
               <h3 className="mt-4 max-w-[760px] font-sans text-[clamp(28px,5vw,56px)] font-medium leading-[0.95] tracking-[-0.045em] text-fg">
                 Tune the launch brief. The blueprint updates live.
               </h3>
-              <p className="mt-3 max-w-[620px] text-[14px] leading-relaxed text-fg-muted">
+              <p
+                id={`product-launch-choice-label-${current.id}`}
+                className="mt-3 max-w-[620px] text-[14px] leading-relaxed text-fg-muted"
+              >
                 {current.prompt}
               </p>
             </div>
@@ -214,13 +217,18 @@ export function ProductLaunchSimulator() {
             <span>choose one</span>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-line-soft bg-bg-2/16">
+          <div
+            role="group"
+            aria-labelledby={`product-launch-choice-label-${current.id}`}
+            className="overflow-hidden rounded-2xl border border-line-soft bg-bg-2/16"
+          >
             {current.choices.map((choice) => {
               const checked = answers[current.id] === choice.id;
               return (
                 <button
                   key={choice.id}
                   type="button"
+                  aria-pressed={checked}
                   onClick={() => choose(choice.id)}
                   className={cn(
                     "group relative w-full border-t border-line-soft/70 px-4 py-3 text-left transition first:border-t-0",
@@ -281,7 +289,7 @@ export function ProductLaunchSimulator() {
 
           <HandoffPanel selected={selected} build={build} />
 
-        </main>
+        </div>
 
       </div>
     </div>
