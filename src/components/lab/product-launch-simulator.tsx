@@ -14,7 +14,7 @@ import {
   Workflow,
   Zap,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 type StepId = "product" | "audience" | "complexity" | "integrations" | "polish";
@@ -114,6 +114,7 @@ const DEFAULTS: Record<StepId, string> = {
 export function ProductLaunchSimulator() {
   const [active, setActive] = useState(0);
   const [answers, setAnswers] = useState<Record<StepId, string>>(DEFAULTS);
+  const reduceMotion = useReducedMotion();
   const current = STEPS[active];
 
   const selected = useMemo(
@@ -253,7 +254,9 @@ export function ProductLaunchSimulator() {
             <motion.div
               className="h-full rounded-full bg-[linear-gradient(90deg,var(--accent),var(--accent-2))]"
               animate={{ width: `${completion}%` }}
-              transition={{ type: "spring", stiffness: 120, damping: 24 }}
+              transition={
+                reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 120, damping: 24 }
+              }
             />
           </div>
 
@@ -344,6 +347,7 @@ function LivePreview({
   build: ReturnType<typeof getBuildShape>;
 }) {
   const visible = active + 1;
+  const reduceMotion = useReducedMotion();
   return (
     <div className="relative overflow-hidden rounded-[20px] border border-line-soft/70 bg-[oklch(0.13_0.006_250)] p-3 sm:p-4">
       <div aria-hidden className="absolute inset-0 [background:radial-gradient(640px_300px_at_50%_0%,rgba(255,255,255,.055),transparent_62%)]" />
@@ -361,8 +365,11 @@ function LivePreview({
           <div className="space-y-3">
             <PreviewPanel show={visible >= 1} title="Product brief" icon={<Layers3 className="size-4" />}>
               <div className="text-[13px] leading-relaxed text-white/72">
-                Build a <span className="text-white">{selected[0].choice.label}</span> for {" "}
-                <span className="text-white">{selected[1].choice.label.toLowerCase()}</span> with a clear first win.
+                Build {getIndefiniteArticle(selected[0].choice.label)}{" "}
+                <span className="text-white">{selected[0].choice.label}</span> for{" "}
+                {getIndefiniteArticle(selected[1].choice.label)}{" "}
+                <span className="text-white">{selected[1].choice.label.toLowerCase()}</span> with a
+                clear first win.
               </div>
             </PreviewPanel>
 
@@ -377,6 +384,7 @@ function LivePreview({
                         className="h-full rounded-full bg-[var(--accent)]"
                         initial={false}
                         animate={{ width: `${42 + index * 22}%` }}
+                        transition={reduceMotion ? { duration: 0 } : undefined}
                       />
                     </div>
                   </div>
@@ -424,11 +432,21 @@ function PreviewPanel({
   children: ReactNode;
   className?: string;
 }) {
+  const reduceMotion = useReducedMotion();
+  const visibleState = reduceMotion
+    ? { opacity: 1 }
+    : { opacity: 1, y: 0, filter: "blur(0px)" };
+  const hiddenState = reduceMotion
+    ? { opacity: 0.28 }
+    : { opacity: 0.28, y: 14, filter: "blur(1.5px)" };
+
   return (
     <motion.div
       initial={false}
-      animate={show ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0.28, y: 14, filter: "blur(1.5px)" }}
-      transition={{ type: "spring", stiffness: 120, damping: 22 }}
+      animate={show ? visibleState : hiddenState}
+      transition={
+        reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 120, damping: 22 }
+      }
       className={cn("rounded-2xl border border-white/10 bg-white/[0.055] p-3", className)}
     >
       <div className="mb-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-white/42">
@@ -461,6 +479,10 @@ function Metric({ label, value }: { label: string; value: string }) {
       <div className="mt-1 truncate text-[12px] text-fg-muted">{value}</div>
     </div>
   );
+}
+
+function getIndefiniteArticle(label: string) {
+  return /^[aeiou]/i.test(label) ? "an" : "a";
 }
 
 function getBuildShape(score: number, answers: Record<StepId, string>) {
