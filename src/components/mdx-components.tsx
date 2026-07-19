@@ -11,6 +11,7 @@ import { RoomboardScreen } from "@/components/roomboard-screens";
 import { RoomboardThemeShowcase } from "@/components/roomboard-theme-showcase";
 import { PromptCompilerArtifact } from "@/components/prompt-compiler-artifact";
 import { CaseTLDR } from "@/components/case-tldr";
+import { SignalOpsReplayDemo } from "@/components/signalops-replay-demo";
 
 /** Local lite version of MDXComponents — avoids needing @types/mdx.
  *  Index signature covers HTML tags; custom components are added explicitly. */
@@ -30,6 +31,7 @@ type MDXComponents = {
   RoomboardThemeShowcase?: typeof RoomboardThemeShowcase;
   PromptCompilerArtifact?: typeof PromptCompilerArtifact;
   CaseTLDR?: typeof CaseTLDR;
+  SignalOpsReplayDemo?: typeof SignalOpsReplayDemo;
 };
 
 /** Custom mapping of HTML elements → styled React components for MDXRemote.
@@ -146,4 +148,5 @@ export const mdxComponents: MDXComponents = {
   RoomboardThemeShowcase,
   PromptCompilerArtifact,
   CaseTLDR,
+  SignalOpsReplayDemo,
 };
