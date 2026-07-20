@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import {
   ArrowRight,
@@ -15,9 +15,15 @@ import {
   Zap,
 } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
+import {
+  getLaunchBlueprintHistoryPath,
+  getLaunchBlueprintPath,
+  type LaunchBlueprint,
+  type LaunchBlueprintStep,
+} from "@/lib/product-launch-blueprint";
 import { cn } from "@/lib/utils";
 
-type StepId = "product" | "audience" | "complexity" | "integrations" | "polish";
+type StepId = LaunchBlueprintStep;
 
 type Choice = {
   id: string;
@@ -103,17 +109,11 @@ const STEPS: Step[] = [
   },
 ];
 
-const DEFAULTS: Record<StepId, string> = {
-  product: "ai",
-  audience: "operator",
-  complexity: "branching",
-  integrations: "linear",
-  polish: "investor",
-};
-
-export function ProductLaunchSimulator() {
-  const [active, setActive] = useState(0);
-  const [answers, setAnswers] = useState<Record<StepId, string>>(DEFAULTS);
+export function ProductLaunchSimulator({ initialBlueprint }: { initialBlueprint: LaunchBlueprint }) {
+  const [active, setActive] = useState(() => STEPS.findIndex((step) => step.id === initialBlueprint.active));
+  const [answers, setAnswers] = useState<Record<StepId, string>>(initialBlueprint.answers);
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "error">("idle");
+  const copyVersion = useRef(0);
   const reduceMotion = useReducedMotion();
   const current = STEPS[active];
 
@@ -130,8 +130,67 @@ export function ProductLaunchSimulator() {
   const completion = Math.round(((active + 1) / STEPS.length) * 100);
   const build = useMemo(() => getBuildShape(score, answers), [score, answers]);
 
+  useEffect(() => {
+    const path = getLaunchBlueprintHistoryPath(
+      { active: current.id, answers },
+      window.location.search,
+      window.location.hash,
+    );
+    let cancelled = false;
+
+    queueMicrotask(() => {
+      if (!cancelled) {
+        window.history.replaceState(null, "", path);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [answers, current.id]);
+
+  function invalidateCopiedBlueprint() {
+    copyVersion.current += 1;
+    setCopyStatus("idle");
+  }
+
+  function selectStep(index: number) {
+    invalidateCopiedBlueprint();
+    setActive(index);
+  }
+
   function choose(choiceId: string) {
+    invalidateCopiedBlueprint();
     setAnswers((next) => ({ ...next, [current.id]: choiceId }));
+  }
+
+  function advanceStep() {
+    invalidateCopiedBlueprint();
+    setActive((next) => (next + 1) % STEPS.length);
+  }
+
+  async function copyBlueprintLink() {
+    const version = ++copyVersion.current;
+    const href = new URL(
+      getLaunchBlueprintPath({ active: current.id, answers }),
+      window.location.origin,
+    ).toString();
+
+    try {
+      if (!navigator.clipboard?.writeText) {
+        throw new Error("Clipboard access is unavailable.");
+      }
+
+      await navigator.clipboard.writeText(href);
+
+      if (copyVersion.current === version) {
+        setCopyStatus("copied");
+      }
+    } catch {
+      if (copyVersion.current === version) {
+        setCopyStatus("error");
+      }
+    }
   }
 
   return (
@@ -158,9 +217,9 @@ export function ProductLaunchSimulator() {
                 <li key={step.id}>
                   <button
                     type="button"
-                    onClick={() => setActive(index)}
+                    onClick={() => selectStep(index)}
                     className={cn(
-                      "group grid w-full grid-cols-[26px_minmax(0,1fr)] gap-3 border-l px-2 py-3 text-left transition",
+                      "group grid w-full grid-cols-[26px_minmax(0,1fr)] gap-3 border-l px-2 py-3 text-left transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]",
                       isActive
                         ? "border-[var(--accent)] bg-[var(--accent)]/[0.035] text-fg"
                         : "border-line-soft/60 text-fg-muted hover:border-line hover:bg-bg-2/20 hover:text-fg",
@@ -231,7 +290,7 @@ export function ProductLaunchSimulator() {
                   aria-pressed={checked}
                   onClick={() => choose(choice.id)}
                   className={cn(
-                    "group relative w-full border-t border-line-soft/70 px-4 py-3 text-left transition first:border-t-0",
+                    "group relative w-full border-t border-line-soft/70 px-4 py-3 text-left transition first:border-t-0 focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--accent)]",
                     checked
                       ? "bg-[var(--accent)]/[0.035] shadow-[inset_3px_0_0_var(--accent)]"
                       : "hover:bg-bg-2/32",
@@ -271,8 +330,8 @@ export function ProductLaunchSimulator() {
           <div className="mt-3 flex items-center justify-end">
             <button
               type="button"
-              onClick={() => setActive((next) => (next + 1) % STEPS.length)}
-              className="inline-flex h-11 items-center gap-2 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-5 font-mono text-[12px] lowercase tracking-[0.06em] text-bg transition hover:brightness-110"
+              onClick={advanceStep}
+              className="inline-flex h-11 items-center gap-2 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-5 font-mono text-[12px] lowercase tracking-[0.06em] text-bg transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
               {active === STEPS.length - 1 ? "replay simulator" : "next step"}
               <ArrowRight className="size-4" />
@@ -287,7 +346,12 @@ export function ProductLaunchSimulator() {
             <LivePreview active={active} selected={selected} build={build} />
           </div>
 
-          <HandoffPanel selected={selected} build={build} />
+          <HandoffPanel
+            selected={selected}
+            build={build}
+            copyStatus={copyStatus}
+            onCopyBlueprint={copyBlueprintLink}
+          />
 
         </div>
 
@@ -299,13 +363,38 @@ export function ProductLaunchSimulator() {
 function HandoffPanel({
   selected,
   build,
+  copyStatus,
+  onCopyBlueprint,
 }: {
   selected: Array<{ step: Step; choice: Choice }>;
   build: ReturnType<typeof getBuildShape>;
+  copyStatus: "idle" | "copied" | "error";
+  onCopyBlueprint: () => void;
 }) {
   return (
     <section className="mt-4 border-t border-line-soft/70 pt-4">
-      <Header icon={<ClipboardList className="size-4" />} label="draft blueprint" value="live draft" />
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Header icon={<ClipboardList className="size-4" />} label="draft blueprint" value="live draft" />
+        <button
+          type="button"
+          onClick={onCopyBlueprint}
+          aria-describedby="product-launch-copy-status"
+          className="inline-flex h-9 items-center rounded-full border border-line-soft bg-bg-2/30 px-3 font-mono text-[10px] lowercase tracking-[0.06em] text-fg-muted transition hover:border-[var(--accent)] hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+        >
+          Copy blueprint link
+        </button>
+      </div>
+      <p
+        id="product-launch-copy-status"
+        aria-live="polite"
+        className="mt-2 min-h-5 font-mono text-[10px] lowercase tracking-[0.06em] text-fg-dim"
+      >
+        {copyStatus === "copied"
+          ? "Blueprint link copied."
+          : copyStatus === "error"
+            ? "Could not copy the link. Please copy it from the address bar."
+            : null}
+      </p>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(220px,0.9fr)_minmax(0,1.4fr)]">
         <div className="p-1">

@@ -3,6 +3,8 @@
 import { Suspense, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
+import { getLaunchBlueprintTrackingSearch } from "@/lib/product-launch-blueprint";
+
 type PostHogClient = typeof import("posthog-js").default;
 
 let posthogClient: Promise<PostHogClient> | null = null;
@@ -27,6 +29,10 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 function PostHogPageView() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const qs =
+    pathname === "/lab/product-launch"
+      ? getLaunchBlueprintTrackingSearch(searchParams)
+      : searchParams.toString();
 
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
@@ -48,7 +54,6 @@ function PostHogPageView() {
       }
 
       let url = window.origin + pathname;
-      const qs = searchParams.toString();
       if (qs) url += `?${qs}`;
       posthog.capture("$pageview", { $current_url: url });
     });
@@ -56,7 +61,7 @@ function PostHogPageView() {
     return () => {
       active = false;
     };
-  }, [pathname, searchParams]);
+  }, [pathname, qs]);
 
   return null;
 }
