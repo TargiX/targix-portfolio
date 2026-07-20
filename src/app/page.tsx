@@ -1,5 +1,6 @@
 import { Suspense } from "react";
-import { LayoutDashboard, PackageCheck, UserCheck } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, LayoutDashboard, PackageCheck, UserCheck } from "lucide-react";
 
 import { Hero } from "@/components/hero";
 import { Section } from "@/components/section";
@@ -182,6 +183,16 @@ export default function Home() {
                 The useful part is not adding a chatbot. It is turning messy work into an interface
                 people can trust, correct, approve, and ship through.
               </p>
+              <Link
+                href="/lab/product-launch"
+                className="group mt-5 inline-flex items-center gap-2 text-[13px] font-medium text-fg transition-colors hover:text-[var(--accent)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
+              >
+                Try the 90-second Product Launch Simulator
+                <ArrowUpRight
+                  className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </Link>
             </div>
 
             {[
