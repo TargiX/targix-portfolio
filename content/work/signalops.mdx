@@ -52,7 +52,7 @@ The feature that separates SignalOps from a static dashboard is **guided inciden
 
 Each scenario advances through five steps: signal → affected jobs → draft mitigation → projected KPI delta → export handoff. Every step sets concrete dashboard state (saved view, provider filter, trigger mode, traffic share, routing applied), so the operator sees the same controls move as if they were operating them by hand.
 
-![SignalOps incident detail](/work/signalops/incident.png)
+<SignalOpsReplayDemo />
 
 The replay is not a video or a mockup. It drives the real TanStack Query hydration, the real TanStack Table + Virtual row rendering, and the real Recharts memo-derived series. The proof callouts on each step name the implementation: "TanStack Virtual filters 10,000 synthetic jobs to the impacted provider with only visible rows mounted," "Applying the rule rewrites derived provider/timeline memos, so KPI cards and every chart re-render from one source."
 
