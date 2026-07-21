@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 
 import { ProductLaunchSimulator } from "@/components/lab/product-launch-simulator";
+import { decodeLaunchBlueprint } from "@/lib/product-launch-blueprint";
 
 export const metadata: Metadata = {
   title: "Product Launch Simulator",
@@ -13,7 +14,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProductLaunchPage() {
+export default async function ProductLaunchPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const initialBlueprint = decodeLaunchBlueprint(await searchParams);
+  const blueprintKey = JSON.stringify(initialBlueprint);
+
   return (
     <main className="min-h-screen px-5 pb-16 pt-8 sm:px-8 sm:pb-24 sm:pt-10">
       <div className="mx-auto w-full max-w-[1280px]">
@@ -51,7 +59,7 @@ export default function ProductLaunchPage() {
           </div>
         </header>
 
-        <ProductLaunchSimulator />
+        <ProductLaunchSimulator key={blueprintKey} initialBlueprint={initialBlueprint} />
 
         <footer className="mt-10 flex flex-col gap-4 border-t border-line-soft pt-7 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-[58ch] text-[12px] leading-relaxed text-fg-dim">
