@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   LAUNCH_BLUEPRINT_DEFAULTS,
   decodeLaunchBlueprint,
+  getLaunchBlueprintCaseStudy,
   getLaunchBlueprintHistoryPath,
   getLaunchBlueprintPath,
   getLaunchBlueprintTrackingSearch,
@@ -58,6 +59,25 @@ test("returns canonical defaults for absent, malformed, or unknown values", () =
     },
   );
   assert.equal(getLaunchBlueprintPath(LAUNCH_BLUEPRINT_DEFAULTS), "/lab/product-launch");
+});
+
+test("maps every product shape to one relevant shipped case study", () => {
+  const expectedCases = {
+    saas: "broker-online-exchange",
+    internal: "signalops",
+    ai: "phosphene",
+    market: "roomboard",
+  };
+
+  for (const [product, slug] of Object.entries(expectedCases)) {
+    assert.equal(
+      getLaunchBlueprintCaseStudy({
+        ...LAUNCH_BLUEPRINT_DEFAULTS.answers,
+        product,
+      }).slug,
+      slug,
+    );
+  }
 });
 
 test("keeps unrelated query state and the hash while replacing blueprint state", () => {

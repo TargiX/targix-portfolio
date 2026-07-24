@@ -15,6 +15,12 @@ export type LaunchBlueprint = {
   answers: LaunchBlueprintAnswers;
 };
 
+export type LaunchBlueprintCaseStudy = {
+  slug: "broker-online-exchange" | "signalops" | "phosphene" | "roomboard";
+  title: string;
+  reason: string;
+};
+
 export type LaunchBlueprintSearchParams = Record<string, string | string[] | undefined>;
 
 const LAUNCH_BLUEPRINT_PARAM_NAMES = [...LAUNCH_BLUEPRINT_STEPS, "step"] as const;
@@ -35,6 +41,29 @@ export const LAUNCH_BLUEPRINT_DEFAULTS: LaunchBlueprint = {
     complexity: "branching",
     integrations: "linear",
     polish: "investor",
+  },
+};
+
+const CASE_STUDY_BY_PRODUCT: Record<string, LaunchBlueprintCaseStudy> = {
+  saas: {
+    slug: "broker-online-exchange",
+    title: "Broker Online Exchange",
+    reason: "a real B2B platform with onboarding, workflow depth, and delivery trade-offs",
+  },
+  internal: {
+    slug: "signalops",
+    title: "SignalOps",
+    reason: "a real operator cockpit built around dense controls, incident context, and decisions",
+  },
+  ai: {
+    slug: "phosphene",
+    title: "Phosphene",
+    reason: "a real AI workflow that makes generation states and human review legible",
+  },
+  market: {
+    slug: "roomboard",
+    title: "Roomboard",
+    reason: "a real collaborative product where trust, feedback, and conversion need to stay clear",
   },
 };
 
@@ -75,6 +104,12 @@ export function isDefaultLaunchBlueprint(blueprint: LaunchBlueprint) {
       (step) => blueprint.answers[step] === LAUNCH_BLUEPRINT_DEFAULTS.answers[step],
     )
   );
+}
+
+export function getLaunchBlueprintCaseStudy(
+  answers: LaunchBlueprintAnswers,
+): LaunchBlueprintCaseStudy {
+  return CASE_STUDY_BY_PRODUCT[answers.product] ?? CASE_STUDY_BY_PRODUCT.ai;
 }
 
 export function getLaunchBlueprintPath(blueprint: LaunchBlueprint) {
