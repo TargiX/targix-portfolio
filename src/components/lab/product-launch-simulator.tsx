@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import Link from "next/link";
 import {
   ArrowRight,
   Blocks,
@@ -16,8 +17,10 @@ import {
 } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import {
+  getLaunchBlueprintCaseStudy,
   getLaunchBlueprintHistoryPath,
   getLaunchBlueprintPath,
+  type LaunchBlueprintCaseStudy,
   type LaunchBlueprint,
   type LaunchBlueprintStep,
 } from "@/lib/product-launch-blueprint";
@@ -129,6 +132,7 @@ export function ProductLaunchSimulator({ initialBlueprint }: { initialBlueprint:
   const score = selected.reduce((sum, item) => sum + item.choice.weight, 0);
   const completion = Math.round(((active + 1) / STEPS.length) * 100);
   const build = useMemo(() => getBuildShape(score, answers), [score, answers]);
+  const caseStudy = useMemo(() => getLaunchBlueprintCaseStudy(answers), [answers]);
 
   useEffect(() => {
     const path = getLaunchBlueprintHistoryPath(
@@ -349,6 +353,7 @@ export function ProductLaunchSimulator({ initialBlueprint }: { initialBlueprint:
           <HandoffPanel
             selected={selected}
             build={build}
+            caseStudy={caseStudy}
             copyStatus={copyStatus}
             onCopyBlueprint={copyBlueprintLink}
           />
@@ -363,11 +368,13 @@ export function ProductLaunchSimulator({ initialBlueprint }: { initialBlueprint:
 function HandoffPanel({
   selected,
   build,
+  caseStudy,
   copyStatus,
   onCopyBlueprint,
 }: {
   selected: Array<{ step: Step; choice: Choice }>;
   build: ReturnType<typeof getBuildShape>;
+  caseStudy: LaunchBlueprintCaseStudy;
   copyStatus: "idle" | "copied" | "error";
   onCopyBlueprint: () => void;
 }) {
@@ -411,6 +418,21 @@ function HandoffPanel({
             <Metric label="user" value={selected[1].choice.label} />
             <Metric label="flow" value={selected[2].choice.label} />
             <Metric label="handoff" value={selected[3].choice.label} />
+          </div>
+          <div className="mt-5 border-t border-line-soft/70 pt-4">
+            <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">
+              real shipped proof
+            </div>
+            <p className="mt-2 text-[12px] leading-relaxed text-fg-muted">
+              This blueprint points toward {caseStudy.reason}.
+            </p>
+            <Link
+              href={`/work/${caseStudy.slug}`}
+              className="group mt-3 inline-flex items-center gap-2 text-[13px] font-medium text-fg transition hover:text-[var(--accent)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
+            >
+              Open {caseStudy.title} case study
+              <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+            </Link>
           </div>
         </div>
 
