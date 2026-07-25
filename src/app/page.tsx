@@ -193,6 +193,16 @@ export default function Home() {
                   aria-hidden="true"
                 />
               </Link>
+              <Link
+                href="/lab"
+                className="group mt-3 inline-flex items-center gap-2 text-[12px] text-fg-muted transition-colors hover:text-[var(--accent)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
+              >
+                Browse the interaction lab
+                <ArrowUpRight
+                  className="size-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </Link>
             </div>
 
             {[
