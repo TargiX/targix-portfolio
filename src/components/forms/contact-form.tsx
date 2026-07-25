@@ -9,7 +9,13 @@ import { cn } from "@/lib/utils";
 
 const INITIAL_STATE: ContactFormState = { ok: false, version: 0 };
 
-export function ContactForm({ disabled = false }: { disabled?: boolean }) {
+export function ContactForm({
+  disabled = false,
+  caseTitle,
+}: {
+  disabled?: boolean;
+  caseTitle?: string;
+}) {
   const [state, formAction, isPending] = useActionState(sendContact, INITIAL_STATE);
   const formRef = useRef<HTMLFormElement>(null);
   const messageId = useId();
@@ -17,7 +23,6 @@ export function ContactForm({ disabled = false }: { disabled?: boolean }) {
   const websiteId = useId();
   const formErrorId = useId();
   const [showSuccess, setShowSuccess] = useState(false);
-  const hasFieldErrors = !!state.fieldErrors && Object.keys(state.fieldErrors).length > 0;
 
   useEffect(() => {
     if (state.ok) {
@@ -34,8 +39,9 @@ export function ContactForm({ disabled = false }: { disabled?: boolean }) {
       action={formAction}
       className="grid gap-3 sm:grid-cols-2"
       aria-label="Contact form"
-      aria-describedby={state.error && !hasFieldErrors ? formErrorId : undefined}
+      aria-describedby={state.error ? formErrorId : undefined}
     >
+      {caseTitle && <input type="hidden" name="context" value={`Case study: ${caseTitle}`} />}
       <Field
         label="name"
         name="name"
@@ -68,7 +74,11 @@ export function ContactForm({ disabled = false }: { disabled?: boolean }) {
           rows={5}
           maxLength={2000}
           disabled={disabled}
-          placeholder="what you're building, what you need, what you'd want me to do…"
+          placeholder={
+            caseTitle
+              ? `what caught your attention in ${caseTitle}, and what would you like to build?`
+              : "what you're building, what you need, what you'd want me to do…"
+          }
           className="w-full resize-none rounded-sm border border-line bg-bg-2/40 px-2.5 py-2 font-mono text-[12px] text-fg outline-none transition-colors placeholder:text-fg-dim focus:border-[var(--accent)]"
           aria-invalid={!!state.fieldErrors?.message}
           aria-describedby={state.fieldErrors?.message ? messageErrorId : undefined}
@@ -113,7 +123,7 @@ export function ContactForm({ disabled = false }: { disabled?: boolean }) {
         </button>
 
         <div className="text-[10px] lowercase tracking-[0.08em] text-fg-dim">
-          server action · resend · zod · react 19 useActionState
+          or use the direct email link above
         </div>
       </div>
 
@@ -131,7 +141,7 @@ export function ContactForm({ disabled = false }: { disabled?: boolean }) {
         )}
       </AnimatePresence>
 
-      {state.error && !hasFieldErrors && (
+      {state.error && (
         <div id={formErrorId} role="alert" className="sm:col-span-2 text-[10px] text-red-400">
           {state.error}
         </div>

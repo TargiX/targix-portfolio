@@ -12,6 +12,7 @@ import { LightboxProvider } from "@/components/lightbox";
 import { CaseMetaRail } from "@/components/case-meta-rail";
 import { CaseNav } from "@/components/case-nav";
 import { CaseRouteReset } from "@/components/case-route-reset";
+import { ContactForm } from "@/components/forms/contact-form";
 import { CONTACT } from "@/lib/data";
 import {
   SITE,
@@ -219,6 +220,19 @@ function CaseContactCTA({ caseTitle }: { caseTitle: string }) {
             linkedin <span aria-hidden="true">↗</span>
           </a>
         </div>
+      </div>
+
+      <div className="mt-8 border-t border-line-soft pt-6">
+        <div className="mb-5 max-w-[58ch]">
+          <p className="mb-2 font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim">
+            start a scoped conversation
+          </p>
+          <p className="m-0 text-[14px] leading-relaxed text-fg-muted">
+            Your message will include this case study, so the conversation starts with the relevant
+            product context.
+          </p>
+        </div>
+        <ContactForm caseTitle={caseTitle} />
       </div>
     </section>
   );
