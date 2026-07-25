@@ -56,6 +56,9 @@ export function SiteNav() {
               </a>
             );
           })}
+          <a href="/proof" className="site-nav-link">
+            Proof
+          </a>
         </div>
 
         <div className="ml-auto flex shrink-0 items-center gap-2 font-mono text-[11px] tracking-[0.04em] sm:gap-4">
