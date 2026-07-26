@@ -25,10 +25,10 @@ export default function LabPage() {
           Back to portfolio
         </Link>
         <Link
-          href="/lab/product-launch"
+          href="/lab/review-relay"
           className="inline-flex items-center gap-1.5 text-[12px] font-medium text-fg transition-colors hover:text-[var(--accent)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
         >
-          Product Launch Simulator
+          Review Relay
           <ArrowUpRight className="size-3.5" aria-hidden="true" />
         </Link>
       </nav>
