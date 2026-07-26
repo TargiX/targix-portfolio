@@ -9,6 +9,12 @@ const ContactSchema = z.object({
   name: z.string().trim().min(1, "name is required").max(80, "too long"),
   email: z.string().trim().email("must be a valid email"),
   message: z.string().trim().min(8, "tell me more than that").max(2000, "too long"),
+  context: z
+    .string()
+    .trim()
+    .min(1, "case study context is required")
+    .max(160, "too long")
+    .refine((value) => !/[\r\n]/.test(value), "must be a single line"),
   website: z.string().optional().default(""),
 });
 
@@ -32,11 +38,13 @@ export async function sendContact(
     name: formData.get("name"),
     email: formData.get("email"),
     message: formData.get("message"),
+    context: formData.get("context"),
     website: formData.get("website") ?? "",
   });
 
   if (!parsed.success) {
     const fieldErrors: ContactFormState["fieldErrors"] = {};
+    let contextError = false;
     for (const issue of parsed.error.issues) {
       const key = issue.path[0];
       if (
@@ -46,10 +54,15 @@ export async function sendContact(
       ) {
         fieldErrors[key] = issue.message;
       }
+      if (key === "context") {
+        contextError = true;
+      }
     }
     return {
       ok: false,
-      error: "fix the highlighted fields",
+      error: contextError
+        ? "case study context is missing or invalid; reopen this form from its case study"
+        : "fix the highlighted fields",
       fieldErrors,
       version: prev.version,
     };
@@ -73,7 +86,7 @@ export async function sendContact(
     };
   }
 
-  const { name, email, message } = parsed.data;
+  const { name, email, message, context } = parsed.data;
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
@@ -93,8 +106,8 @@ export async function sendContact(
       from: FROM_EMAIL,
       to: TO_EMAIL,
       replyTo: email,
-      subject: `Portfolio · ${name}`,
-      text: `From: ${name} <${email}>\n\n${message}`,
+      subject: `Portfolio · ${name}${context ? ` · ${context}` : ""}`,
+      text: `From: ${name} <${email}>${context ? `\nContext: ${context}` : ""}\n\n${message}`,
     });
     if (error) {
       console.error("[contact] resend error:", error);
