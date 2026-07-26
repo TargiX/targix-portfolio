@@ -66,16 +66,28 @@ export default async function ProductLaunchPage({
             Built as a compact proof of how I turn ambiguous product constraints into interface
             structure, implementation scope, and a shippable handoff.
           </p>
-          <Link
-            href="mailto:hello@ilyamoskovkin.com?subject=Product%20idea%20for%20Ilya"
-            className="group inline-flex shrink-0 items-center gap-2 font-mono text-[11px] tracking-[0.06em] text-fg-muted transition-colors hover:text-[var(--accent)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
-          >
-            Send me a messy product idea
-            <ArrowUpRight
-              className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-              aria-hidden="true"
-            />
-          </Link>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+            <Link
+              href="/lab/scope"
+              className="group inline-flex shrink-0 items-center gap-2 font-mono text-[11px] tracking-[0.06em] text-fg-muted transition-colors hover:text-[var(--accent)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
+            >
+              Turn an ambiguous brief into scope
+              <ArrowUpRight
+                className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </Link>
+            <Link
+              href="mailto:hello@ilyamoskovkin.com?subject=Product%20idea%20for%20Ilya"
+              className="group inline-flex shrink-0 items-center gap-2 font-mono text-[11px] tracking-[0.06em] text-fg-muted transition-colors hover:text-[var(--accent)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
+            >
+              Send me a messy product idea
+              <ArrowUpRight
+                className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </Link>
+          </div>
         </footer>
       </div>
     </main>
