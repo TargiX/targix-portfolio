@@ -9,6 +9,15 @@ type DeliveryMode = "validate" | "clarify" | "ship";
 type Constraint = "audience" | "integration" | "risk";
 type CopyStatus = "idle" | "copied" | "error";
 
+type ScopeScenario = {
+  id: string;
+  label: string;
+  detail: string;
+  brief: string;
+  delivery: DeliveryMode;
+  constraint: Constraint;
+};
+
 const DELIVERY_OPTIONS: Array<{ id: DeliveryMode; label: string; detail: string }> = [
   {
     id: "validate",
@@ -42,6 +51,36 @@ const CONSTRAINT_OPTIONS: Array<{ id: Constraint; label: string; detail: string 
     id: "risk",
     label: "Trust or operational risk is high",
     detail: "The interface must make review, correction, and accountability explicit.",
+  },
+];
+
+const SCENARIOS: ScopeScenario[] = [
+  {
+    id: "support-handoff",
+    label: "Support escalation handoff",
+    detail: "Turn a recurring customer escalation into one owned engineering decision.",
+    brief:
+      "Support teams lose the context behind recurring escalations. Create one reviewable handoff so engineering can understand the customer impact, decide the next action, and report the outcome back to support.",
+    delivery: "clarify",
+    constraint: "integration",
+  },
+  {
+    id: "ai-review",
+    label: "AI exception review",
+    detail: "Make automated output safe to correct and approve before it reaches a customer.",
+    brief:
+      "Operations teams need to review AI-generated account updates before they reach customers. Build a narrow surface that makes the proposed change, human correction, approval decision, and audit context visible in one place.",
+    delivery: "clarify",
+    constraint: "risk",
+  },
+  {
+    id: "integration-deadline",
+    label: "Integration under deadline",
+    detail: "Ship a truthful operator path while an external dependency remains fragile.",
+    brief:
+      "A launch depends on an external CRM handoff that can delay or reject records. Give operators a reliable first path that validates the request, shows the handoff state, and preserves a recoverable draft when the dependency fails.",
+    delivery: "ship",
+    constraint: "integration",
   },
 ];
 
@@ -114,6 +153,13 @@ export function ScopeConsole() {
     setConstraint(value);
   }
 
+  function applyScenario(scenario: ScopeScenario) {
+    invalidateArtifact();
+    setBrief(scenario.brief);
+    setDelivery(scenario.delivery);
+    setConstraint(scenario.constraint);
+  }
+
   async function copyMemo() {
     const version = ++copyVersion.current;
 
@@ -167,6 +213,43 @@ export function ScopeConsole() {
                 : "Enough context to shape a first-slice memo."}
             </span>
           </label>
+
+          <fieldset className="mt-6">
+            <legend className="font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">
+              Try a realistic starting point
+            </legend>
+            <p className="mt-2 text-[12px] leading-relaxed text-fg-muted">
+              Load a concrete brief, then change any input before you shape the memo.
+            </p>
+            <div className="mt-3 grid gap-2">
+              {SCENARIOS.map((scenario) => {
+                const selected =
+                  brief === scenario.brief &&
+                  delivery === scenario.delivery &&
+                  constraint === scenario.constraint;
+
+                return (
+                  <button
+                    key={scenario.id}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => applyScenario(scenario)}
+                    className={cn(
+                      "group w-full rounded-xl border px-3 py-3 text-left transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]",
+                      selected
+                        ? "border-[var(--accent)] bg-[var(--accent)]/[0.045] shadow-[inset_3px_0_0_var(--accent)]"
+                        : "border-line-soft bg-bg-2/16 hover:border-line hover:bg-bg-2/32",
+                    )}
+                  >
+                    <span className="block text-[13px] font-medium text-fg">{scenario.label}</span>
+                    <span className="mt-1 block text-[11px] leading-relaxed text-fg-muted">
+                      {scenario.detail}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
 
           <ChoiceGroup
             label="Delivery pressure"
