@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 
 import { ProofPathBuilder } from "@/components/proof-path-builder";
+import { getProofMode } from "@/lib/proof-path";
 
 export const metadata: Metadata = {
   title: "Evidence Path",
@@ -11,7 +12,18 @@ export const metadata: Metadata = {
   alternates: { canonical: "/proof" },
 };
 
-export default function ProofPage() {
+export default async function ProofPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const query = await searchParams;
+  const mode = getProofMode(typeof query.for === "string" ? query.for : undefined);
+  const initialOpenedIndexes = getOpenedStopIndexes(
+    typeof query.opened === "string" ? query.opened : undefined,
+    mode.stops.length,
+  );
+
   return (
     <main className="min-h-screen px-5 pb-16 pt-8 sm:px-8 sm:pb-24 sm:pt-10">
       <div className="mx-auto w-full max-w-[1280px]">
@@ -43,7 +55,7 @@ export default function ProofPage() {
           </div>
         </header>
 
-        <ProofPathBuilder />
+        <ProofPathBuilder initialModeId={mode.id} initialOpenedIndexes={initialOpenedIndexes} />
 
         <footer className="mt-10 flex flex-col gap-4 border-t border-line-soft pt-7 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-[58ch] text-[12px] leading-relaxed text-fg-dim">
@@ -59,5 +71,15 @@ export default function ProofPage() {
         </footer>
       </div>
     </main>
+  );
+}
+
+function getOpenedStopIndexes(value: string | undefined, totalStops: number) {
+  if (!value) {
+    return [];
+  }
+
+  return [...new Set(value.split(",").map(Number))].filter(
+    (index) => Number.isInteger(index) && index >= 0 && index < totalStops,
   );
 }
