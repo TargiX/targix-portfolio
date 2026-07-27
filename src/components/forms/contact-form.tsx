@@ -12,9 +12,11 @@ const INITIAL_STATE: ContactFormState = { ok: false, version: 0 };
 export function ContactForm({
   disabled = false,
   caseTitle,
+  context,
 }: {
   disabled?: boolean;
   caseTitle?: string;
+  context?: string;
 }) {
   const [state, formAction, isPending] = useActionState(sendContact, INITIAL_STATE);
   const formRef = useRef<HTMLFormElement>(null);
@@ -41,7 +43,9 @@ export function ContactForm({
       aria-label="Contact form"
       aria-describedby={state.error ? formErrorId : undefined}
     >
-      {caseTitle && <input type="hidden" name="context" value={`Case study: ${caseTitle}`} />}
+      {(caseTitle || context) && (
+        <input type="hidden" name="context" value={caseTitle ? `Case study: ${caseTitle}` : context} />
+      )}
       <Field
         label="name"
         name="name"

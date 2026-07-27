@@ -14,6 +14,7 @@ import { WorkScrollController } from "@/components/work-scroll-controller";
 import { WorkScrollMemory } from "@/components/work-scroll-memory";
 import { MoreWorkRibbon } from "@/components/more-work-ribbon";
 import { SectionTracker } from "@/components/section-tracker";
+import { ContactForm } from "@/components/forms/contact-form";
 import { CONTACT, FEATURED, MORE } from "@/lib/data";
 import { getHomeJsonLd } from "@/lib/seo";
 
@@ -340,6 +341,18 @@ export default function Home() {
                 Open to senior frontend or design-engineering roles. Based in Vietnam, comfortable
                 async.
               </p>
+              <div className="mt-8 max-w-[680px] border-t border-line-soft/70 pt-6">
+                <div className="mb-4 max-w-[56ch]">
+                  <p className="font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim">
+                    start a project conversation
+                  </p>
+                  <p className="mt-2 text-[13px] leading-relaxed text-fg-muted">
+                    Share the product problem, the outcome you need, and where you want a senior
+                    product engineer to take ownership.
+                  </p>
+                </div>
+                <ContactForm context="Portfolio homepage" />
+              </div>
             </div>
 
             {/* links */}
