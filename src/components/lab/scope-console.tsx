@@ -289,6 +289,7 @@ export function ScopeConsole() {
             type="button"
             disabled={!canGenerate}
             onClick={() => {
+              copyVersion.current += 1;
               setArtifactStatus("idle");
               setGenerated(true);
             }}
