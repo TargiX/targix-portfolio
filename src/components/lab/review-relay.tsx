@@ -1,14 +1,18 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Check, ClipboardCheck, Copy, ShieldCheck } from "lucide-react";
 
+import {
+  getReviewRelayHistoryPath,
+  type DecisionOwner,
+  type ProofFocus,
+  type ReviewMoment,
+  type ReviewRelayInput,
+} from "@/lib/review-relay";
 import { cn } from "@/lib/utils";
 
-type ReviewMoment = "launch" | "incident" | "handoff";
-type DecisionOwner = "product" | "engineering" | "client";
-type ProofFocus = "behavior" | "risk" | "delivery";
-type CopyStatus = "idle" | "copied" | "error";
+type CopyStatus = "idle" | "relay-copied" | "link-copied" | "error";
 
 const MOMENTS: Array<{ id: ReviewMoment; label: string; detail: string }> = [
   { id: "launch", label: "Before a product bet", detail: "A team needs a real decision before polishing the wrong thing." },
@@ -46,15 +50,27 @@ const PROOF_COPY: Record<ProofFocus, string> = {
   delivery: "Show the named owner, the exact handoff artifact, and the next checkpoint after delivery.",
 };
 
-export function ReviewRelay() {
-  const [moment, setMoment] = useState<ReviewMoment>("launch");
-  const [owner, setOwner] = useState<DecisionOwner>("product");
-  const [proof, setProof] = useState<ProofFocus>("behavior");
-  const [generated, setGenerated] = useState(false);
+export function ReviewRelay({ initialRelay }: { initialRelay: ReviewRelayInput }) {
+  const [moment, setMoment] = useState<ReviewMoment>(initialRelay.moment);
+  const [owner, setOwner] = useState<DecisionOwner>(initialRelay.owner);
+  const [proof, setProof] = useState<ProofFocus>(initialRelay.proof);
+  const [generated, setGenerated] = useState(initialRelay.ready);
   const [copyStatus, setCopyStatus] = useState<CopyStatus>("idle");
   const copyVersion = useRef(0);
 
   const relay = useMemo(() => createRelay(moment, owner, proof), [moment, owner, proof]);
+
+  useEffect(() => {
+    window.history.replaceState(
+      null,
+      "",
+      getReviewRelayHistoryPath(
+        { moment, owner, proof, ready: generated },
+        window.location.search,
+        window.location.hash,
+      ),
+    );
+  }, [generated, moment, owner, proof]);
 
   function invalidateRelay() {
     copyVersion.current += 1;
@@ -82,7 +98,18 @@ export function ReviewRelay() {
     try {
       if (!navigator.clipboard?.writeText) throw new Error("Clipboard access unavailable");
       await navigator.clipboard.writeText(relay.markdown);
-      if (copyVersion.current === version) setCopyStatus("copied");
+      if (copyVersion.current === version) setCopyStatus("relay-copied");
+    } catch {
+      if (copyVersion.current === version) setCopyStatus("error");
+    }
+  }
+
+  async function copyShareLink() {
+    const version = ++copyVersion.current;
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard access unavailable");
+      await navigator.clipboard.writeText(window.location.href);
+      if (copyVersion.current === version) setCopyStatus("link-copied");
     } catch {
       if (copyVersion.current === version) setCopyStatus("error");
     }
@@ -125,9 +152,14 @@ export function ReviewRelay() {
               {generated ? "Review relay ready" : "Your review relay will appear here"}
             </div>
             {generated && (
-              <button type="button" onClick={copyRelay} className="inline-flex h-9 items-center gap-2 rounded-full border border-line-soft bg-bg-2/30 px-3 font-mono text-[10px] lowercase tracking-[0.06em] text-fg-muted transition hover:border-[var(--accent)] hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]">
-                <Copy className="size-3.5" aria-hidden /> Copy relay
-              </button>
+              <div className="flex flex-wrap gap-2">
+                <button type="button" onClick={copyShareLink} className="inline-flex h-9 items-center gap-2 rounded-full border border-line-soft bg-bg-2/30 px-3 font-mono text-[10px] lowercase tracking-[0.06em] text-fg-muted transition hover:border-[var(--accent)] hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]">
+                  <Copy className="size-3.5" aria-hidden /> Copy share link
+                </button>
+                <button type="button" onClick={copyRelay} className="inline-flex h-9 items-center gap-2 rounded-full border border-line-soft bg-bg-2/30 px-3 font-mono text-[10px] lowercase tracking-[0.06em] text-fg-muted transition hover:border-[var(--accent)] hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]">
+                  <Copy className="size-3.5" aria-hidden /> Copy relay
+                </button>
+              </div>
             )}
           </div>
 
@@ -138,7 +170,7 @@ export function ReviewRelay() {
               <RelayBlock label="Proof before approval" value={relay.proof} />
               <RelayBlock label="The next message" value={relay.nextMessage} accent />
               <p className="min-h-5 text-[12px] text-fg-dim" role="status">
-                {copyStatus === "copied" ? "Relay copied. It belongs to this exact set of choices." : copyStatus === "error" ? "Could not copy the relay. Select the text manually." : "Draft generated from the choices on the left."}
+                {copyStatus === "relay-copied" ? "Relay copied. It belongs to this exact set of choices." : copyStatus === "link-copied" ? "Share link copied. It restores this decision, owner, proof boundary, and ready relay." : copyStatus === "error" ? "Could not copy. Select the relay or URL from the address bar manually." : "This relay is shareable: its URL preserves the current choices and ready state."}
               </p>
             </article>
           ) : (
