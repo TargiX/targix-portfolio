@@ -1,13 +1,13 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { ArrowRight, Check, CircleAlert, ClipboardList, Copy, Layers3 } from "lucide-react";
+import { ArrowRight, Check, CircleAlert, ClipboardList, Copy, Download, Layers3 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 type DeliveryMode = "validate" | "clarify" | "ship";
 type Constraint = "audience" | "integration" | "risk";
-type CopyStatus = "idle" | "copied" | "error";
+type ArtifactStatus = "idle" | "copied" | "downloaded" | "error";
 
 type ScopeScenario = {
   id: string;
@@ -122,7 +122,7 @@ export function ScopeConsole() {
   const [delivery, setDelivery] = useState<DeliveryMode>("validate");
   const [constraint, setConstraint] = useState<Constraint>("audience");
   const [generated, setGenerated] = useState(false);
-  const [copyStatus, setCopyStatus] = useState<CopyStatus>("idle");
+  const [artifactStatus, setArtifactStatus] = useState<ArtifactStatus>("idle");
   const copyVersion = useRef(0);
 
   const normalizedBrief = brief.trim();
@@ -134,7 +134,7 @@ export function ScopeConsole() {
 
   function invalidateArtifact() {
     copyVersion.current += 1;
-    setCopyStatus("idle");
+    setArtifactStatus("idle");
     setGenerated(false);
   }
 
@@ -169,9 +169,30 @@ export function ScopeConsole() {
       }
 
       await navigator.clipboard.writeText(memo.markdown);
-      if (copyVersion.current === version) setCopyStatus("copied");
+      if (copyVersion.current === version) setArtifactStatus("copied");
     } catch {
-      if (copyVersion.current === version) setCopyStatus("error");
+      if (copyVersion.current === version) setArtifactStatus("error");
+    }
+  }
+
+  function downloadMemo() {
+    const version = ++copyVersion.current;
+
+    try {
+      const file = new Blob([memo.markdown], { type: "text/markdown;charset=utf-8" });
+      const url = URL.createObjectURL(file);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = "first-slice-scope-memo.md";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+
+      if (copyVersion.current === version) setArtifactStatus("downloaded");
+    } catch {
+      if (copyVersion.current === version) setArtifactStatus("error");
     }
   }
 
@@ -268,7 +289,7 @@ export function ScopeConsole() {
             type="button"
             disabled={!canGenerate}
             onClick={() => {
-              setCopyStatus("idle");
+              setArtifactStatus("idle");
               setGenerated(true);
             }}
             className="mt-7 inline-flex h-11 items-center gap-2 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-5 font-mono text-[12px] lowercase tracking-[0.06em] text-bg transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-40"
@@ -285,15 +306,26 @@ export function ScopeConsole() {
               {generated ? "Reviewable scope memo" : "Your scope memo will appear here"}
             </div>
             {generated && (
-              <button
-                type="button"
-                onClick={copyMemo}
-                aria-describedby="scope-copy-status"
-                className="inline-flex h-9 items-center gap-2 rounded-full border border-line-soft bg-bg-2/30 px-3 font-mono text-[10px] lowercase tracking-[0.06em] text-fg-muted transition hover:border-[var(--accent)] hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-              >
-                <Copy className="size-3.5" aria-hidden />
-                Copy memo
-              </button>
+              <div className="flex flex-wrap items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={copyMemo}
+                  aria-describedby="scope-action-status"
+                  className="inline-flex h-9 items-center gap-2 rounded-full border border-line-soft bg-bg-2/30 px-3 font-mono text-[10px] lowercase tracking-[0.06em] text-fg-muted transition hover:border-[var(--accent)] hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                >
+                  <Copy className="size-3.5" aria-hidden />
+                  Copy memo
+                </button>
+                <button
+                  type="button"
+                  onClick={downloadMemo}
+                  aria-describedby="scope-action-status"
+                  className="inline-flex h-9 items-center gap-2 rounded-full border border-line-soft bg-bg-2/30 px-3 font-mono text-[10px] lowercase tracking-[0.06em] text-fg-muted transition hover:border-[var(--accent)] hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                >
+                  <Download className="size-3.5" aria-hidden />
+                  Download memo
+                </button>
+              </div>
             )}
           </div>
 
@@ -308,11 +340,13 @@ export function ScopeConsole() {
               <MemoRow n="03" label="Risk to make visible" body={memo.risk} />
               <MemoRow n="04" label="Review contract" body={memo.review} />
               <MemoRow n="05" label="Decision before build" body={memo.nextDecision} />
-              <p id="scope-copy-status" aria-live="polite" className="min-h-5 font-mono text-[10px] lowercase tracking-[0.06em] text-fg-dim">
-                {copyStatus === "copied"
+              <p id="scope-action-status" aria-live="polite" className="min-h-5 font-mono text-[10px] lowercase tracking-[0.06em] text-fg-dim">
+                {artifactStatus === "copied"
                   ? "Scope memo copied. Paste it into the product or engineering conversation."
-                  : copyStatus === "error"
-                    ? "Could not copy the memo. Select the visible memo and copy it manually."
+                  : artifactStatus === "downloaded"
+                    ? "Scope memo download started. Keep this version with the product or engineering conversation."
+                    : artifactStatus === "error"
+                      ? "Could not prepare the memo. Select the visible memo and copy it manually."
                     : "This memo is generated from the current brief and constraints."}
               </p>
             </article>
