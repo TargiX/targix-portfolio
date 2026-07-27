@@ -2,12 +2,19 @@
 
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { Bot, GitBranch, MousePointer2, Scissors } from "lucide-react";
+import {
+  Bot,
+  GitBranch,
+  ListChecks,
+  MousePointer2,
+  Scissors,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TimelineEditor } from "@/components/lab/timeline-editor";
 import { PromptCompilerArtifact } from "@/components/prompt-compiler-artifact";
 import { AiChat } from "@/components/lab/ai-chat";
 import { ReactFlowDemo } from "@/components/lab/react-flow-demo";
+import { AssumptionLedger } from "@/components/lab/assumption-ledger";
 
 type Experiment = {
   id: string;
@@ -19,6 +26,15 @@ type Experiment = {
 };
 
 const EXPERIMENTS: Experiment[] = [
+  {
+    id: "ledger",
+    title: "Assumption Ledger",
+    kicker: "hypothesis · signal · falsifier",
+    value:
+      "Turn a product claim into a small, reviewable experiment with a first action, success signal, and condition to reverse course.",
+    icon: <ListChecks className="size-4" />,
+    component: <AssumptionLedger />,
+  },
   {
     id: "timeline",
     title: "Timeline Editor",
@@ -60,7 +76,9 @@ const EXPERIMENTS: Experiment[] = [
 export function ExperimentGallery() {
   const [activeId, setActiveId] = useState(EXPERIMENTS[0]?.id ?? "");
   const active = useMemo(
-    () => EXPERIMENTS.find((experiment) => experiment.id === activeId) ?? EXPERIMENTS[0],
+    () =>
+      EXPERIMENTS.find((experiment) => experiment.id === activeId) ??
+      EXPERIMENTS[0],
     [activeId],
   );
 
@@ -75,12 +93,16 @@ export function ExperimentGallery() {
               experiment gallery
             </div>
             <p className="mt-2 max-w-[46ch] text-[12px] leading-relaxed text-fg-muted">
-              Smaller interaction studies live here one at a time, so they don&apos;t fight the main
-              simulator or each other.
+              Smaller interaction studies live here one at a time, so they
+              don&apos;t fight the main simulator or each other.
             </p>
           </div>
 
-          <div className="grid gap-2" role="tablist" aria-label="Lab experiments">
+          <div
+            className="grid gap-2"
+            role="tablist"
+            aria-label="Lab experiments"
+          >
             {EXPERIMENTS.map((experiment) => {
               const isActive = experiment.id === active.id;
               return (
@@ -102,13 +124,17 @@ export function ExperimentGallery() {
                   <span
                     className={cn(
                       "flex size-8 items-center justify-center rounded-xl border",
-                      isActive ? "border-[var(--accent)] text-[var(--accent)]" : "border-line text-fg-dim",
+                      isActive
+                        ? "border-[var(--accent)] text-[var(--accent)]"
+                        : "border-line text-fg-dim",
                     )}
                   >
                     {experiment.icon}
                   </span>
                   <span className="min-w-0">
-                    <span className="block truncate text-[13px] font-medium">{experiment.title}</span>
+                    <span className="block truncate text-[13px] font-medium">
+                      {experiment.title}
+                    </span>
                     <span className="mt-0.5 block truncate font-mono text-[10px] lowercase text-fg-dim">
                       {experiment.kicker}
                     </span>
@@ -136,7 +162,9 @@ export function ExperimentGallery() {
                 {active.title}
               </h3>
             </div>
-            <p className="max-w-[46ch] text-[12px] leading-relaxed text-fg-muted">{active.value}</p>
+            <p className="max-w-[46ch] text-[12px] leading-relaxed text-fg-muted">
+              {active.value}
+            </p>
           </div>
 
           <div className="min-w-0">{active.component}</div>
