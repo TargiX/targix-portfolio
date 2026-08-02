@@ -14,7 +14,6 @@ import { WorkScrollController } from "@/components/work-scroll-controller";
 import { WorkScrollMemory } from "@/components/work-scroll-memory";
 import { MoreWorkRibbon } from "@/components/more-work-ribbon";
 import { SectionTracker } from "@/components/section-tracker";
-import { ContactForm } from "@/components/forms/contact-form";
 import { CONTACT, FEATURED, MORE } from "@/lib/data";
 import { getHomeJsonLd } from "@/lib/seo";
 
@@ -341,38 +340,6 @@ export default function Home() {
                 Open to senior frontend or design-engineering roles. Based in Vietnam, comfortable
                 async.
               </p>
-              <div className="mt-8 max-w-[680px] border-t border-line-soft/70 pt-6">
-                <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-sm border border-line-soft bg-bg-2/20 px-3 py-3">
-                  <div>
-                    <p className="font-mono text-[10px] lowercase tracking-[0.08em] text-fg-dim">
-                      not sure how to frame the first message?
-                    </p>
-                    <p className="mt-1 text-[12px] text-fg-muted">
-                      Shape a focused product brief before you reach out.
-                    </p>
-                  </div>
-                  <Link
-                    href="/brief"
-                    className="group inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] lowercase tracking-[0.06em] text-fg transition-colors hover:text-[var(--accent)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
-                  >
-                    Start with a brief
-                    <ArrowUpRight
-                      className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                      aria-hidden="true"
-                    />
-                  </Link>
-                </div>
-                <div className="mb-4 max-w-[56ch]">
-                  <p className="font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim">
-                    start a project conversation
-                  </p>
-                  <p className="mt-2 text-[13px] leading-relaxed text-fg-muted">
-                    Share the product problem, the outcome you need, and where you want a senior
-                    product engineer to take ownership.
-                  </p>
-                </div>
-                <ContactForm context="Portfolio homepage" />
-              </div>
             </div>
 
             {/* links */}
