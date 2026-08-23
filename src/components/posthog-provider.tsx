@@ -35,7 +35,8 @@ function PostHogPageView() {
       : searchParams.toString();
 
   useEffect(() => {
-    const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+    const key =
+      process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN ?? process.env.NEXT_PUBLIC_POSTHOG_KEY;
     if (!key || !pathname) return;
 
     let active = true;
@@ -44,10 +45,11 @@ function PostHogPageView() {
       if (!active) return;
       if (!initialized) {
         posthog.init(key, {
-          api_host: "/ingest",
+          api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "/ingest",
           ui_host: "https://us.posthog.com",
           capture_pageview: false,
           capture_pageleave: true,
+          capture_exceptions: true,
           person_profiles: "always",
         });
         initialized = true;
