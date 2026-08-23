@@ -359,7 +359,7 @@ export function HeroAsciiCubes({ className }: Props) {
         W,
         H,
         isMobile
-          ? { fracX: 0.76, fracY: 0.23, scaleK: 0.17 }
+          ? { fracX: 0.84, fracY: 0.19, scaleK: 0.13 }
           : compact
             ? { fracX: 0.77, fracY: 0.44, scaleK: 0.29 }
             : { fracX: 0.71, fracY: 0.45, scaleK: 0.44 },
