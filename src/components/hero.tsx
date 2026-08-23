@@ -1,44 +1,20 @@
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowDownRight, ArrowRight, FileText, Mail } from "lucide-react";
+import { ArrowDownRight, FileText, Mail } from "lucide-react";
+
+import { HeroAsciiCubes } from "@/components/hero/hero-ascii-cubes";
 
 const EMAIL_HREF =
   "mailto:hello@ilyamoskovkin.com?subject=Senior%20frontend%20or%20design-engineering%20role";
-
-const EVIDENCE = [
-  {
-    title: "Broker Online Exchange",
-    label: "Production SaaS · Lead frontend · 2021–2026",
-    note: "Five years of product ownership through an AppDirect acquisition.",
-    href: "/work/broker-online-exchange",
-    image: "/work/broker/accounts.webp",
-  },
-  {
-    title: "Phosphene",
-    label: "Founder-led AI product",
-    note: "Product, design, frontend, backend, billing, and operations.",
-    href: "/work/phosphene",
-    image: "/work/phosphene/phosphene-landing-showcase.jpg",
-  },
-  {
-    title: "Roomboard",
-    label: "Independent collaboration product",
-    note: "Realtime roles, review states, comments, and canvas UX.",
-    href: "/work/roomboard",
-    image: "/work/roomboard/canvas-room.png",
-  },
-] as const;
 
 export function Hero() {
   return (
     <header className="hero-scroll-wrap relative" data-screen-label="00 Hero">
       <div className="hero-shell relative isolate w-full overflow-hidden">
         <div aria-hidden="true" className="hero-bg absolute inset-0 z-0" />
+        <HeroAsciiCubes className="absolute inset-0 z-[2]" />
         <HeroPosterGrid />
 
         <div className="hero-copy-shell relative z-10 grid w-full">
           <HeroCopy />
-          <HeroEvidenceReel />
         </div>
 
         <HeroProofStrip />
@@ -65,12 +41,12 @@ function HeroPosterGrid() {
 
       <div className="hero-rail-note hero-rail-note--right hero-rail-note--systems">
         <span className="hero-rail-number">02</span>
-        <span className="hero-rail-copy">Production</span>
+        <span className="hero-rail-copy">AI Systems</span>
       </div>
 
       <div className="hero-rail-note hero-rail-note--right hero-rail-note--visual">
         <span className="hero-rail-number">03</span>
-        <span className="hero-rail-copy">Products</span>
+        <span className="hero-rail-copy">Visual Systems</span>
       </div>
     </div>
   );
@@ -107,7 +83,7 @@ function HeroCopy() {
       <div className="mt-7 flex flex-wrap items-center gap-3">
         <a
           href={EMAIL_HREF}
-          className="inline-flex h-12 items-center justify-center gap-3 rounded-sm bg-[var(--accent)] px-5 font-mono text-[13px] font-bold tracking-[0.04em] text-black shadow-[0_16px_36px_color-mix(in_oklab,var(--accent)_24%,transparent)] transition-transform hover:scale-[1.02] active:scale-[0.98]"
+          className="hero-primary-cta inline-flex h-12 items-center justify-center gap-3 rounded-sm bg-[var(--accent)] px-5 font-mono text-[13px] font-bold tracking-[0.04em] shadow-[0_16px_36px_color-mix(in_oklab,var(--accent)_24%,transparent)] transition-transform hover:scale-[1.02] active:scale-[0.98]"
         >
           <Mail className="size-4" aria-hidden="true" />
           Email Ilya
@@ -135,56 +111,6 @@ function HeroCopy() {
         available now · remote from Vietnam · UTC+7
       </div>
     </div>
-  );
-}
-
-function HeroEvidenceReel() {
-  const [primary, ...secondary] = EVIDENCE;
-
-  return (
-    <aside className="hero-evidence" aria-label="Selected product evidence">
-      <div className="hero-evidence-heading">
-        <span>Selected evidence</span>
-        <span>production / founder / independent</span>
-      </div>
-
-      <Link href={primary.href} className="hero-evidence-primary group">
-        <Image
-          src={primary.image}
-          alt={`${primary.title} product interface`}
-          fill
-          priority
-          sizes="(min-width: 1024px) 42vw, 0px"
-          className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.025]"
-        />
-        <span className="hero-evidence-shade" aria-hidden="true" />
-        <span className="hero-evidence-copy">
-          <span className="hero-evidence-label">{primary.label}</span>
-          <strong>{primary.title}</strong>
-          <span>{primary.note}</span>
-        </span>
-        <ArrowRight className="hero-evidence-arrow" aria-hidden="true" />
-      </Link>
-
-      <div className="hero-evidence-secondary-grid">
-        {secondary.map((item) => (
-          <Link key={item.title} href={item.href} className="hero-evidence-secondary group">
-            <Image
-              src={item.image}
-              alt={`${item.title} product interface`}
-              fill
-              sizes="(min-width: 1024px) 21vw, 0px"
-              className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.035]"
-            />
-            <span className="hero-evidence-shade" aria-hidden="true" />
-            <span className="hero-evidence-copy">
-              <span className="hero-evidence-label">{item.label}</span>
-              <strong>{item.title}</strong>
-            </span>
-          </Link>
-        ))}
-      </div>
-    </aside>
   );
 }
 
