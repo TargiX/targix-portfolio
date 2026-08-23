@@ -4,6 +4,11 @@ import { z } from "zod";
 import { Resend } from "resend";
 
 import { checkRateLimit } from "@/lib/rate-limit";
+import {
+  anonymizedDistinctId,
+  captureServerEvent,
+  getRequestDistinctId,
+} from "@/lib/posthog-server";
 
 const ContactSchema = z.object({
   name: z.string().trim().min(1, "name is required").max(80, "too long"),
@@ -68,8 +73,24 @@ export async function sendContact(
     };
   }
 
+  const { name, email, message, context } = parsed.data;
+  const emailDomain = email.split("@")[1]?.toLowerCase() ?? "unknown";
+  const distinctId = await getRequestDistinctId(anonymizedDistinctId("contact", email));
+  const baseProperties = {
+    source: "contact_form",
+    context,
+    email_domain: emailDomain,
+    name_length: name.length,
+    message_length: message.length,
+  };
+
   // honeypot tripped → fail silently, look successful
   if (parsed.data.website) {
+    await captureServerEvent({
+      distinctId,
+      event: "contact_form_spam_trapped",
+      properties: baseProperties,
+    });
     return { ok: true, version: prev.version + 1 };
   }
 
@@ -79,6 +100,14 @@ export async function sendContact(
     windowMs: 60 * 60 * 1000,
   });
   if (!rateLimit.ok) {
+    await captureServerEvent({
+      distinctId,
+      event: "contact_form_rate_limited",
+      properties: {
+        ...baseProperties,
+        retry_after_seconds: rateLimit.retryAfterSeconds,
+      },
+    });
     return {
       ok: false,
       error: `too many messages; try again in ${Math.ceil(rateLimit.retryAfterSeconds / 60)}m`,
@@ -86,13 +115,21 @@ export async function sendContact(
     };
   }
 
-  const { name, email, message, context } = parsed.data;
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
     if (process.env.NODE_ENV !== "production") {
       console.warn("[contact] RESEND_API_KEY not set — skipped delivery.");
     }
+    await captureServerEvent({
+      distinctId,
+      event: "contact_form_send_failed",
+      properties: {
+        ...baseProperties,
+        delivery_provider: "unconfigured",
+        error_name: "missing_resend_api_key",
+      },
+    });
     return {
       ok: false,
       error: "contact form is not configured; use the email link instead",
@@ -111,6 +148,15 @@ export async function sendContact(
     });
     if (error) {
       console.error("[contact] resend error:", error);
+      await captureServerEvent({
+        distinctId,
+        event: "contact_form_send_failed",
+        properties: {
+          ...baseProperties,
+          delivery_provider: "resend",
+          error_name: "resend_error",
+        },
+      });
       return {
         ok: false,
         error: "send failed; try the email link instead",
@@ -119,12 +165,31 @@ export async function sendContact(
     }
   } catch (err) {
     console.error("[contact] unexpected error:", err);
+    await captureServerEvent({
+      distinctId,
+      event: "contact_form_send_failed",
+      properties: {
+        ...baseProperties,
+        delivery_provider: "resend",
+        error_name: err instanceof Error ? err.name : "unknown_error",
+      },
+    });
     return {
       ok: false,
       error: "send failed; try the email link instead",
       version: prev.version,
     };
   }
+
+  await captureServerEvent({
+    distinctId,
+    event: "contact_form_submitted",
+    properties: {
+      ...baseProperties,
+      delivery_provider: "resend",
+      sent: true,
+    },
+  });
 
   return { ok: true, version: prev.version + 1 };
 }
