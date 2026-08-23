@@ -10,6 +10,7 @@ if (!allowedModes.has(mode)) {
 }
 
 const requestedPort = Number.parseInt(process.env.PORT || "3010", 10);
+const requestedHost = process.env.HOST || "127.0.0.1";
 
 if (!Number.isInteger(requestedPort) || requestedPort < 1 || requestedPort > 65535) {
   console.error(`[portfolio] invalid PORT: ${process.env.PORT}`);
@@ -24,7 +25,7 @@ function canListen(port) {
     server.once("listening", () => {
       server.close(() => resolve(true));
     });
-    server.listen(port, "0.0.0.0");
+    server.listen(port, requestedHost);
   });
 }
 
@@ -53,7 +54,7 @@ if (port !== requestedPort) {
   console.warn(`[portfolio] port ${requestedPort} is busy; using ${port} instead.`);
 }
 
-const child = spawn("next", [mode, "--port", String(port)], {
+const child = spawn("next", [mode, "--hostname", requestedHost, "--port", String(port)], {
   stdio: "inherit",
   shell: process.platform === "win32",
 });

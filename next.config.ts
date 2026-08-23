@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const CANONICAL_ORIGIN = "https://ilyamoskovkin.com";
 const VERCEL_APP_HOST = ".+\\.vercel\\.app";
+const IS_VERCEL_PRODUCTION = process.env.VERCEL_ENV === "production";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
@@ -9,14 +10,14 @@ const nextConfig: NextConfig = {
     qualities: [75, 95],
   },
   async redirects() {
-    return [
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: VERCEL_APP_HOST }],
-        destination: `${CANONICAL_ORIGIN}/:path*`,
-        permanent: true,
-      },
-    ];
+    if (!IS_VERCEL_PRODUCTION) return [];
+
+    return [{
+      source: "/:path*",
+      has: [{ type: "host", value: VERCEL_APP_HOST }],
+      destination: `${CANONICAL_ORIGIN}/:path*`,
+      permanent: true,
+    }];
   },
   // Reverse-proxy PostHog through our own origin so analytics survive ad-blockers.
   async rewrites() {

@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import type { Project } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -59,112 +58,6 @@ const accent = (hue: number, lightness = 0.72, chroma = 0.16, alpha = 1) =>
   alpha < 1
     ? `oklch(${lightness} ${chroma} ${hue} / ${alpha})`
     : `oklch(${lightness} ${chroma} ${hue})`;
-
-function CountUpNumber({
-  value,
-  pad = 0,
-  delay = 0,
-  className,
-}: {
-  value: number;
-  pad?: number;
-  delay?: number;
-  className?: string;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const reduce = useReducedMotion();
-  const [active, setActive] = useState(false);
-  const [display, setDisplay] = useState(0);
-
-  useEffect(() => {
-    if (reduce) {
-      setDisplay(value);
-      return;
-    }
-
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        setActive(true);
-        observer.disconnect();
-      },
-      { threshold: 0.55, rootMargin: "0px 0px -8% 0px" },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [reduce, value]);
-
-  useEffect(() => {
-    if (!active) return;
-    if (reduce) {
-      setDisplay(value);
-      return;
-    }
-
-    let frame = 0;
-    let timeout = 0;
-    const duration = value > 999 ? 1100 : 760;
-
-    timeout = window.setTimeout(() => {
-      const start = window.performance.now();
-
-      const tick = (now: number) => {
-        const progress = Math.min(1, (now - start) / duration);
-        const eased = 1 - Math.pow(1 - progress, 3);
-
-        setDisplay(Math.round(value * eased));
-
-        if (progress < 1) {
-          frame = window.requestAnimationFrame(tick);
-        }
-      };
-
-      frame = window.requestAnimationFrame(tick);
-    }, delay);
-
-    return () => {
-      window.clearTimeout(timeout);
-      window.cancelAnimationFrame(frame);
-    };
-  }, [active, delay, reduce, value]);
-
-  return (
-    <span ref={ref} className={cn("inline-block tabular-nums", className)}>
-      {Math.min(display, value).toString().padStart(pad, "0")}
-    </span>
-  );
-}
-
-function CountUpText({
-  text,
-  delay = 0,
-  className,
-}: {
-  text: string;
-  delay?: number;
-  className?: string;
-}) {
-  return (
-    <span className={cn("tabular-nums", className)}>
-      {text.split(/(\d+)/g).map((part, i) =>
-        /^\d+$/.test(part) ? (
-          <CountUpNumber
-            key={`${part}-${i}`}
-            value={Number(part)}
-            pad={part.length}
-            delay={delay + i * 70}
-          />
-        ) : (
-          <span key={`${part}-${i}`}>{part}</span>
-        ),
-      )}
-    </span>
-  );
-}
 
 /**
  * One featured project as a full-screen scroll-snap stage.
@@ -229,8 +122,8 @@ export function WorkStage({ project, index }: { project: Project; index: number 
         >
           <motion.div
             className="will-change-transform"
-            initial={reduce ? false : { opacity: 0, y: 42, scale: 0.985, filter: "blur(10px)" }}
-            whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            initial={reduce ? false : { y: 24, scale: 0.992 }}
+            whileInView={{ y: 0, scale: 1 }}
             viewport={{ once: true, margin: "-14% 0px -12% 0px" }}
             transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
           >
@@ -239,7 +132,7 @@ export function WorkStage({ project, index }: { project: Project; index: number 
                 "group/phosphene group/card group/stage relative w-full",
                 isSignalOps
                   ? "overflow-visible rounded-none border-0 bg-transparent"
-                  : "overflow-hidden rounded-2xl border bg-bg-2",
+                  : "overflow-hidden rounded-lg border bg-bg-2",
                 href && "cursor-pointer",
               )}
               style={{
@@ -319,7 +212,7 @@ export function WorkStage({ project, index }: { project: Project; index: number 
                     aria-label={`${title} — open case study`}
                     className={cn(
                       "absolute inset-0 z-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-                      isSignalOps ? "rounded-lg" : "rounded-2xl",
+                      "rounded-lg",
                     )}
                   />
                 )}
@@ -337,15 +230,13 @@ export function WorkStage({ project, index }: { project: Project; index: number 
         >
           <Reveal>
             <div className="mb-3 flex flex-wrap items-center gap-2 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim">
-              <CountUpNumber
-                value={index + 1}
-                pad={2}
-                className="text-[var(--accent)]"
-              />
+              <span className="tabular-nums text-[var(--accent)]">
+                {String(index + 1).padStart(2, "0")}
+              </span>
               <span className="text-fg-muted/60">/</span>
-              <CountUpText text={year} delay={130} className="whitespace-nowrap" />
+              <span className="whitespace-nowrap tabular-nums">{year}</span>
               <span className="text-fg-muted/60 hidden sm:inline">/</span>
-              <span className="w-full sm:w-auto">{role.replace(' · ', '\n')}</span>
+              <span className="w-full sm:w-auto">{role}</span>
             </div>
           </Reveal>
 

@@ -20,18 +20,16 @@ export type Project = {
   demo?: "phosphene" | "roomboard" | "broker";
 };
 
-// The strongest hiring proof first: a real B2B platform led for ~5 years, a
-// dense React/data-heavy cockpit, the AI product, and a shipped cross-platform
-// side product. Everything else drops to the lighter "More work" tier below.
+// Featured work, ordered by depth of ownership and relevance to senior product roles.
 export const FEATURED: Project[] = [
   {
     index: "①",
     year: "2021 – 2026",
-    role: "Lead Frontend · Broker Online Exchange",
+    role: "Production · Lead Frontend",
     title: "Broker Online Exchange",
     blurb:
-      "Nearly five years leading the frontend behind MyServiceCloud, Broker Online Exchange's private B2B energy-brokerage platform. Public access is restricted, so the case study uses walkthroughs and redacted screenshots to show the dashboards, quoting flows, AppDirect/Mantine re-theme, and Gemini Vision Bill Scan to Quote work I led.",
-    tags: ["Vue 3", "React", "TypeScript", "Design systems", "Mantine", "Zustand", "Laravel", "Team lead"],
+      "I led frontend for nearly five years as the product grew through an AppDirect acquisition. My work included quoting, dashboards, a design-system migration, and bill extraction with human review.",
+    tags: ["Vue 3", "React", "Design systems", "Complex SaaS", "AI review", "Team lead"],
     links: [
       { label: "public company site", href: "https://www.brokeronlinexchange.com/" },
       { label: "case study", href: "/work/broker-online-exchange" },
@@ -41,28 +39,12 @@ export const FEATURED: Project[] = [
   },
   {
     index: "②",
-    year: "2025",
-    role: "Solo · React systems",
-    title: "SignalOps",
-    blurb:
-      "An operations cockpit for AI generation infrastructure: provider health monitoring, incident drill-down with guided replay, virtualized job inspection, and routing-rule simulation. A focused data product built to show how frontend craft serves operational decisions — not just dashboards.",
-    tags: ["Next.js 16", "React 19", "TanStack Table", "TanStack Virtual", "Recharts", "TypeScript"],
-    links: [
-      { label: "signalops.cc", href: "https://signalops.cc" },
-      { label: "github", href: "https://github.com/TargiX/signalops" },
-      { label: "case study", href: "/work/signalops" },
-    ],
-    caseSlug: "signalops",
-    thumb: "/work/signalops/landing.png",
-  },
-  {
-    index: "③",
     year: "2026 – now",
-    role: "Solo founder · Design + Eng",
+    role: "Founder-led · Design + Engineering",
     title: "Phosphene",
     blurb:
-      "A template-first AI image product. Users pick a curated outcome, add references or small tweaks, generate results, then open deeper graph and workflow tools only when they need them.",
-    tags: ["Nuxt 4", "Vue 3", "tRPC", "Prisma", "Postgres", "Templates", "D3", "Vue Flow", "fal.ai", "Gemini", "Paddle"],
+      "My AI image product, built and operated end to end. It starts with templates and opens into graph-based tools for users who need more control.",
+    tags: ["Nuxt 4", "Vue 3", "AI workflows", "Product design", "Postgres", "Payments"],
     links: [
       { label: "phosphene.cc", href: "https://phosphene.cc" },
       { label: "case study", href: "/work/phosphene" },
@@ -71,13 +53,13 @@ export const FEATURED: Project[] = [
     thumb: "/work/phosphene/phosphene-landing-showcase.jpg",
   },
   {
-    index: "④",
+    index: "③",
     year: "2025",
-    role: "Solo · Design + Eng",
+    role: "Independent product · Design + Engineering",
     title: "Roomboard",
     blurb:
-      "A private-by-default visual decision room for landing-page reviews, moodboards, and creative feedback. Open a room, invite editors or viewers, comment on cards, and close the loop.",
-    tags: ["Next.js 16", "React 19", "Pixi.js", "Elixir/Phoenix", "Supabase", "Realtime", "Canvas UX"],
+      "A private canvas for reviewing landing pages and moodboards. I designed and built rooms, roles, comments, review states, and realtime collaboration.",
+    tags: ["Next.js", "React", "Pixi.js", "Realtime", "Permissions", "Canvas UX"],
     links: [
       { label: "roomboard.online", href: "https://roomboard.online" },
       { label: "case study", href: "/work/roomboard" },
@@ -88,48 +70,32 @@ export const FEATURED: Project[] = [
   },
 ];
 
-// Lighter tier: still real, but lower hiring weight. A 4-col compact grid so
-// they don't visually compete with the four featured cards above.
+// Smaller builds remain available without competing with the three main case studies.
 export const MORE: Project[] = [
   {
+    index: "④",
+    year: "2025",
+    role: "Independent system · React",
+    title: "SignalOps",
+    blurb:
+      "A working incident dashboard for AI infrastructure, with provider health, guided replay, virtualized jobs, and routing controls.",
+    links: [
+      { label: "signalops.cc", href: "https://signalops.cc" },
+      { label: "github", href: "https://github.com/TargiX/signalops" },
+      { label: "case study", href: "/work/signalops" },
+    ],
+    tags: ["Next.js", "React", "Virtualized data", "Recharts"],
+    caseSlug: "signalops",
+    thumb: "/work/signalops/cockpit.png",
+  },
+  {
     index: "⑤",
-    year: "2026",
-    role: "Demo · Full-stack portfolio build",
-    title: "TalentSignal",
-    blurb:
-      "A compact HR/social discovery workspace for matching profiles, reviewing compatibility, sending signals, and handling trust workflows across a Nuxt frontend and NestJS API.",
-    tags: ["Nuxt 4", "Vue 3", "NestJS", "MySQL", "Redis", "DynamoDB", "OpenSearch"],
-    links: [
-      { label: "live demo", href: "https://talentsignal.us" },
-      { label: "github", href: "https://github.com/TargiX/TalentSignal" },
-      { label: "api docs", href: "https://api.talentsignal.us/docs" },
-      { label: "case study", href: "/work/talentsignal" },
-    ],
-    caseSlug: "talentsignal",
-    thumb: "/work/talentsignal/discover-desktop.png",
-  },
-  {
-    index: "⑥",
-    year: "2026",
-    role: "Demo · React dashboard build",
-    title: "NovaFlow",
-    blurb:
-      "A screenshot-faithful analytics dashboard demo with responsive metric cards, chart interactions, transaction search/export, and a mock-backed API deployed as Vercel Functions.",
-    tags: ["React 19", "TypeScript", "Vite", "TanStack Query", "TanStack Table", "Recharts", "Vercel"],
-    links: [
-      { label: "live demo", href: "https://novaflow.signalops.cc" },
-      { label: "github", href: "https://github.com/TargiX/novaflow" },
-    ],
-    thumb: "/work/novaflow/dashboard.png",
-  },
-  {
-    index: "⑦",
     year: "2026 – now",
-    role: "Solo · Product Design + Eng",
+    role: "Independent product · Cross-platform",
     title: "Anchor",
     blurb:
-      "A calm daily-ritual app for mood, sleep, intention, and journaling. Live at anchorapp.cc, built from one Next.js codebase that ships to web, iOS/Android (Capacitor), and desktop (Electron).",
-    tags: ["Next.js 16", "React 19", "Capacitor", "Electron", "Framer Motion"],
+      "A calm daily-ritual product shipped from one Next.js codebase to web, iOS, Android, and desktop.",
+    tags: ["Next.js", "React", "Capacitor", "Electron"],
     links: [
       ...(ANCHOR_DEPLOYED ? [{ label: "anchorapp.cc", href: ANCHOR_URL }] : []),
       { label: "github", href: ANCHOR_REPO_URL },
@@ -137,32 +103,31 @@ export const MORE: Project[] = [
     ],
     caseSlug: "anchor",
     thumb: "/work/anchor/anchor-laptop-hero.jpg",
-    screens: [
-      "/work/anchor/landing.png",
-      "/work/anchor/dashboard.png",
-      "/work/anchor/sleep.png",
-      "/work/anchor/evening.png",
-    ],
   },
   {
-    index: "⑧",
+    index: "⑥",
     year: "2026",
-    role: "Solo · Fictional concept demo",
-    title: "HelixCare Pulse",
+    role: "Full-stack product build · Vue",
+    title: "TalentSignal",
     blurb:
-      "A fictional healthcare SaaS marketing concept — no real clients, metrics, or compliance claims. Dark, premium landing built in Astro to test section-driven, static-output storytelling around a high-impact product visual.",
-    tags: ["Astro", "SSG", "Premium B2B", "Healthcare", "Responsive UI", "Vercel"],
-    links: [{ label: "live demo", href: "https://helixcare-pulse.vercel.app" }],
-    thumb: "/work/helixcare-pulse/hero-device.png",
+      "An HR workspace for finding candidates, comparing profiles, messaging, and moderation.",
+    tags: ["Nuxt 4", "Vue 3", "NestJS", "Search"],
+    links: [
+      { label: "live demo", href: "https://talentsignal.us" },
+      { label: "github", href: "https://github.com/TargiX/TalentSignal" },
+      { label: "case study", href: "/work/talentsignal" },
+    ],
+    caseSlug: "talentsignal",
+    thumb: "/work/talentsignal/discover-desktop.png",
   },
   {
-    index: "⑨",
+    index: "⑦",
     year: "2023 – 2026",
-    role: "Solo · Web3 trading UI",
+    role: "Independent system · Trading UI",
     title: "Injective Trading Terminal",
     blurb:
-      "A Nuxt/TypeScript trading terminal for the Injective testnet: wallet connect, account balances, live spot markets, an order book, candlestick charts, and gRPC-web data over injective-ts.",
-    tags: ["Nuxt 3", "TypeScript", "Injective / Cosmos", "gRPC-web", "Trading UI", "Keplr"],
+      "A Nuxt trading terminal for the Injective testnet with wallet state, live markets, order book, and candlestick charts.",
+    tags: ["Nuxt 3", "TypeScript", "Trading UI", "gRPC-web"],
     links: [
       { label: "live app", href: "https://injective.ilyamoskovkin.com" },
       { label: "github", href: "https://github.com/TargiX/injective-testnet-dapp" },

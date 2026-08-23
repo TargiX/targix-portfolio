@@ -1,9 +1,13 @@
 "use client";
 
+import { FileText } from "lucide-react";
+
 import { useVietnamTime } from "@/lib/use-vietnam-time";
 import { SECTION_SEQUENCE, useActiveSection } from "@/lib/use-active-section";
 
-const LINKS = SECTION_SEQUENCE.map((section) => ({
+const LINKS = SECTION_SEQUENCE.filter((section) =>
+  ["top", "work", "about"].includes(section.id),
+).map((section) => ({
   id: section.id,
   href: `#${section.id}`,
   label: section.shortLabel,
@@ -50,7 +54,7 @@ export function SiteNav() {
                 href={l.href}
                 aria-current={isActive ? "true" : undefined}
                 data-active={isActive ? "true" : undefined}
-                className="site-nav-link"
+                className={l.id === "top" ? "site-nav-link site-nav-link--top" : "site-nav-link"}
               >
                 {l.label}
               </a>
@@ -75,6 +79,16 @@ export function SiteNav() {
             className="hidden rounded-md border border-white/14 bg-white/[0.035] px-3 py-1.5 text-fg-muted shadow-[inset_0_1px_0_rgba(255,255,255,.08)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] sm:inline-flex"
           >
             Résumé ↗
+          </a>
+          <a
+            href="/Ilya_Moskovkin_CV.pdf"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Open résumé"
+            title="Open résumé"
+            className="grid size-8 place-items-center rounded-md border border-line-soft text-fg-muted transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] sm:hidden"
+          >
+            <FileText className="size-4" aria-hidden="true" />
           </a>
           <div className="hidden items-center gap-2 text-[10px] lowercase text-fg-dim sm:flex">
             <span className="status-dot" />

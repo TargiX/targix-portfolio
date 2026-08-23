@@ -10,13 +10,9 @@ import { Play } from "lucide-react";
  */
 const VIDEOS: { id: string; title: string }[] = [
   { id: "2YcdN3ZXpLI", title: "Creating a customer" },
-  { id: "_tW_lgOQzp4", title: "Adding an account" },
-  { id: "7mP-1O_iAEk", title: "Customer list" },
   { id: "s_NMn2A7qX8", title: "Quote from an account" },
   { id: "lFEJ9qzPZr8", title: "Creating a proposal" },
   { id: "FUtf_WNOHbk", title: "Creating a contract" },
-  { id: "RcJ-EwXmnJE", title: "Contract within a customer" },
-  { id: "yIeZGIPZxZo", title: "Tools & resources" },
 ];
 
 function VideoTile({ id, title }: { id: string; title: string }) {
@@ -80,9 +76,8 @@ export function BrokerVideos() {
         ))}
       </div>
       <p className="mt-3 border-l border-line-soft pl-3 font-mono text-[11px] leading-relaxed text-fg-dim">
-        Real walkthroughs of the live platform. Customer creation, accounts, quoting, proposals,
-        and contract generation. The frontend in every one of these flows is what my team and I
-        built and maintained.{" "}
+        A focused sample of the live workflow: customer setup, quoting, proposals, and contract
+        generation. The frontend in these flows is what my team and I built and maintained.{" "}
         <a
           href="https://www.brokeronlinexchange.com/broker-resources/"
           target="_blank"

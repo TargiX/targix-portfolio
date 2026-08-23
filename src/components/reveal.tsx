@@ -11,7 +11,8 @@ const EASE = [0.22, 1, 0.36, 1] as const;
  * because motion's whileInView mis-detected inside the ViewSwitcher's
  * AnimatePresence + overflow container. With that container gone, whileInView
  * works reliably, so this is a thin, declarative version of the same idea:
- * fade + rise once, then never again.
+ * rise once, then never again. Content stays opaque before the observer fires,
+ * so hash navigation and constrained browser contexts never reveal a blank gap.
  *
  * `delay` lets callers stagger children; `as` lets it wrap any element.
  */
@@ -38,8 +39,8 @@ export function Reveal({
   return (
     <MotionTag
       className={cn(className)}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ y }}
+      whileInView={{ y: 0 }}
       viewport={{ once: true, margin: "-12% 0px -12% 0px" }}
       transition={{ duration: 0.6, ease: EASE, delay }}
     >
