@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Check, Compass, Copy, ExternalLink } from "lucide-react";
+import { ArrowRight, Check, Compass, Copy } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { PROOF_MODES, getProofMode, type ProofModeId } from "@/lib/proof-path";
@@ -9,40 +9,20 @@ import { cn } from "@/lib/utils";
 
 export function ProofPathBuilder({
   initialModeId,
-  initialOpenedIndexes,
 }: {
   initialModeId: ProofModeId;
-  initialOpenedIndexes: number[];
 }) {
   const [modeId, setModeId] = useState<ProofModeId>(initialModeId);
-  const [openedStops, setOpenedStops] = useState<string[]>(() =>
-    initialOpenedIndexes.map((index) => `${initialModeId}:${index}`),
-  );
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "error">("idle");
   const mode = useMemo(() => getProofMode(modeId), [modeId]);
-  const openedIndexes = useMemo(
-    () =>
-      openedStops
-        .filter((id) => id.startsWith(`${mode.id}:`))
-        .map((id) => Number(id.split(":")[1]))
-        .filter((index) => Number.isInteger(index)),
-    [mode.id, openedStops],
-  );
-  const complete = openedIndexes.length;
 
   useEffect(() => {
-    window.history.replaceState(null, "", getProofPath(mode.id, openedIndexes));
-  }, [mode.id, openedIndexes]);
+    window.history.replaceState(null, "", getProofPath(mode.id));
+  }, [mode.id]);
 
   function chooseMode(id: ProofModeId) {
     setCopyStatus("idle");
     setModeId(id);
-  }
-
-  function markOpened(index: number) {
-    const id = `${mode.id}:${index}`;
-    setCopyStatus("idle");
-    setOpenedStops((current) => (current.includes(id) ? current : [...current, id]));
   }
 
   async function copyProofLink() {
@@ -52,7 +32,7 @@ export function ProofPathBuilder({
       }
 
       await navigator.clipboard.writeText(
-        new URL(getProofPath(mode.id, openedIndexes), window.location.origin).toString(),
+        new URL(getProofPath(mode.id), window.location.origin).toString(),
       );
       setCopyStatus("copied");
     } catch {
@@ -66,12 +46,12 @@ export function ProofPathBuilder({
         <aside className="border-b border-line-soft bg-bg/60 p-5 xl:border-b-0 xl:border-r xl:p-6">
           <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">
             <Compass className="size-3.5 text-[var(--accent)]" aria-hidden="true" />
-            choose the proof you need
+            choose a route
           </div>
           <p className="mt-3 text-[13px] leading-relaxed text-fg-muted">
-            This is not a project grid. Pick the capability under review and get a short, intentional path through the strongest evidence.
+            Each route contains three case studies.
           </p>
-          <div className="mt-6 grid gap-2" role="radiogroup" aria-label="Capability to evaluate">
+          <div className="mt-6 grid gap-2" role="radiogroup" aria-label="Case study route">
             {PROOF_MODES.map((candidate) => {
               const selected = candidate.id === mode.id;
               return (
@@ -106,7 +86,7 @@ export function ProofPathBuilder({
         <section className="min-w-0 p-5 sm:p-6">
           <div className="flex flex-wrap items-start justify-between gap-4 border-b border-line-soft pb-5">
             <div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--accent)]">your evidence path</div>
+              <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--accent)]">selected route</div>
               <h2 className="mt-2 font-sans text-[clamp(30px,5vw,52px)] font-medium leading-[0.95] tracking-[-0.045em] text-fg">{mode.outcome}</h2>
               <p className="mt-3 max-w-[66ch] text-[13px] leading-relaxed text-fg-muted">{mode.intro}</p>
             </div>
@@ -118,11 +98,8 @@ export function ProofPathBuilder({
                 className="inline-flex h-9 items-center gap-2 rounded-full border border-line-soft bg-bg-2/25 px-3 font-mono text-[10px] lowercase tracking-[0.06em] text-fg-muted transition hover:border-[var(--accent)] hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
               >
                 <Copy className="size-3.5" aria-hidden="true" />
-                {copyStatus === "copied" ? "proof link copied" : "copy proof link"}
+                {copyStatus === "copied" ? "link copied" : "copy link"}
               </button>
-              <div className="rounded-full border border-line-soft bg-bg-2/25 px-3 py-2 font-mono text-[10px] lowercase text-fg-dim">
-                {complete} / {mode.stops.length} proof stops opened
-              </div>
               <p id="proof-path-copy-status" aria-live="polite" className="basis-full text-right font-mono text-[10px] lowercase tracking-[0.06em] text-fg-dim">
                 {copyStatus === "error" ? "Could not copy the link. Please copy it from the address bar." : null}
               </p>
@@ -130,8 +107,7 @@ export function ProofPathBuilder({
           </div>
 
           <ol className="mt-5 grid gap-3">
-            {mode.stops.map((stop, index) => {
-              const opened = openedStops.includes(`${mode.id}:${index}`);
+            {mode.stops.map((stop) => {
               return (
                 <li key={stop.title} className="grid gap-4 rounded-2xl border border-line-soft bg-bg-2/[0.12] p-4 transition hover:border-line sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
                   <div>
@@ -142,11 +118,10 @@ export function ProofPathBuilder({
                   </div>
                   <Link
                     href={stop.href}
-                    onClick={() => markOpened(index)}
                     className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-full border border-line-soft bg-bg px-4 font-mono text-[10px] lowercase tracking-[0.06em] text-fg-muted transition hover:border-[var(--accent)] hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
                   >
-                    {opened ? "reopen proof" : stop.action}
-                    {opened ? <ExternalLink className="size-3.5" aria-hidden="true" /> : <ArrowRight className="size-3.5" aria-hidden="true" />}
+                    {stop.action}
+                    <ArrowRight className="size-3.5" aria-hidden="true" />
                   </Link>
                 </li>
               );
@@ -158,15 +133,10 @@ export function ProofPathBuilder({
   );
 }
 
-function getProofPath(modeId: ProofModeId, openedIndexes: number[]) {
+function getProofPath(modeId: ProofModeId) {
   const params = new URLSearchParams(window.location.search);
   params.set("for", modeId);
-
-  if (openedIndexes.length > 0) {
-    params.set("opened", openedIndexes.join(","));
-  } else {
-    params.delete("opened");
-  }
+  params.delete("opened");
 
   const query = params.toString();
   return `/proof${query ? `?${query}` : ""}${window.location.hash}`;

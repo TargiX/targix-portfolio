@@ -71,13 +71,14 @@ function HeroCopy() {
       />
 
       <p className="m-0 max-w-[620px] font-sans text-[25px] font-light leading-[1.2] tracking-normal text-fg sm:text-[30px]">
-        I lead complex product interfaces from ambiguous brief to{" "}
-        <span className="text-[var(--accent)]">shipped system.</span>
+        I design and build{" "}
+        <span className="text-[var(--accent)]">complex web products.</span>
       </p>
 
       <p className="mt-4 max-w-[570px] font-sans text-[15px] leading-[1.65] text-fg-muted sm:text-[17px]">
-        10+ years in frontend. Nearly five years leading a production B2B platform through
-        acquisition. Now building SaaS and AI workflows across Vue and React.
+        10+ years in frontend. Nearly five leading Broker Online Exchange through its acquisition
+        by AppDirect. I now run Phosphene and work across Vue, React, product design, and backend
+        delivery.
       </p>
 
       <div className="mt-7 flex flex-wrap items-center gap-3">

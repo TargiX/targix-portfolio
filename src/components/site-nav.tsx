@@ -5,7 +5,9 @@ import { FileText } from "lucide-react";
 import { useVietnamTime } from "@/lib/use-vietnam-time";
 import { SECTION_SEQUENCE, useActiveSection } from "@/lib/use-active-section";
 
-const LINKS = SECTION_SEQUENCE.map((section) => ({
+const LINKS = SECTION_SEQUENCE.filter((section) =>
+  ["top", "work", "about"].includes(section.id),
+).map((section) => ({
   id: section.id,
   href: `#${section.id}`,
   label: section.shortLabel,

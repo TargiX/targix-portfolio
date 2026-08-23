@@ -20,8 +20,7 @@ export type Project = {
   demo?: "phosphene" | "roomboard" | "broker";
 };
 
-// Three kinds of proof, in hiring order: production leadership, founder-level
-// ownership, and an independent product with a distinct interaction model.
+// Featured work, ordered by depth of ownership and relevance to senior product roles.
 export const FEATURED: Project[] = [
   {
     index: "①",
@@ -29,7 +28,7 @@ export const FEATURED: Project[] = [
     role: "Production · Lead Frontend",
     title: "Broker Online Exchange",
     blurb:
-      "Nearly five years leading frontend for a private B2B energy platform through an acquisition: dense workflows, an incremental design-system re-theme, team patterns, and an AI-assisted bill-to-quote flow.",
+      "I led frontend for nearly five years as the product grew through an AppDirect acquisition. My work included quoting, dashboards, a design-system migration, and bill extraction with human review.",
     tags: ["Vue 3", "React", "Design systems", "Complex SaaS", "AI review", "Team lead"],
     links: [
       { label: "public company site", href: "https://www.brokeronlinexchange.com/" },
@@ -44,7 +43,7 @@ export const FEATURED: Project[] = [
     role: "Founder-led · Design + Engineering",
     title: "Phosphene",
     blurb:
-      "A shipped AI image product I own end to end. Templates make generation approachable; graph and workflow tools preserve depth for advanced users.",
+      "My AI image product, built and operated end to end. It starts with templates and opens into graph-based tools for users who need more control.",
     tags: ["Nuxt 4", "Vue 3", "AI workflows", "Product design", "Postgres", "Payments"],
     links: [
       { label: "phosphene.cc", href: "https://phosphene.cc" },
@@ -59,7 +58,7 @@ export const FEATURED: Project[] = [
     role: "Independent product · Design + Engineering",
     title: "Roomboard",
     blurb:
-      "A private visual decision room for landing-page reviews and moodboards, with roles, comments, review states, and a realtime canvas built around closing feedback loops.",
+      "A private canvas for reviewing landing pages and moodboards. I designed and built rooms, roles, comments, review states, and realtime collaboration.",
     tags: ["Next.js", "React", "Pixi.js", "Realtime", "Permissions", "Canvas UX"],
     links: [
       { label: "roomboard.online", href: "https://roomboard.online" },
@@ -71,8 +70,7 @@ export const FEATURED: Project[] = [
   },
 ];
 
-// Secondary proof stays useful but visually distinct from the three core cases.
-// Concept-only builds live in the lab rather than competing with shipped work.
+// Smaller builds remain available without competing with the three main case studies.
 export const MORE: Project[] = [
   {
     index: "④",
@@ -80,7 +78,7 @@ export const MORE: Project[] = [
     role: "Independent system · React",
     title: "SignalOps",
     blurb:
-      "An operations cockpit for AI generation infrastructure: provider health, incident replay, virtualized jobs, and routing decisions.",
+      "A working incident dashboard for AI infrastructure, with provider health, guided replay, virtualized jobs, and routing controls.",
     links: [
       { label: "signalops.cc", href: "https://signalops.cc" },
       { label: "github", href: "https://github.com/TargiX/signalops" },
@@ -112,7 +110,7 @@ export const MORE: Project[] = [
     role: "Full-stack product build · Vue",
     title: "TalentSignal",
     blurb:
-      "A compact HR discovery workspace for matching profiles, reviewing compatibility, messaging, and trust workflows.",
+      "An HR workspace for finding candidates, comparing profiles, messaging, and moderation.",
     tags: ["Nuxt 4", "Vue 3", "NestJS", "Search"],
     links: [
       { label: "live demo", href: "https://talentsignal.us" },

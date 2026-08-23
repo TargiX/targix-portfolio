@@ -1,9 +1,12 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowUpRight, LayoutDashboard, PackageCheck, UserCheck } from "lucide-react";
 
 import { Hero } from "@/components/hero";
 import { Section } from "@/components/section";
 import { LazyFooterJellyfish } from "@/components/lazy-footer-jellyfish";
+import { GitHubActivity } from "@/components/server/github-activity";
+import { GitHubContributions } from "@/components/server/github-contributions";
 import { SiteNav } from "@/components/site-nav";
 import { WorkStage } from "@/components/work-stage";
 import { WorkScrollController } from "@/components/work-scroll-controller";
@@ -17,18 +20,18 @@ const PAGE = "mx-auto w-full max-w-[1280px] px-5 sm:px-8";
 
 const CAPABILITIES = [
   {
-    title: "Complex operator UI",
-    body: "Dashboards, dense forms, data grids, review states, and workflows people run their day on.",
+    title: "Complex product UI",
+    body: "Dashboards, multi-step forms, data grids, permissions, and the awkward states around them.",
     icon: LayoutDashboard,
   },
   {
-    title: "AI with human control",
-    body: "Extraction and generation flows where users can review, correct, retry, and understand failure.",
+    title: "AI features people can correct",
+    body: "Bill extraction and image generation with review, retry, and clear failure states.",
     icon: UserCheck,
   },
   {
-    title: "Full feature ownership",
-    body: "Product shape, design system, frontend, API boundaries, release quality, and production follow-through.",
+    title: "Ownership through release",
+    body: "I work from product decisions and Figma through frontend architecture, APIs, tests, and deployment.",
     icon: PackageCheck,
   },
 ] as const;
@@ -36,21 +39,21 @@ const CAPABILITIES = [
 const PROOF_PATHS = [
   {
     href: "/proof?for=operator",
-    eyebrow: "Complex SaaS",
-    title: "Operator surfaces",
-    body: "Production workflows, data density, permissions, and decisions under pressure.",
+    eyebrow: "B2B SaaS",
+    title: "Dashboards and operator workflows",
+    body: "Broker Online Exchange, SignalOps, and Roomboard.",
   },
   {
     href: "/proof?for=ai",
     eyebrow: "Applied AI",
-    title: "AI that lands in a workflow",
-    body: "Generation, extraction, correction states, failure handling, and product boundaries.",
+    title: "AI features with review built in",
+    body: "Phosphene, bill extraction, and generation infrastructure.",
   },
   {
     href: "/proof?for=ownership",
     eyebrow: "Design engineering",
-    title: "From product shape to ship",
-    body: "Independent products where interaction design and implementation are one responsibility.",
+    title: "Products I designed and built",
+    body: "Phosphene, Anchor, and Roomboard.",
   },
 ] as const;
 
@@ -82,7 +85,7 @@ export default function Home() {
             <span className="font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim">02</span>
             <span className="font-sans text-[20px] font-medium text-fg">Selected Work</span>
             <span className="font-mono text-[11px] lowercase tracking-[0.08em] text-fg-muted">
-              {FEATURED.length} kinds of proof
+              {FEATURED.length} projects
             </span>
             <span className="h-px flex-1 bg-gradient-to-r from-line to-transparent" aria-hidden />
           </div>
@@ -104,19 +107,18 @@ export default function Home() {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-16">
             <div>
               <p className="max-w-[34ch] font-sans text-[24px] font-light leading-[1.35] text-fg sm:text-[30px]">
-                Designer-turned-engineer for products where the interface carries real operational
-                weight.
+                I design and build complex web products.
               </p>
               <p className="mt-5 max-w-[68ch] text-[15px] leading-[1.75] text-fg-muted">
-                I have spent 10+ years shipping web products and nearly five leading frontend for a
-                private B2B SaaS platform. I work at production depth in Vue/Nuxt and React/Next.js,
-                and I am comfortable owning the path from product and design decisions through API
-                boundaries, implementation, testing, and release quality.
+                I have worked in frontend for more than 10 years. For nearly five of them I led
+                frontend for Broker Online Exchange, a B2B energy platform acquired by AppDirect.
+                The job covered quoting flows, dashboards, data-heavy forms, a design-system
+                migration, and day-to-day ownership of a production app.
               </p>
               <p className="mt-4 max-w-[68ch] text-[15px] leading-[1.75] text-fg-muted">
-                I now build and operate Phosphene end to end while staying available for senior
-                frontend and design-engineering roles. Remote from Vietnam (UTC+7), with long-term
-                async collaboration as my default.
+                I work in Vue/Nuxt and React/Next.js. I also run Phosphene, so my work now includes
+                backend APIs, payments, analytics, deployment, and support. I am based in Vietnam
+                (UTC+7) and work remotely.
               </p>
 
               <div className="mt-8 grid gap-x-8 sm:grid-cols-2">
@@ -188,21 +190,21 @@ export default function Home() {
           </div>
         </Section>
 
-        <Section id="evidence" n="04" title="Review by capability" kicker="about 5 minutes">
+        <Section id="evidence" n="04" title="For hiring managers" kicker="3 short routes">
           <div className="grid gap-8 lg:grid-cols-[minmax(240px,0.7fr)_minmax(0,1.7fr)] lg:gap-14">
             <div>
               <p className="max-w-[24ch] font-sans text-[26px] font-light leading-[1.25] text-fg">
-                Follow the proof that matches the work you need done.
+                Looking for something specific?
               </p>
               <p className="mt-4 max-w-[42ch] text-[13px] leading-[1.7] text-fg-muted">
-                Each path is a short, role-aware route through shipped case studies and concrete
-                product surfaces.
+                Choose the kind of work you are hiring for. Each route opens three relevant case
+                studies.
               </p>
               <Link
                 href="/proof"
                 className="group mt-6 inline-flex items-center gap-2 font-mono text-[11px] lowercase tracking-[0.05em] text-fg transition-colors hover:text-[var(--accent)]"
               >
-                open evidence builder
+                choose a route
                 <ArrowUpRight className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
             </div>
@@ -231,6 +233,21 @@ export default function Home() {
             </div>
           </div>
         </Section>
+
+        <Section id="github" n="05" title="GitHub" kicker="public activity">
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)] lg:items-start">
+            <div className="min-w-0">
+              <Suspense fallback={<GitHubFallback />}>
+                <GitHubContributions username="TargiX" />
+              </Suspense>
+            </div>
+            <div className="min-w-0">
+              <Suspense fallback={<GitHubFallback />}>
+                <GitHubActivity username="TargiX" />
+              </Suspense>
+            </div>
+          </div>
+        </Section>
       </main>
 
       <footer className="relative mt-6 overflow-hidden">
@@ -256,7 +273,7 @@ export default function Home() {
                 </span>
               </a>
               <p className="mt-3 max-w-[48ch] text-[13px] leading-relaxed text-fg-muted">
-                Senior frontend and design engineering. Vue or React. Complex SaaS and applied AI.
+                Available for senior frontend and design-engineering roles. Remote from Vietnam.
               </p>
             </div>
 
@@ -279,7 +296,7 @@ export default function Home() {
           </div>
 
           <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-line-soft/60 pt-6 text-[10px] lowercase tracking-[0.06em] text-fg-dim">
-            <span>im / portfolio / evidence-first</span>
+            <span>im / portfolio / v1.0</span>
             <span className="size-[3px] rounded-full bg-fg-dim" />
             <span>next 16 · react 19 · tailwind v4</span>
             <span className="size-[3px] rounded-full bg-fg-dim" />
@@ -288,5 +305,18 @@ export default function Home() {
         </div>
       </footer>
     </>
+  );
+}
+
+function GitHubFallback() {
+  return (
+    <div className="animate-pulse rounded-md border border-line-soft bg-bg-2/40 p-4">
+      <div className="mb-3 h-3 w-40 rounded bg-bg-2" />
+      <div className="space-y-2">
+        <div className="h-3 w-full rounded bg-bg-2" />
+        <div className="h-3 w-5/6 rounded bg-bg-2" />
+        <div className="h-3 w-3/4 rounded bg-bg-2" />
+      </div>
+    </div>
   );
 }
