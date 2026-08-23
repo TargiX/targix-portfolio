@@ -2,8 +2,8 @@
 slug: broker-online-exchange
 title: Broker Online Exchange
 year: "2021 – 2026"
-role: Lead Frontend · Broker Online Exchange (then AppDirect)
-blurb: "Nearly five years leading frontend on a private B2B energy-brokerage platform, four at Broker Online Exchange and the last after AppDirect acquired it. Public access is restricted, so this case study uses product walkthroughs and redacted interface screenshots to show the dashboards, quoting flows, design-system re-theme, and Gemini Vision Bill Scan to Quote work I led."
+role: Production · Lead Frontend
+blurb: "Nearly five years leading frontend for a private B2B energy platform through an acquisition: complex broker workflows, an incremental design-system re-theme, team patterns, and an AI-assisted bill-to-quote flow."
 tags: ["Vue 3", "React", "TypeScript", "Design systems", "Mantine", "Zustand", "Laravel", "Yii", "Gemini Vision", "Team lead", "Mentoring"]
 links:
   - { label: "public company site", href: "https://www.brokeronlinexchange.com/" }
@@ -14,73 +14,72 @@ featured: false
 ---
 
 <CaseTLDR
-  role="Lead Frontend"
-  line="Nearly 5 years owning a private B2B energy-brokerage platform through an acquisition."
+  role="Production · Lead Frontend"
+  line="Nearly five years owning the frontend of a private B2B platform through an acquisition."
   stack="Vue 3, React, Mantine, Zustand, Gemini Vision, Team lead"
 >
 
-- Private production platform; proof shown through walkthroughs and redacted UI screenshots
-- Led the frontend team, mentored juniors, owned architecture and patterns
-- Full design-system re-theme to AppDirect's language (Mantine) + new areas in React
-- Flagship: Bill Scan to Quote — scanned bills to structured quotes via Gemini Vision OCR
+- Led frontend architecture, code review, delivery patterns, and junior mentorship
+- Kept a revenue-bearing platform shipping during an incremental design-system re-theme
+- Introduced React and Mantine for new product areas alongside the existing Vue application
+- Shipped Bill Scan to Quote: scanned utility bills become editable, structured quotes
 
 </CaseTLDR>
 
-## The role
+## What shipped
 
-For close to five years I led the frontend on **MyServiceCloud**, the platform behind **Broker Online Exchange**, a B2B energy-brokerage product for brokers. Four of those years were at Broker Online Exchange itself; in the last year **AppDirect acquired the company** and the work continued under them.
+MyServiceCloud is the private platform behind **Broker Online Exchange**, used by energy brokers to manage customers, accounts, quoting, proposals, contracts, documents, and reporting. I led its frontend for close to five years: four at Broker Online Exchange and the final period after **AppDirect acquired the company**.
 
-I led the frontend the whole way through: set the direction for how we built UI, owned the architecture and component patterns, ran code review, and mentored the junior engineers on the team. When a new product area landed on the roadmap, I was the person who decided how it got built on the client and made sure it shipped.
+This was long-lived production ownership, not a greenfield handoff. The platform kept serving real business workflows while the team added product areas, modernized the stack, and moved the interface onto AppDirect's design language.
 
-The product itself is private production tooling for registered broker agents. The live dashboard sits behind login/invite access, so this case study is intentionally built from public walkthrough videos and redacted interface screenshots rather than a public demo link. Most of the UI shown in those materials is what my team and I shipped.
+## My responsibility
 
-## The platform
+I set frontend architecture and component patterns, reviewed code, mentored junior engineers, and decided how new product areas should be built on the client. I also worked across the API boundary with the PHP team and stayed responsible for whether the resulting flow was understandable, resilient, and shippable.
+
+The recurring constraints were the useful kind:
+
+- dense forms and tables with a large amount of interdependent state,
+- multi-step flows where partial progress and validation had to remain legible,
+- a mixed Vue and React frontend during modernization,
+- and incremental releases on a platform the business could not pause.
+
+## Production evidence
+
+The live application is restricted to registered brokers, so the proof here comes from the company's public walkthroughs and redacted product screenshots. The walkthrough below shows the platform as customers used it: quoting, dashboards, catalog, and document handling.
 
 <YouTubeEmbed id="_PRKfDjIIu0" start={21} poster="/work/broker/platform-quote.jpg" title="Broker Online Exchange · platform walkthrough" />
 
-That's the product walkthrough. Nearly everything on screen (the quoting flows, dashboards, catalog, document handling) is the frontend I led. It's a dense, data-heavy application: a real B2B tool where every screen holds a lot of state and still has to feel workable.
+<BrokerShots />
 
-## The UI, flow by flow
-
-These are the platform's own walkthroughs from the public resource hub, the day-to-day flows brokers actually use. Creating customers and accounts, the customer list, building quotes and proposals, and the **commercial-raise / contract-generation** screens (pricing to contract). The frontend in every one of these is what my team and I built and maintained.
+Four focused walkthroughs show the everyday workflow from customer setup through quote and contract. The full public resource hub remains linked below for deeper review.
 
 <BrokerVideos />
 
-## The interface
+## Modernizing the design system
 
-<BrokerShots />
+After the acquisition, I led an incremental re-theme of MyServiceCloud onto **AppDirect's design language**. New areas used **React**, **Mantine**, and **Zustand** alongside the existing Vue application.
 
-## Rebuilding the design language
+The important engineering decision was to make the migration additive and reviewable. Shared tokens and component patterns moved first; product areas followed in slices. That let the team improve consistency without freezing feature delivery or attempting a risky rewrite.
 
-The work I'm proudest of is the design-system overhaul. After AppDirect acquired the company, I led a full re-theme of MyServiceCloud: rebuilding the UI on a **Mantine**-based component system and bringing the whole platform onto **AppDirect's design language**, with a new visual language, tokens, and consistent component patterns across the app. New feature areas were built in **React** (Mantine + **Zustand**) alongside the existing Vue codebase.
+My role covered three connected layers:
 
-Leading that work meant:
+- **System direction:** translating the new visual language into tokens, components, and repeatable interaction patterns.
+- **Frontend architecture:** setting React structure and state patterns while maintaining stable boundaries with the Vue codebase.
+- **Team adoption:** reviewing implementation, documenting decisions in code, and helping junior engineers ship within the system.
 
-- **Owning the visual language:** turning AppDirect's design direction into tokens, components, and patterns the whole team could build on.
-- **Keeping it shippable:** re-theming a live, revenue-bearing platform incrementally, in small steps. The product kept shipping the whole time.
-- **Setting the React patterns:** for the new areas, component structure, state with Zustand, and how we used Mantine and styled it to the product instead of shipping default-kit UI.
+## Bill Scan to Quote
 
-This is the work that's invisible in a screen recording but is exactly what "lead frontend" means: choosing the design system and patterns a team builds on, and being responsible for them staying coherent over years.
+The most distinctive feature I led turned a scanned utility bill into a structured quote. A broker uploads a PDF or photo; **Gemini Vision** extracts line items and rate-plan data; the interface then makes that output reviewable and editable before it enters the quoting workflow.
 
-## Flagship: Bill Scan to Quote
+The model call was only one part of the product. The frontend had to handle poor photos and multi-page bills, communicate extraction confidence, preserve the original source, and let a broker correct uncertain fields without starting over. The goal was not autonomous OCR. It was a faster human review loop that brokers could trust.
 
-The feature I'm proudest of shipping is the flow that turns a **scanned utility bill into a structured quote**. A broker uploads a PDF or photo of a customer's existing bill; the system reads it with **Gemini Vision** OCR, extracts the line items and rate plan, and turns that into a comparable quote inside the platform, instead of re-typing a bill by hand.
+## Technical boundaries
 
-On the frontend that meant building an interface that could:
+- **Vue 3 + TypeScript** remained the production core.
+- **React + Mantine + Zustand** powered newer product areas and the design-system migration.
+- **Yii and Laravel** sat behind the API boundary during different phases of the platform.
+- **Gemini Vision** provided structured extraction for Bill Scan to Quote.
 
-- handle messy real-world uploads (skewed scans, multi-page bills, bad photos) without falling over,
-- surface the OCR's confidence and let a human correct it before the numbers became a quote,
-- and keep the review-and-correct loop fast enough that it actually saved brokers time.
+## What this proves
 
-It's the kind of feature where the AI is only half the work: the other half is the UI that makes the AI's output trustworthy and editable.
-
-## Stack
-
-- **Frontend:** Vue 3 + TypeScript at the platform's core, with **React** (**Mantine**, **Zustand**) introduced for new feature areas.
-- **Backend:** PHP: **Yii** in the earlier years, **Laravel** later. (Frontend was my lane; I worked across the API boundary with both.)
-- **Gemini Vision:** OCR for the bill-scanning flow.
-- Years of accumulated component and pattern work to keep a large B2B app maintainable.
-
-## What I take from it
-
-Five years on one platform (through a full design-system overhaul and an acquisition) taught me the thing that's easy to skip on side projects: how to keep a real, growing product **coherent** across many features, many engineers, and a long timeline, while still shipping. Leading the frontend there is why I'm comfortable being the senior frontend voice on a team, beyond an individual contributor heads-down on a ticket.
+Five years on one platform taught me how to keep a product coherent across changing requirements, multiple engineers, a design-system migration, and an acquisition. That is the work behind the title “Lead Frontend”: not only shipping a screen, but making the next screen easier for the team to ship well.

@@ -1,14 +1,10 @@
-import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowUpRight, LayoutDashboard, PackageCheck, UserCheck } from "lucide-react";
 
 import { Hero } from "@/components/hero";
 import { Section } from "@/components/section";
 import { LazyFooterJellyfish } from "@/components/lazy-footer-jellyfish";
-import { GitHubActivity } from "@/components/server/github-activity";
-import { GitHubContributions } from "@/components/server/github-contributions";
 import { SiteNav } from "@/components/site-nav";
-import { Reveal } from "@/components/reveal";
 import { WorkStage } from "@/components/work-stage";
 import { WorkScrollController } from "@/components/work-scroll-controller";
 import { WorkScrollMemory } from "@/components/work-scroll-memory";
@@ -17,13 +13,51 @@ import { SectionTracker } from "@/components/section-tracker";
 import { CONTACT, FEATURED, MORE } from "@/lib/data";
 import { getHomeJsonLd } from "@/lib/seo";
 
-// One shared outer container width across the whole page — no more "wide here,
-// narrow there" jumps between sections. Text-heavy inner blocks narrow their
-// own measure for readability, but the outer rail and gutters stay consistent.
 const PAGE = "mx-auto w-full max-w-[1280px] px-5 sm:px-8";
 
+const CAPABILITIES = [
+  {
+    title: "Complex operator UI",
+    body: "Dashboards, dense forms, data grids, review states, and workflows people run their day on.",
+    icon: LayoutDashboard,
+  },
+  {
+    title: "AI with human control",
+    body: "Extraction and generation flows where users can review, correct, retry, and understand failure.",
+    icon: UserCheck,
+  },
+  {
+    title: "Full feature ownership",
+    body: "Product shape, design system, frontend, API boundaries, release quality, and production follow-through.",
+    icon: PackageCheck,
+  },
+] as const;
+
+const PROOF_PATHS = [
+  {
+    href: "/proof?for=operator",
+    eyebrow: "Complex SaaS",
+    title: "Operator surfaces",
+    body: "Production workflows, data density, permissions, and decisions under pressure.",
+  },
+  {
+    href: "/proof?for=ai",
+    eyebrow: "Applied AI",
+    title: "AI that lands in a workflow",
+    body: "Generation, extraction, correction states, failure handling, and product boundaries.",
+  },
+  {
+    href: "/proof?for=ownership",
+    eyebrow: "Design engineering",
+    title: "From product shape to ship",
+    body: "Independent products where interaction design and implementation are one responsibility.",
+  },
+] as const;
+
 export default function Home() {
-  const EMAIL = CONTACT.find((c) => c.key === "email") ?? CONTACT[0];
+  const email = CONTACT.find((contact) => contact.key === "email") ?? CONTACT[0];
+  const linkedin = CONTACT.find((contact) => contact.key === "linkedin");
+  const resume = CONTACT.find((contact) => contact.key === "résumé");
   const homeJsonLd = getHomeJsonLd([...FEATURED, ...MORE]);
 
   return (
@@ -42,112 +76,96 @@ export default function Home() {
 
       <Hero />
 
-      {/* ── FEATURED WORK ── native scroll through full-screen project stages.
-          The header sits in the shared container; stages are full-bleed so
-          each project owns its own inner container and visual background. */}
       <div className="work-continuum relative overflow-hidden">
         <div className={`${PAGE} relative z-10`}>
-          <div id="work" className="flex items-baseline gap-3 pt-8 scroll-mt-20">
+          <div id="work" className="flex items-baseline gap-3 scroll-mt-20 pt-8">
             <span className="font-mono text-[11px] lowercase tracking-[0.08em] text-fg-dim">02</span>
-            <span className="font-sans text-[20px] font-medium tracking-[-0.01em] text-fg">
-              Selected Work
-            </span>
+            <span className="font-sans text-[20px] font-medium text-fg">Selected Work</span>
             <span className="font-mono text-[11px] lowercase tracking-[0.08em] text-fg-muted">
-              {FEATURED.length} projects
+              {FEATURED.length} kinds of proof
             </span>
             <span className="h-px flex-1 bg-gradient-to-r from-line to-transparent" aria-hidden />
           </div>
         </div>
 
         <WorkScrollController>
-          {FEATURED.map((p, i) => (
-            <WorkStage key={p.title} project={p} index={i} />
+          {FEATURED.map((project, index) => (
+            <WorkStage key={project.title} project={project} index={index} />
           ))}
         </WorkScrollController>
       </div>
 
-      {/* ── MORE WORK ── horizontal ribbon of lighter builds */}
-      <section className={`${PAGE} border-t border-line-soft py-16`}>
+      <section className={`${PAGE} border-t border-line-soft py-12`}>
         <MoreWorkRibbon projects={MORE} />
       </section>
 
-      {/* ── ABOUT ────────────────────────────────────────────── */}
-      <main className={`${PAGE} pb-24 pt-16`}>
+      <main className={`${PAGE} pb-16 pt-8`}>
         <Section id="about" n="03" title="About">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,720px)_minmax(360px,420px)] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,760px)_minmax(380px,430px)]">
-            <section className="[&>p]:mb-4 [&>p]:text-fg-muted [&>p:last-child]:mb-0">
-              <p>
-                Designer-turned-frontend engineer focused on complex product UI: dashboards,
-                workflows, editors, and AI-assisted interfaces. I&rsquo;m comfortable owning the
-                frontend end-to-end — from product shape and design-system decisions to
-                implementation details, state management, API boundaries, and release quality.
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-16">
+            <div>
+              <p className="max-w-[34ch] font-sans text-[24px] font-light leading-[1.35] text-fg sm:text-[30px]">
+                Designer-turned-engineer for products where the interface carries real operational
+                weight.
+              </p>
+              <p className="mt-5 max-w-[68ch] text-[15px] leading-[1.75] text-fg-muted">
+                I have spent 10+ years shipping web products and nearly five leading frontend for a
+                private B2B SaaS platform. I work at production depth in Vue/Nuxt and React/Next.js,
+                and I am comfortable owning the path from product and design decisions through API
+                boundaries, implementation, testing, and release quality.
+              </p>
+              <p className="mt-4 max-w-[68ch] text-[15px] leading-[1.75] text-fg-muted">
+                I now build and operate Phosphene end to end while staying available for senior
+                frontend and design-engineering roles. Remote from Vietnam (UTC+7), with long-term
+                async collaboration as my default.
               </p>
 
-              <p>
-                Senior frontend engineer, 10+ years building production web apps. I spent the last
-                5+ years leading the frontend of a B2B SaaS platform: dashboards, complex forms,
-                data grids, the kind of app real businesses run their day on. I came into
-                engineering from a UI design background, so I read Figma the way a designer does.
-              </p>
+              <div className="mt-8 grid gap-x-8 sm:grid-cols-2">
+                {CAPABILITIES.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={item.title} className="border-t border-line-soft py-5">
+                      <div className="mb-2 flex items-center gap-2.5">
+                        <Icon className="size-4 text-[var(--accent)]" aria-hidden="true" />
+                        <h3 className="font-sans text-[16px] font-medium text-fg">{item.title}</h3>
+                      </div>
+                      <p className="max-w-[46ch] text-[12px] leading-[1.65] text-fg-muted">
+                        {item.body}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
 
-              <p>
-                I work in both React (Next.js) and Vue (Vue 2/3, Nuxt) at production level. I&rsquo;m
-                also fullstack when a project needs it — I build and run my own product,{" "}
-                <a href="https://phosphene.cc">phosphene.cc</a>, end to end, including the backend,
-                database and deployment. So I can take a project from design all the way to shipped.
-              </p>
+              <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 font-mono text-[11px] lowercase tracking-[0.05em]">
+                <a href={email.href} className="text-fg transition-colors hover:text-[var(--accent)]">
+                  email me ↗
+                </a>
+                {resume && (
+                  <a
+                    href={resume.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-fg-muted transition-colors hover:text-[var(--accent)]"
+                  >
+                    résumé ↗
+                  </a>
+                )}
+                {linkedin && (
+                  <a
+                    href={linkedin.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-fg-muted transition-colors hover:text-[var(--accent)]"
+                  >
+                    linkedin ↗
+                  </a>
+                )}
+              </div>
+            </div>
 
-              <p>A few things I bring:</p>
-
-              <ul className="my-5 flex flex-col gap-3">
-                {[
-                  {
-                    label: "Complex SaaS interfaces:",
-                    body: "dashboards, multi-step wizards, dynamic forms, data grids, filtering",
-                  },
-                  {
-                    label: "Strong performance work:",
-                    body: "virtualized lists, load-time optimization, smooth UI under heavy data",
-                  },
-                  {
-                    label: "AI-augmented workflow:",
-                    body: "Claude Code + Codex are part of my daily process: faster scaffolding, refactors, and test generation, more ground covered per hour. Architecture and quality calls stay mine.",
-                  },
-                  {
-                    label: "AI integration in production:",
-                    body: "shipped AI-powered features including a document-scanning feature and an AI image generation product",
-                  },
-                  {
-                    label: "Testing:",
-                    body: "Cypress, Playwright, Vitest.",
-                  },
-                  {
-                    label: "Clear remote communication:",
-                    body: "concrete demos, clean PRs, early flagging of risk. Remote async has been my default for 10+ years",
-                  },
-                ].map((item) => (
-                  <li key={item.label} className="flex gap-3 text-fg-muted">
-                    <span
-                      aria-hidden
-                      className="mt-[0.72em] h-px w-5 shrink-0 bg-[color-mix(in_oklab,var(--accent)_72%,transparent)]"
-                    />
-                    <span>
-                      <strong className="font-medium text-fg">{item.label}</strong> {item.body}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              <p>
-                Available now, open to senior frontend or design-engineering roles, contract or
-                full-time. I work remote from Vietnam (UTC+7), with comfortable overlap into
-                European and US-morning hours. Let&rsquo;s talk.
-              </p>
-            </section>
-
-            <aside className="lg:sticky lg:top-24 lg:-mt-2">
-              <figure className="group/portrait relative mx-auto aspect-[4/5] w-full max-w-[390px] justify-self-center">
-                <div className="relative aspect-[4/5] w-full overflow-hidden rounded-sm bg-bg-2/30 shadow-[0_28px_80px_rgba(0,0,0,.28)]">
+            <aside className="lg:sticky lg:top-24">
+              <figure className="relative mx-auto aspect-[4/5] w-full max-w-[340px]">
+                <div className="relative size-full overflow-hidden rounded-sm bg-bg-2/30 shadow-[0_28px_80px_rgba(0,0,0,.28)]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/about/ilya-2026.jpg"
@@ -158,234 +176,117 @@ export default function Home() {
                     className="block size-full select-none object-cover object-[50%_38%]"
                   />
                 </div>
-                {/* green corner-brackets (crop-marks) — real rounded corner where the two sides meet, 1px */}
-                <span aria-hidden className="pointer-events-none absolute -left-3 -top-3 z-30 size-5 rounded-tl-[4px] border-l border-t border-[var(--accent)]" />
-                <span aria-hidden className="pointer-events-none absolute -right-3 -top-3 z-30 size-5 rounded-tr-[4px] border-r border-t border-[var(--accent)]" />
-                <span aria-hidden className="pointer-events-none absolute -right-3 -bottom-3 z-30 size-5 rounded-br-[4px] border-r border-b border-[var(--accent)]" />
-                <span aria-hidden className="pointer-events-none absolute -left-3 -bottom-3 z-30 size-5 rounded-bl-[4px] border-l border-b border-[var(--accent)]" />
+                <span aria-hidden className="absolute -left-3 -top-3 size-5 rounded-tl-[4px] border-l border-t border-[var(--accent)]" />
+                <span aria-hidden className="absolute -right-3 -top-3 size-5 rounded-tr-[4px] border-r border-t border-[var(--accent)]" />
+                <span aria-hidden className="absolute -bottom-3 -right-3 size-5 rounded-br-[4px] border-b border-r border-[var(--accent)]" />
+                <span aria-hidden className="absolute -bottom-3 -left-3 size-5 rounded-bl-[4px] border-b border-l border-[var(--accent)]" />
               </figure>
-              <figcaption className="mx-auto mt-3 max-w-[390px] text-right font-mono text-[10px] lowercase tracking-[0.1em] text-fg-dim">
-                ilya moskovkin · frontend & design-eng
+              <figcaption className="mx-auto mt-3 max-w-[340px] text-right font-mono text-[10px] lowercase tracking-[0.1em] text-fg-dim">
+                ilya moskovkin · frontend &amp; design engineering
               </figcaption>
             </aside>
           </div>
         </Section>
 
-        <Section id="stack" n="03" title="Product Workflow">
-          <div className="grid gap-x-4 gap-y-6 lg:grid-cols-9 lg:items-start">
-            <div className="min-w-0 lg:col-span-3">
-              <p className="max-w-[52ch] text-[15px] leading-relaxed text-fg-muted">
-                I build AI-powered SaaS features where the model has to work inside a real business
-                workflow: structured inputs, review states, failure handling, permissions, and
-                production UI around the generation.
+        <Section id="evidence" n="04" title="Review by capability" kicker="about 5 minutes">
+          <div className="grid gap-8 lg:grid-cols-[minmax(240px,0.7fr)_minmax(0,1.7fr)] lg:gap-14">
+            <div>
+              <p className="max-w-[24ch] font-sans text-[26px] font-light leading-[1.25] text-fg">
+                Follow the proof that matches the work you need done.
               </p>
-              <p className="mt-4 max-w-[52ch] text-[13px] leading-relaxed text-fg-muted">
-                The useful part is not adding a chatbot. It is turning messy work into an interface
-                people can trust, correct, approve, and ship through.
+              <p className="mt-4 max-w-[42ch] text-[13px] leading-[1.7] text-fg-muted">
+                Each path is a short, role-aware route through shipped case studies and concrete
+                product surfaces.
               </p>
               <Link
-                href="/lab/product-launch"
-                className="group mt-5 inline-flex items-center gap-2 text-[13px] font-medium text-fg transition-colors hover:text-[var(--accent)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
+                href="/proof"
+                className="group mt-6 inline-flex items-center gap-2 font-mono text-[11px] lowercase tracking-[0.05em] text-fg transition-colors hover:text-[var(--accent)]"
               >
-                Try the 90-second Product Launch Simulator
-                <ArrowUpRight
-                  className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                  aria-hidden="true"
-                />
-              </Link>
-              <Link
-                href="/lab"
-                className="group mt-3 inline-flex items-center gap-2 text-[12px] text-fg-muted transition-colors hover:text-[var(--accent)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
-              >
-                Browse the interaction lab
-                <ArrowUpRight
-                  className="size-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                  aria-hidden="true"
-                />
+                open evidence builder
+                <ArrowUpRight className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
             </div>
 
-            {[
-              {
-                label: "AI SaaS features",
-                items: [
-                  "document scanning",
-                  "structured extraction",
-                  "dynamic forms",
-                  "AI-assisted review",
-                  "workflow builders",
-                ],
-              },
-              {
-                label: "Integration layer",
-                items: [
-                  "LLM orchestration",
-                  "RAG and retrieval",
-                  "structured outputs",
-                  "async generation UX",
-                  "cost and failure states",
-                ],
-              },
-              {
-                label: "Product delivery",
-                items: [
-                  "Figma to production",
-                  "frontend plus API glue",
-                  "validation and edge cases",
-                  "loading and error states",
-                  "clean handoff quality",
-                ],
-              },
-            ].map((col) => (
-              <div
-                key={col.label}
-                className="min-w-0 rounded-md border border-line-soft bg-bg-2/35 p-4 lg:col-span-2"
-              >
-                <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.12em] text-fg-dim">
-                  {col.label}
-                </div>
-                <ul className="flex flex-col gap-2">
-                  {col.items.map((item) => (
-                    <li key={item} className="flex gap-2 text-[12px] leading-relaxed text-fg-muted">
-                      <span
-                        aria-hidden
-                        className="mt-[0.58em] size-1.5 shrink-0 rounded-full bg-[var(--accent)]"
-                      />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-
-            {[
-              {
-                value: "business UI",
-                body: "dashboards, admin panels, CRMs, data grids, filters, and multi-step flows",
-                icon: LayoutDashboard,
-              },
-              {
-                value: "human in the loop",
-                body: "review screens where users approve, correct, retry, or explain AI output",
-                icon: UserCheck,
-              },
-              {
-                value: "full feature slices",
-                body: "frontend, backend glue, database shape, deployment, and quality checks",
-                icon: PackageCheck,
-              },
-            ].map((item) => {
-              const Icon = item.icon;
-              return (
-                <div key={item.value} className="min-w-0 border-t border-line-soft pt-4 lg:col-span-3">
-                  <div className="mb-2 flex items-center gap-2.5">
-                    <span className="grid size-7 shrink-0 place-items-center rounded-md border border-line-soft bg-bg-2/45 text-[var(--accent)]">
-                      <Icon className="size-3.5" aria-hidden="true" />
+            <div className="border-b border-line-soft">
+              {PROOF_PATHS.map((path, index) => (
+                <Link
+                  key={path.href}
+                  href={path.href}
+                  className="group grid gap-2 border-t border-line-soft py-5 transition-colors sm:grid-cols-[120px_minmax(0,1fr)_auto] sm:items-center sm:gap-5"
+                >
+                  <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-fg-dim">
+                    0{index + 1} · {path.eyebrow}
+                  </span>
+                  <span>
+                    <strong className="block font-sans text-[17px] font-medium text-fg transition-colors group-hover:text-[var(--accent)]">
+                      {path.title}
+                    </strong>
+                    <span className="mt-1 block max-w-[58ch] text-[12px] leading-[1.6] text-fg-muted">
+                      {path.body}
                     </span>
-                    <div className="font-sans text-[18px] font-medium tracking-[-0.01em] text-fg">
-                      {item.value}
-                    </div>
-                  </div>
-                  <p className="max-w-[44ch] text-[12px] leading-relaxed text-fg-muted">
-                    {item.body}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </Section>
-
-        <Section id="github" n="04" title="GitHub Pulse" kicker="public signal">
-          <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)] lg:items-start">
-            <div className="min-w-0">
-              <Suspense fallback={<GitHubFallback />}>
-                <GitHubContributions username="TargiX" />
-              </Suspense>
-            </div>
-            <div className="min-w-0">
-              <Suspense fallback={<GitHubFallback />}>
-                <GitHubActivity username="TargiX" />
-              </Suspense>
+                  </span>
+                  <ArrowUpRight className="hidden size-4 text-fg-dim transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--accent)] sm:block" aria-hidden="true" />
+                </Link>
+              ))}
             </div>
           </div>
         </Section>
-
       </main>
 
-      <footer className="relative mt-10 overflow-hidden">
-        {/* grey-green aurora tint that rises from the bottom, mirroring the hero */}
+      <footer className="relative mt-6 overflow-hidden">
         <div aria-hidden="true" className="footer-glow pointer-events-none absolute inset-0 z-0" />
         <LazyFooterJellyfish />
         <div className="relative z-10 mx-auto max-w-[1280px] px-5 py-14 sm:px-8">
           <div className="grid gap-10 sm:grid-cols-[1fr_auto] sm:items-start">
-            {/* big CTA */}
             <div>
               <div className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] lowercase tracking-[0.1em] text-fg-dim">
                 <span className="relative flex size-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--accent)] opacity-60" />
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-[var(--accent)] opacity-60" />
                   <span className="relative inline-flex size-2 rounded-full bg-[var(--accent)]" />
                 </span>
                 available for work
               </div>
               <a
-                href={EMAIL.href}
-                className="group block break-words font-sans text-[clamp(22px,7vw,44px)] font-medium tracking-[-0.02em] text-fg transition-colors hover:text-[var(--accent)]"
+                href={email.href}
+                className="group block break-words font-sans text-[clamp(22px,7vw,44px)] font-medium text-fg transition-colors hover:text-[var(--accent)]"
               >
-                {EMAIL.label}
+                {email.label}
                 <span className="ml-2 inline-block text-[0.6em] align-middle transition-transform group-hover:-translate-y-1 group-hover:translate-x-1">
                   ↗
                 </span>
               </a>
-              <p className="mt-3 max-w-[46ch] text-[13px] leading-relaxed text-fg-muted">
-                Open to senior frontend or design-engineering roles. Based in Vietnam, comfortable
-                async.
+              <p className="mt-3 max-w-[48ch] text-[13px] leading-relaxed text-fg-muted">
+                Senior frontend and design engineering. Vue or React. Complex SaaS and applied AI.
               </p>
             </div>
 
-            {/* links */}
             <nav className="flex flex-col gap-2.5 text-[12px] sm:text-right">
-              {CONTACT.map((c) => (
+              {CONTACT.map((contact) => (
                 <a
-                  key={c.key}
-                  href={c.href}
-                  target={c.href.startsWith("mailto:") ? undefined : "_blank"}
-                  rel={c.href.startsWith("mailto:") ? undefined : "noreferrer"}
+                  key={contact.key}
+                  href={contact.href}
+                  target={contact.href.startsWith("mailto:") ? undefined : "_blank"}
+                  rel={contact.href.startsWith("mailto:") ? undefined : "noreferrer"}
                   className="group inline-flex items-center gap-2 text-fg-muted transition-colors hover:text-[var(--accent)] sm:justify-end"
                 >
                   <span className="font-mono text-[10px] lowercase tracking-[0.08em] text-fg-dim">
-                    {c.key}
+                    {contact.key}
                   </span>
-                  <span className="text-fg group-hover:text-[var(--accent)]">
-                    {c.label}
-                  </span>
+                  <span className="text-fg group-hover:text-[var(--accent)]">{contact.label}</span>
                 </a>
               ))}
             </nav>
           </div>
 
-          {/* credits */}
           <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-line-soft/60 pt-6 text-[10px] lowercase tracking-[0.06em] text-fg-dim">
-            <span>im / portfolio / v1.0</span>
+            <span>im / portfolio / evidence-first</span>
             <span className="size-[3px] rounded-full bg-fg-dim" />
-            <span>built with next 16 · react 19 · tailwind v4 · three.js · framer</span>
+            <span>next 16 · react 19 · tailwind v4</span>
             <span className="size-[3px] rounded-full bg-fg-dim" />
             <span className="ml-auto">© {new Date().getFullYear()} ilya moskovkin</span>
           </div>
         </div>
       </footer>
     </>
-  );
-}
-
-function GitHubFallback() {
-  return (
-    <div className="animate-pulse rounded-md border border-line-soft bg-bg-2/40 p-4">
-      <div className="mb-3 h-3 w-40 rounded bg-bg-2" />
-      <div className="space-y-2">
-        <div className="h-3 w-full rounded bg-bg-2" />
-        <div className="h-3 w-5/6 rounded bg-bg-2" />
-        <div className="h-3 w-3/4 rounded bg-bg-2" />
-      </div>
-    </div>
   );
 }

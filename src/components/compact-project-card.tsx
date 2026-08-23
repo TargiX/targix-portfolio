@@ -27,7 +27,7 @@ export function CompactProjectCard({ project }: { project: Project }) {
   const secondaryLinks = (links ?? []).filter((l) => l.href !== href);
 
   return (
-    <article className="group/card relative flex h-full min-h-[360px] w-full flex-col overflow-hidden rounded-xl bg-bg-2/30 transition-colors duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-bg-2/35">
+    <article className="group/card relative flex h-full min-h-[340px] w-full flex-col overflow-hidden rounded-lg bg-bg-2/30 transition-colors duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-bg-2/35">
       {/* Media stage — same treatment as the big card, scaled down */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-bg-2 [perspective:900px]">
         <div
@@ -127,14 +127,14 @@ export function CompactProjectCard({ project }: { project: Project }) {
             target="_blank"
             rel="noreferrer"
             aria-label={`${title} — open`}
-            className="absolute inset-0 z-10 rounded-xl"
+            className="absolute inset-0 z-10 rounded-lg"
           />
         ) : (
           <Link
             href={href}
             prefetch={false}
             aria-label={`${title} — open case study`}
-            className="absolute inset-0 z-10 rounded-xl"
+            className="absolute inset-0 z-10 rounded-lg"
           />
         ))}
     </article>
