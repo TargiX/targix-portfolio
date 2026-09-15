@@ -81,6 +81,12 @@ export default async function CasePage({ params }: { params: Params }) {
       />
       <BackToWork key={c.slug} />
 
+      {c.slug === "broker-online-exchange" && c.cover && (
+        <figure className="mb-10 mt-10 overflow-hidden rounded-md border border-line-soft">
+          <img src={c.cover} alt="Broker Online Exchange interface overview" width={1200} height={630} className="h-auto w-full" />
+        </figure>
+      )}
+
       {/* One grid runs through the whole article: a left reading column
           (title, lede, body — same left edge top to bottom) and a sticky
           meta rail on the right. On mobile it stacks head → rail → body. */}

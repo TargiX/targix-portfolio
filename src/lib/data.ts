@@ -37,8 +37,8 @@ export const FEATURED: Project[] = [
       { label: "case study", href: "/work/broker-online-exchange" },
     ],
     caseSlug: "broker-online-exchange",
-    thumb: "/work/broker/platform-quote.jpg",
-    evidenceCaption: "Customer quotes in the company’s public walkthrough. My team built and maintained the frontend behind these broker workflows.",
+    thumb: "/work/broker/banner.webp",
+    evidenceCaption: "Broker Online Exchange interface overview. My team built and maintained the frontend; the case study includes public product walkthroughs.",
   },
   {
     index: "②",
