@@ -166,7 +166,12 @@ void main(){
 
   float outA = aGlyph + aRaw * (1.0 - aGlyph);
   vec3 outC = (ink * aGlyph + raw.rgb * aRaw * (1.0 - aGlyph)) / max(outA, 1e-4);
-  gl_FragColor = vec4(outC, outA);
+  // Exploded cubes can cross the full-screen quad during scroll. Keep the
+  // outer two glyph cells transparent, then fade in over three more cells,
+  // so moving glyphs never flash against the DOM clipping boundary.
+  vec2 edge = min(px, uRes - px);
+  float edgeFade = smoothstep(uCell * 2.0, uCell * 5.0, min(edge.x, edge.y));
+  gl_FragColor = vec4(outC, outA * edgeFade);
 }
 `;
 
