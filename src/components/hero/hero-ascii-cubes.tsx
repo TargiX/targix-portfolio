@@ -216,7 +216,8 @@ export function HeroAsciiCubes({ className }: Props) {
 
   useEffect(() => {
     const host = hostRef.current;
-    if (!host) return;
+    if (!host || !host.parentElement) return;
+    const surface = host.parentElement;
 
     let disposed = false;
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
@@ -246,9 +247,7 @@ export function HeroAsciiCubes({ className }: Props) {
       return;
     }
 
-    // touch devices get a tighter pixel-ratio cap: three passes per frame add up
-    const coarse = window.matchMedia?.("(pointer: coarse)").matches ?? false;
-    const pr = Math.min(window.devicePixelRatio || 1, coarse ? 1.5 : 2);
+    const pr = 1; // ASCII cells do not benefit from a Retina-sized drawing buffer.
     // offscreen targets at half res: the ASCII pass samples ~9px cells anyway,
     // so full-res glass buys nothing — this halves fragment work twice over
     const RT_SCALE = 0.5;
@@ -259,14 +258,16 @@ export function HeroAsciiCubes({ className }: Props) {
     canvas.style.cssText = "display:block;width:100%;height:100%";
     host.appendChild(canvas);
 
-    let W = host.clientWidth || window.innerWidth;
-    let H = host.clientHeight || window.innerHeight;
-    renderer.setSize(W, H, false);
+    let W = surface.clientWidth || window.innerWidth;
+    let H = surface.clientHeight || window.innerHeight;
+    let renderW = Math.max(1, host.clientWidth);
+    let renderH = Math.max(1, host.clientHeight);
+    renderer.setSize(renderW, renderH, false);
 
     const makeRT = () =>
       new THREE.WebGLRenderTarget(
-        Math.max(1, (W * pr * RT_SCALE) | 0),
-        Math.max(1, (H * pr * RT_SCALE) | 0),
+        Math.max(1, (renderW * pr * RT_SCALE) | 0),
+        Math.max(1, (renderH * pr * RT_SCALE) | 0),
         {
           magFilter: THREE.LinearFilter,
           minFilter: THREE.LinearFilter,
@@ -302,7 +303,7 @@ export function HeroAsciiCubes({ className }: Props) {
       uniforms: {
         uScene: { value: feedRT.texture },
         // uRes must match the target the cubes render into (gl_FragCoord space)
-        uRes: { value: new THREE.Vector2(W * pr * RT_SCALE, H * pr * RT_SCALE) },
+        uRes: { value: new THREE.Vector2(renderW * pr * RT_SCALE, renderH * pr * RT_SCALE) },
         uAccent: { value: new THREE.Vector3(...accentRgb) },
         uLight: { value: uLight },
         uReveal: { value: 0 },
@@ -345,7 +346,7 @@ export function HeroAsciiCubes({ className }: Props) {
       uniforms: {
         uScene: { value: cubesRT.texture },
         uGlyphs: { value: glyphTex },
-        uRes: { value: new THREE.Vector2(W * pr, H * pr) },
+        uRes: { value: new THREE.Vector2(renderW * pr, renderH * pr) },
         uCell: { value: CELL_CSS * pr },
         uGlyphCount: { value: GLYPHS.length },
         uAccent: { value: new THREE.Vector3(...accentRgb) },
@@ -369,6 +370,7 @@ export function HeroAsciiCubes({ className }: Props) {
             ? { fracX: 0.77, fracY: 0.44, scaleK: 0.29 }
             : { fracX: 0.71, fracY: 0.45, scaleK: 0.44 },
       );
+      cubeCam.setViewOffset(W, H, host.offsetLeft, host.offsetTop, renderW, renderH);
     };
     layout();
 
@@ -377,7 +379,7 @@ export function HeroAsciiCubes({ className }: Props) {
     const mouse = { x: W / 2, y: H / 2, tx: W / 2, ty: H / 2, active: 0 };
     const onMove = (e: PointerEvent) => {
       if (e.pointerType === "touch") return;
-      const rect = host.getBoundingClientRect();
+      const rect = surface.getBoundingClientRect();
       mouse.tx = e.clientX - rect.left;
       mouse.ty = e.clientY - rect.top;
       mouse.active = 1;
@@ -390,17 +392,24 @@ export function HeroAsciiCubes({ className }: Props) {
 
     const ro = new ResizeObserver(() => {
       if (disposed) return;
-      W = host.clientWidth || W;
-      H = host.clientHeight || H;
-      renderer.setSize(W, H, false);
+      const nextW = surface.clientWidth || W;
+      const nextH = surface.clientHeight || H;
+      const nextRenderW = Math.max(1, host.clientWidth);
+      const nextRenderH = Math.max(1, host.clientHeight);
+      if (W === nextW && H === nextH && renderW === nextRenderW && renderH === nextRenderH) return;
+      W = nextW;
+      H = nextH;
+      renderW = nextRenderW;
+      renderH = nextRenderH;
+      renderer.setSize(renderW, renderH, false);
       feedRT.dispose();
       cubesRT.dispose();
       feedRT = makeRT();
       cubesRT = makeRT();
       cubeMat.uniforms.uScene.value = feedRT.texture;
       asciiMat.uniforms.uScene.value = cubesRT.texture;
-      cubeMat.uniforms.uRes.value.set(W * pr * RT_SCALE, H * pr * RT_SCALE);
-      asciiMat.uniforms.uRes.value.set(W * pr, H * pr);
+      cubeMat.uniforms.uRes.value.set(renderW * pr * RT_SCALE, renderH * pr * RT_SCALE);
+      asciiMat.uniforms.uRes.value.set(renderW * pr, renderH * pr);
       layout();
       if (reduce) {
         reduceFrames = 0;
@@ -444,13 +453,18 @@ export function HeroAsciiCubes({ className }: Props) {
     const _pushVec = new THREE.Vector3();
 
     let raf = 0;
-    const tick = () => {
+    let lastPaint = -Infinity;
+    const FRAME_MS = 1000 / 30;
+    const tick = (now = performance.now()) => {
       if (disposed) return;
+      if (document.hidden) { raf = 0; return; }
       if (visible && (!reduce || reduceFrames < 8)) {
         raf = requestAnimationFrame(tick);
       } else {
         raf = 0;
       }
+      if (now - lastPaint < FRAME_MS - 1) return;
+      lastPaint = now;
       reduceFrames++;
       const elapsed = reduce ? REDUCE_T : (performance.now() - start) / 1000;
       feedMat.uniforms.uTime.value = elapsed;
@@ -581,10 +595,20 @@ export function HeroAsciiCubes({ className }: Props) {
       renderer.clear(true, true, true);
       renderer.render(asciiScene, fsCamera);
     };
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      } else if (visible && !raf && (!reduce || reduceFrames < 8)) {
+        raf = requestAnimationFrame(tick);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
     raf = requestAnimationFrame(tick);
 
     return () => {
       disposed = true;
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);
@@ -608,9 +632,31 @@ export function HeroAsciiCubes({ className }: Props) {
   return (
     <div
       ref={hostRef}
-      className={className}
+      className={`${className ?? ""} hero-canvas-layer`}
       aria-hidden="true"
-      style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
-    />
+      style={{ pointerEvents: "none" }}
+    >
+      <style jsx>{`
+/* Keep the animated GPU surface out of the copy, frame rail and stats panel. */
+.hero-canvas-layer {
+  position: absolute;
+  left: 52%;
+  right: var(--hero-rail);
+  top: 0;
+  bottom: var(--hero-bottom-band);
+  contain: strict;
+  isolation: isolate;
+  transform: translateZ(0);
+}
+
+@media (max-width: 767px) {
+  .hero-canvas-layer {
+    left: 70%;
+    right: 0;
+    bottom: 65%;
+  }
+}
+      `}</style>
+    </div>
   );
 }
