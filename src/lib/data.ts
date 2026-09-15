@@ -50,6 +50,7 @@ export const FEATURED: Project[] = [
     tags: ["Nuxt 4", "Vue 3", "iOS", "AI workflows", "Product design", "Payments"],
     links: [
       { label: "phosphene.cc", href: "https://phosphene.cc" },
+      { label: "App Store", href: "https://apps.apple.com/app/phosphene-ai-photoshoot-studio/id6787385939" },
       { label: "case study", href: "/work/phosphene" },
     ],
     caseSlug: "phosphene",
@@ -108,7 +109,36 @@ export const MORE: Project[] = [
     caseSlug: "anchor",
     thumb: "/work/anchor/anchor-laptop-hero.jpg",
   },
-
+  {
+    index: "⑥",
+    year: "2026",
+    role: "Full-stack product build · Vue",
+    title: "TalentSignal",
+    blurb:
+      "An HR workspace for finding candidates, comparing profiles, messaging, and moderation.",
+    tags: ["Nuxt 4", "Vue 3", "NestJS", "Search"],
+    links: [
+      { label: "live demo", href: "https://talentsignal.us" },
+      { label: "github", href: "https://github.com/TargiX/TalentSignal" },
+      { label: "case study", href: "/work/talentsignal" },
+    ],
+    caseSlug: "talentsignal",
+    thumb: "/work/talentsignal/discover-desktop.png",
+  },
+  {
+    index: "⑦",
+    year: "2023 – 2026",
+    role: "Independent system · Trading UI",
+    title: "Injective Trading Terminal",
+    blurb:
+      "A Nuxt trading terminal for the Injective testnet with wallet state, live markets, order book, and candlestick charts.",
+    tags: ["Nuxt 3", "TypeScript", "Trading UI", "gRPC-web"],
+    links: [
+      { label: "live app", href: "https://injective.ilyamoskovkin.com" },
+      { label: "github", href: "https://github.com/TargiX/injective-testnet-dapp" },
+    ],
+    thumb: "/work/injective/dashboard-dark.png",
+  },
 ];
 
 export const STACK = [
@@ -152,6 +182,18 @@ export const CONTACT = [
 
 
 export const IOS_APPS: (Project & { imageAlt: string; decision: string })[] = [
+  {
+    index: "phosphene-ios",
+    year: "Published",
+    role: "Independent iOS product · Design + Engineering",
+    title: "Phosphene",
+    blurb: "An AI photo studio with guided templates, reference photos, and a private gallery.",
+    decision: "Connect generation to the iPhone photo picker, saving to Photos, and sharing results.",
+    tags: ["iOS", "AI images", "Photos", "App Store"],
+    links: [{ label: "App Store", href: "https://apps.apple.com/app/phosphene-ai-photoshoot-studio/id6787385939" }],
+    thumb: "/work/phosphene/app-store-1.jpg",
+    imageAlt: "Phosphene App Store screenshot showing the visual template catalog",
+  },
   {
     index: "frume",
     year: "Published",

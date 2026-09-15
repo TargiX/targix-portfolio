@@ -28,13 +28,13 @@ export function MoreWorkRibbon({ projects }: { projects: Project[] }) {
 
       <div className="relative max-w-full overflow-hidden">
         <div
-          className="ribbon-track flex snap-x items-stretch gap-3 overflow-x-auto pb-2"
+          className="ribbon-track flex snap-x items-stretch gap-3 overflow-x-auto pb-2 lg:grid lg:grid-cols-4"
           aria-label="More work — scroll horizontally"
         >
           {projects.map((p) => (
             <div
               key={p.title}
-              className="ribbon-item flex w-[clamp(230px,23vw,278px)] flex-shrink-0"
+              className="ribbon-item flex w-[clamp(230px,23vw,278px)] flex-shrink-0 lg:w-auto"
             >
               <div className="relative flex h-full w-full">
                 <CompactProjectCard project={p} />

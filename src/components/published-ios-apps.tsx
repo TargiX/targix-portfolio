@@ -8,13 +8,13 @@ export function PublishedIOSApps() {
       <div className="mb-7">
         <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-fg-dim">Independent products · App Store</p>
         <h2 id="ios-apps-title" className="mt-2 font-sans text-[28px] font-medium tracking-tight text-fg">Published iOS apps</h2>
-        <p className="mt-2 max-w-[65ch] font-sans text-[15px] leading-relaxed text-fg-muted">Two focused products I designed, built, and brought to the App Store.</p>
+        <p className="mt-2 max-w-[65ch] font-sans text-[15px] leading-relaxed text-fg-muted">Products I designed, built, and brought to the App Store.</p>
       </div>
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-3">
         {IOS_APPS.map((app) => (
-          <article key={app.title} className="grid grid-cols-[100px_minmax(0,1fr)] gap-4 rounded-lg border border-line-soft bg-bg-2/30 p-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6 sm:p-6">
+          <article key={app.title} className="grid grid-cols-[100px_minmax(0,1fr)] gap-4 rounded-lg border border-line-soft bg-bg-2/30 p-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6 sm:p-6 lg:grid-cols-[100px_minmax(0,1fr)] lg:gap-4 lg:p-4">
             <a href={app.links[0].href} target="_blank" rel="noreferrer" aria-label={`${app.title} screenshots on the App Store`} className="self-start overflow-hidden rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]">
-              <Image src={app.thumb!} alt={app.imageAlt} width={221} height={480} sizes="(min-width: 640px) 150px, 100px" className="h-auto w-full" />
+              <Image src={app.thumb!} alt={app.imageAlt} width={221} height={480} sizes="(min-width: 1024px) 100px, (min-width: 640px) 150px, 100px" className="h-auto w-full" />
             </a>
             <div className="flex min-w-0 flex-col items-start">
               <h3 className="font-sans text-[23px] font-medium text-fg">{app.title}</h3>
