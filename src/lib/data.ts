@@ -46,8 +46,8 @@ export const FEATURED: Project[] = [
     role: "Founder-led · Design + Engineering",
     title: "Phosphene",
     blurb:
-      "My AI image product, built and operated end to end. It starts with templates and opens into graph-based tools for users who need more control.",
-    tags: ["Nuxt 4", "Vue 3", "AI workflows", "Product design", "Postgres", "Payments"],
+      "My AI image product for web and iOS, built and operated end to end. It starts with templates and opens into graph-based tools for users who need more control.",
+    tags: ["Nuxt 4", "Vue 3", "iOS", "AI workflows", "Product design", "Payments"],
     links: [
       { label: "phosphene.cc", href: "https://phosphene.cc" },
       { label: "case study", href: "/work/phosphene" },
