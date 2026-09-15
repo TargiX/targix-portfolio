@@ -1,4 +1,4 @@
-import { CONTACT, FEATURED, MORE, type Project } from "@/lib/data";
+import { CONTACT, FEATURED, MORE, IOS_APPS, type Project } from "@/lib/data";
 import { getAllCases, type CaseDoc } from "@/lib/content";
 import { SITE, absoluteUrl } from "@/lib/seo";
 
@@ -80,6 +80,9 @@ ${FEATURED.map(projectLine).join("\n")}
 
 ## Additional projects
 ${MORE.map(projectLine).join("\n")}
+
+## Published iOS apps
+${IOS_APPS.map(projectLine).join("\n")}
 
 ## Case study index
 ${cases.map(caseStudyLine).join("\n")}

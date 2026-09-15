@@ -108,36 +108,7 @@ export const MORE: Project[] = [
     caseSlug: "anchor",
     thumb: "/work/anchor/anchor-laptop-hero.jpg",
   },
-  {
-    index: "⑥",
-    year: "2026",
-    role: "Full-stack product build · Vue",
-    title: "TalentSignal",
-    blurb:
-      "An HR workspace for finding candidates, comparing profiles, messaging, and moderation.",
-    tags: ["Nuxt 4", "Vue 3", "NestJS", "Search"],
-    links: [
-      { label: "live demo", href: "https://talentsignal.us" },
-      { label: "github", href: "https://github.com/TargiX/TalentSignal" },
-      { label: "case study", href: "/work/talentsignal" },
-    ],
-    caseSlug: "talentsignal",
-    thumb: "/work/talentsignal/discover-desktop.png",
-  },
-  {
-    index: "⑦",
-    year: "2023 – 2026",
-    role: "Independent system · Trading UI",
-    title: "Injective Trading Terminal",
-    blurb:
-      "A Nuxt trading terminal for the Injective testnet with wallet state, live markets, order book, and candlestick charts.",
-    tags: ["Nuxt 3", "TypeScript", "Trading UI", "gRPC-web"],
-    links: [
-      { label: "live app", href: "https://injective.ilyamoskovkin.com" },
-      { label: "github", href: "https://github.com/TargiX/injective-testnet-dapp" },
-    ],
-    thumb: "/work/injective/dashboard-dark.png",
-  },
+
 ];
 
 export const STACK = [
@@ -178,3 +149,31 @@ export const CONTACT = [
   },
   { key: "résumé", label: "Ilya_Moskovkin_CV.pdf", href: "/Ilya_Moskovkin_CV.pdf" },
 ] as const;
+
+
+export const IOS_APPS: (Project & { imageAlt: string; decision: string })[] = [
+  {
+    index: "frume",
+    year: "Published",
+    role: "Independent iOS product · Design + Engineering",
+    title: "Frume",
+    blurb: "A photo puzzle app with personal images, adjustable puzzle sizes, and saved progress.",
+    decision: "Keep one-finger play available while using pinch to zoom into larger boards.",
+    tags: ["iOS", "Gestures", "Photos", "App Store"],
+    links: [{ label: "App Store", href: "https://apps.apple.com/app/frume/id1639767109" }],
+    thumb: "/work/frume/app-store-1.jpg",
+    imageAlt: "Frume App Store screenshot showing a photo puzzle and its piece tray",
+  },
+  {
+    index: "sleepy-agi",
+    year: "Published",
+    role: "Independent iOS product · Design + Engineering",
+    title: "Sleepy AGI",
+    blurb: "Calm audio briefings across five channels, with a playback queue and saved listening position.",
+    decision: "Let listening continue with the screen locked, with playback controls and a sleep timer.",
+    tags: ["iOS", "Audio playback", "App Store"],
+    links: [{ label: "App Store", href: "https://apps.apple.com/app/sleepy-agi/id6788091465" }],
+    thumb: "/work/sleepy-agi/app-store-1.jpg",
+    imageAlt: "Sleepy AGI App Store screenshot showing audio briefings and playback controls",
+  },
+];

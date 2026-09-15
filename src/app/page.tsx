@@ -11,9 +11,10 @@ import { SiteNav } from "@/components/site-nav";
 import { WorkStage } from "@/components/work-stage";
 import { WorkScrollController } from "@/components/work-scroll-controller";
 import { WorkScrollMemory } from "@/components/work-scroll-memory";
+import { PublishedIOSApps } from "@/components/published-ios-apps";
 import { MoreWorkRibbon } from "@/components/more-work-ribbon";
 import { SectionTracker } from "@/components/section-tracker";
-import { CONTACT, FEATURED, MORE } from "@/lib/data";
+import { CONTACT, FEATURED, MORE, IOS_APPS } from "@/lib/data";
 import { getHomeJsonLd } from "@/lib/seo";
 
 const PAGE = "mx-auto w-full max-w-[1280px] px-5 sm:px-8";
@@ -61,7 +62,7 @@ export default function Home() {
   const email = CONTACT.find((contact) => contact.key === "email") ?? CONTACT[0];
   const linkedin = CONTACT.find((contact) => contact.key === "linkedin");
   const resume = CONTACT.find((contact) => contact.key === "résumé");
-  const homeJsonLd = getHomeJsonLd([...FEATURED, ...MORE]);
+  const homeJsonLd = getHomeJsonLd([...FEATURED, ...IOS_APPS, ...MORE]);
 
   return (
     <>
@@ -97,6 +98,8 @@ export default function Home() {
           ))}
         </WorkScrollController>
       </div>
+
+      <PublishedIOSApps />
 
       <section className={`${PAGE} border-t border-line-soft py-12`}>
         <MoreWorkRibbon projects={MORE} />
