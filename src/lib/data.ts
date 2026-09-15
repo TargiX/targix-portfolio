@@ -14,6 +14,8 @@ export type Project = {
   caseSlug?: string;
   /** Small preview image shown beside the text on the home page card. */
   thumb?: string;
+  /** Caption identifying the product evidence and personal contribution. */
+  evidenceCaption?: string;
   /** Screens splayed as a fan in the media stage (mobile-style projects). */
   screens?: string[];
   /** Renders a live interactive demo in the media stage instead of images. */
@@ -28,18 +30,19 @@ export const FEATURED: Project[] = [
     role: "Production · Lead Frontend",
     title: "Broker Online Exchange",
     blurb:
-      "I led frontend for nearly five years as the product grew through an AppDirect acquisition. My work included quoting, dashboards, a design-system migration, and bill extraction with human review.",
+      "I led two engineers and owned frontend architecture for nearly five years. We shipped broker workflows and an incremental design-system migration; I also led bill extraction with editable human review.",
     tags: ["Vue 3", "React", "Design systems", "Complex SaaS", "AI review", "Team lead"],
     links: [
       { label: "public company site", href: "https://www.brokeronlinexchange.com/" },
       { label: "case study", href: "/work/broker-online-exchange" },
     ],
     caseSlug: "broker-online-exchange",
-    thumb: "/work/broker/banner.webp",
+    thumb: "/work/broker/platform-quote.jpg",
+    evidenceCaption: "Customer quotes in the company’s public walkthrough. My team built and maintained the frontend behind these broker workflows.",
   },
   {
     index: "②",
-    year: "2026 – now",
+    year: "Ongoing",
     role: "Founder-led · Design + Engineering",
     title: "Phosphene",
     blurb:
@@ -50,11 +53,12 @@ export const FEATURED: Project[] = [
       { label: "case study", href: "/work/phosphene" },
     ],
     caseSlug: "phosphene",
-    thumb: "/work/phosphene/phosphene-landing-showcase.jpg",
+    thumb: "/work/phosphene/template-builder.png",
+    evidenceCaption: "References → guided inputs → generation. I designed and built the product, including payments and provider integration.",
   },
   {
     index: "③",
-    year: "2025",
+    year: "2025 – 2026",
     role: "Independent product · Design + Engineering",
     title: "Roomboard",
     blurb:
@@ -65,8 +69,8 @@ export const FEATURED: Project[] = [
       { label: "case study", href: "/work/roomboard" },
     ],
     caseSlug: "roomboard",
-    thumb: "/work/roomboard/landing-hero.png",
-    demo: "roomboard",
+    thumb: "/work/roomboard/canvas-room.png",
+    evidenceCaption: "A private review room with cards, comments, and sharing controls. I built the canvas and collaboration workflow.",
   },
 ];
 

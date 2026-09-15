@@ -107,11 +107,11 @@ export default function Home() {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-16">
             <div>
               <p className="max-w-[34ch] font-sans text-[24px] font-light leading-[1.35] text-fg sm:text-[30px]">
-                I design and build complex web products.
+                I build SaaS interfaces and lead frontend delivery.
               </p>
               <p className="mt-5 max-w-[68ch] text-[15px] leading-[1.75] text-fg-muted">
                 I have worked in frontend for more than 10 years. For nearly five of them I led
-                frontend for Broker Online Exchange, a B2B energy platform acquired by AppDirect.
+                a team of two engineers at Broker Online Exchange, a B2B energy platform acquired by AppDirect.
                 The job covered quoting flows, dashboards, data-heavy forms, a design-system
                 migration, and day-to-day ownership of a production app.
               </p>

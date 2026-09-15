@@ -31,7 +31,7 @@ export const PROOF_MODES: readonly ProofMode[] = [
         eyebrow: "01 · B2B SaaS",
         title: "Broker Online Exchange",
         description:
-          "I led the frontend for nearly five years. The case study covers quoting, dashboards, complex forms, a design-system migration, and bill extraction.",
+          "I led two engineers and owned frontend architecture for nearly five years. The case study covers quoting, dashboards, complex forms, a design-system migration, and bill extraction.",
         href: "/work/broker-online-exchange",
         action: "Open case study",
         evidence: "Lead frontend · B2B SaaS · 2021–2026",

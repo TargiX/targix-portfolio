@@ -56,10 +56,10 @@ function HeroCopy() {
   return (
     <div className="hero-copy-inner">
       <div className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-fg-muted sm:text-[12px]">
-        Senior frontend &amp; design engineer
+        Senior frontend engineer
       </div>
 
-      <h1 className="m-0 max-w-[660px] font-sans text-[58px] font-light leading-[0.94] tracking-normal text-fg sm:text-[74px] md:text-[82px] lg:text-[88px] xl:text-[96px]">
+      <h1 className="m-0 max-w-[660px] font-sans text-[48px] font-light leading-[0.94] tracking-normal text-fg sm:text-[74px] md:text-[82px] lg:text-[88px] xl:text-[96px]">
         Ilya
         <br />
         Moskovkin
@@ -71,17 +71,16 @@ function HeroCopy() {
       />
 
       <p className="m-0 max-w-[620px] font-sans text-[25px] font-light leading-[1.2] tracking-normal text-fg sm:text-[30px]">
-        I design and build{" "}
-        <span className="text-[var(--accent)]">complex web products.</span>
+        Frontend engineering for{" "}
+        <span className="text-[var(--accent)]">complex SaaS products.</span>
       </p>
 
       <p className="mt-4 max-w-[570px] font-sans text-[15px] leading-[1.65] text-fg-muted sm:text-[17px]">
-        10+ years in frontend. Nearly five leading Broker Online Exchange through its acquisition
-        by AppDirect. I now run Phosphene and work across Vue, React, product design, and backend
-        delivery.
+        10+ years in production. Nearly five leading frontend at Broker Online Exchange through
+        its AppDirect acquisition. React, Vue, and product design.
       </p>
 
-      <div className="mt-7 flex flex-wrap items-center gap-3">
+      <div className="mt-5 flex flex-wrap items-center gap-3">
         <a
           href={EMAIL_HREF}
           className="hero-primary-cta inline-flex h-12 items-center justify-center gap-3 rounded-sm bg-[var(--accent)] px-5 font-mono text-[13px] font-bold tracking-[0.04em] shadow-[0_16px_36px_color-mix(in_oklab,var(--accent)_24%,transparent)] transition-transform hover:scale-[1.02] active:scale-[0.98]"
@@ -107,9 +106,9 @@ function HeroCopy() {
         </a>
       </div>
 
-      <div className="mt-5 flex items-center gap-2 font-mono text-[10px] lowercase tracking-[0.08em] text-fg-dim">
+      <div className="mt-4 flex items-center gap-2 font-mono text-[12px] lowercase tracking-[0.08em] text-fg-dim">
         <span className="size-1.5 rounded-full bg-[var(--accent)] shadow-[0_0_12px_color-mix(in_oklab,var(--accent)_55%,transparent)]" />
-        available now · remote from Vietnam · UTC+7
+        available · remote, Vietnam · UTC+7
       </div>
     </div>
   );
@@ -121,7 +120,7 @@ function HeroProofStrip() {
       {[
         ["10+", "Years", "in production"],
         ["5", "Years", "frontend lead"],
-        ["1", "Founder-led", "AI product"],
+        ["2", "Engineers", "I led"],
       ].map(([value, lineOne, lineTwo]) => (
         <div key={`${lineOne}-${lineTwo}`} className="hero-stat">
           <span className="hero-stat-token">{value}</span>
