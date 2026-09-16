@@ -81,25 +81,16 @@ export default async function CasePage({ params }: { params: Params }) {
       />
       <BackToWork key={c.slug} />
 
-      {/* Cover is a full-width band above the article grid — the wide "hero". */}
-      {c.cover && (
-        <figure className="mb-12 mt-10">
-          <div className="overflow-hidden rounded-md border border-line-soft bg-bg-2/60">
-            <div className="relative aspect-[1200/630] bg-bg">
-              <img
-                src={c.cover}
-                alt={`${c.title} product preview`}
-                className="h-full w-full object-cover object-top"
-              />
-            </div>
-          </div>
+      {c.slug === "broker-online-exchange" && c.cover && (
+        <figure className="mb-10 mt-10 overflow-hidden rounded-md border border-line-soft">
+          <img src={c.cover} alt="Broker Online Exchange interface overview" width={1200} height={630} className="h-auto w-full" />
         </figure>
       )}
 
       {/* One grid runs through the whole article: a left reading column
           (title, lede, body — same left edge top to bottom) and a sticky
           meta rail on the right. On mobile it stacks head → rail → body. */}
-      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_13.75rem] lg:items-start lg:gap-x-16">
+      <div className="mt-10 lg:grid lg:grid-cols-[minmax(0,1fr)_13.75rem] lg:items-start lg:gap-x-16">
         <header className="lg:col-start-1 lg:row-start-1">
           <div className="mb-4 flex items-center gap-3 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-muted">
             <span className="text-fg-dim">{c.role}</span>
@@ -107,11 +98,11 @@ export default async function CasePage({ params }: { params: Params }) {
             <span>{c.year}</span>
           </div>
 
-          <h1 className="heading-gradient m-0 mb-6 w-fit font-sans text-[52px] font-medium leading-[1.05] tracking-[-0.025em] sm:text-[64px]">
+          <h1 className="heading-gradient m-0 mb-6 w-fit font-sans text-[40px] font-medium leading-[1.05] tracking-[-0.025em] sm:text-[64px]">
             {c.title}
           </h1>
 
-          <p className="m-0 max-w-[56ch] font-mono text-[17px] leading-[1.6] text-fg-muted">
+          <p className="m-0 max-w-[56ch] font-sans text-[17px] leading-[1.6] text-fg-muted">
             {c.blurb}
           </p>
         </header>

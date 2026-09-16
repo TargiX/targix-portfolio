@@ -11,9 +11,10 @@ import { SiteNav } from "@/components/site-nav";
 import { WorkStage } from "@/components/work-stage";
 import { WorkScrollController } from "@/components/work-scroll-controller";
 import { WorkScrollMemory } from "@/components/work-scroll-memory";
+import { PublishedIOSApps } from "@/components/published-ios-apps";
 import { MoreWorkRibbon } from "@/components/more-work-ribbon";
 import { SectionTracker } from "@/components/section-tracker";
-import { CONTACT, FEATURED, MORE } from "@/lib/data";
+import { CONTACT, FEATURED, MORE, IOS_APPS } from "@/lib/data";
 import { getHomeJsonLd } from "@/lib/seo";
 
 const PAGE = "mx-auto w-full max-w-[1280px] px-5 sm:px-8";
@@ -61,7 +62,7 @@ export default function Home() {
   const email = CONTACT.find((contact) => contact.key === "email") ?? CONTACT[0];
   const linkedin = CONTACT.find((contact) => contact.key === "linkedin");
   const resume = CONTACT.find((contact) => contact.key === "résumé");
-  const homeJsonLd = getHomeJsonLd([...FEATURED, ...MORE]);
+  const homeJsonLd = getHomeJsonLd([...FEATURED, ...IOS_APPS, ...MORE]);
 
   return (
     <>
@@ -98,6 +99,8 @@ export default function Home() {
         </WorkScrollController>
       </div>
 
+      <PublishedIOSApps />
+
       <section className={`${PAGE} border-t border-line-soft py-12`}>
         <MoreWorkRibbon projects={MORE} />
       </section>
@@ -107,11 +110,11 @@ export default function Home() {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-16">
             <div>
               <p className="max-w-[34ch] font-sans text-[24px] font-light leading-[1.35] text-fg sm:text-[30px]">
-                I design and build complex web products.
+                I build SaaS interfaces and lead frontend delivery.
               </p>
               <p className="mt-5 max-w-[68ch] text-[15px] leading-[1.75] text-fg-muted">
                 I have worked in frontend for more than 10 years. For nearly five of them I led
-                frontend for Broker Online Exchange, a B2B energy platform acquired by AppDirect.
+                a team of two engineers at Broker Online Exchange, a B2B energy platform acquired by AppDirect.
                 The job covered quoting flows, dashboards, data-heavy forms, a design-system
                 migration, and day-to-day ownership of a production app.
               </p>

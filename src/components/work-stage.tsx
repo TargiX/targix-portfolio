@@ -73,7 +73,7 @@ const accent = (hue: number, lightness = 0.72, chroma = 0.16, alpha = 1) =>
  * interactive showcases, Anchor keeps its ScreenFan.
  */
 export function WorkStage({ project, index }: { project: Project; index: number }) {
-  const { year, role, title, blurb, tags, links, caseSlug, screens, thumb, demo } =
+  const { year, role, title, blurb, tags, links, caseSlug, screens, thumb, demo, evidenceCaption } =
     project;
   const href = caseSlug ? `/work/${caseSlug}` : undefined;
   const fan = screens && screens.length > 0 ? screens : null;
@@ -141,7 +141,16 @@ export function WorkStage({ project, index }: { project: Project; index: number 
                 borderColor: isSignalOps ? "transparent" : accent(hue, 0.5, 0.02, 0.25),
               }}
             >
-                {isBroker ? (
+                {evidenceCaption && imagePreview ? (
+                  <Image
+                    src={imagePreview}
+                    alt={`${title}: ${evidenceCaption}`}
+                    loading={index === 0 ? "eager" : "lazy"}
+                    fill
+                    sizes="(min-width: 1024px) 760px, 100vw"
+                    className={caseSlug === "broker-online-exchange" || caseSlug === "phosphene" ? "object-cover object-top" : "object-contain"}
+                  />
+                ) : isBroker ? (
                   <div className="absolute inset-[-4%] scale-[1.035]">
                     <div className="work-stage-media-drift h-full w-full">
                       <BrokerPreview />
@@ -217,6 +226,11 @@ export function WorkStage({ project, index }: { project: Project; index: number 
                   />
                 )}
             </div>
+            {evidenceCaption && (
+              <p className="mt-3 border-l border-line pl-3 font-sans text-[13px] leading-relaxed text-fg-muted">
+                {evidenceCaption}
+              </p>
+            )}
           </motion.div>
         </div>
 
@@ -229,7 +243,7 @@ export function WorkStage({ project, index }: { project: Project; index: number 
           )}
         >
           <Reveal>
-            <div className="mb-3 flex flex-wrap items-center gap-2 font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim">
+            <div className="mb-3 flex flex-wrap items-center gap-2 font-mono text-[12px] lowercase tracking-[0.06em] text-fg-dim">
               <span className="tabular-nums text-[var(--accent)]">
                 {String(index + 1).padStart(2, "0")}
               </span>
@@ -273,7 +287,7 @@ export function WorkStage({ project, index }: { project: Project; index: number 
           )}
 
           <Reveal delay={0.15}>
-            <p className="mb-6 text-[14px] leading-[1.65] text-fg-muted">{blurb}</p>
+            <p className="mb-6 font-sans text-[16px] leading-[1.65] text-fg-muted">{blurb}</p>
           </Reveal>
 
           <Reveal delay={0.2}>

@@ -14,6 +14,8 @@ export type Project = {
   caseSlug?: string;
   /** Small preview image shown beside the text on the home page card. */
   thumb?: string;
+  /** Caption identifying the product evidence and personal contribution. */
+  evidenceCaption?: string;
   /** Screens splayed as a fan in the media stage (mobile-style projects). */
   screens?: string[];
   /** Renders a live interactive demo in the media stage instead of images. */
@@ -28,7 +30,7 @@ export const FEATURED: Project[] = [
     role: "Production · Lead Frontend",
     title: "Broker Online Exchange",
     blurb:
-      "I led frontend for nearly five years as the product grew through an AppDirect acquisition. My work included quoting, dashboards, a design-system migration, and bill extraction with human review.",
+      "I led two engineers and owned frontend architecture for nearly five years. We shipped broker workflows and an incremental design-system migration; I also led bill extraction with editable human review.",
     tags: ["Vue 3", "React", "Design systems", "Complex SaaS", "AI review", "Team lead"],
     links: [
       { label: "public company site", href: "https://www.brokeronlinexchange.com/" },
@@ -36,25 +38,28 @@ export const FEATURED: Project[] = [
     ],
     caseSlug: "broker-online-exchange",
     thumb: "/work/broker/banner.webp",
+    evidenceCaption: "Broker Online Exchange interface overview. My team built and maintained the frontend; the case study includes public product walkthroughs.",
   },
   {
     index: "②",
-    year: "2026 – now",
+    year: "Ongoing",
     role: "Founder-led · Design + Engineering",
     title: "Phosphene",
     blurb:
-      "My AI image product, built and operated end to end. It starts with templates and opens into graph-based tools for users who need more control.",
-    tags: ["Nuxt 4", "Vue 3", "AI workflows", "Product design", "Postgres", "Payments"],
+      "My AI image product for web and iOS, built and operated end to end. It starts with templates and opens into graph-based tools for users who need more control.",
+    tags: ["Nuxt 4", "Vue 3", "iOS", "AI workflows", "Product design", "Payments"],
     links: [
       { label: "phosphene.cc", href: "https://phosphene.cc" },
+      { label: "App Store", href: "https://apps.apple.com/app/phosphene-ai-photoshoot-studio/id6787385939" },
       { label: "case study", href: "/work/phosphene" },
     ],
     caseSlug: "phosphene",
     thumb: "/work/phosphene/phosphene-landing-showcase.jpg",
+    evidenceCaption: "Phosphene landing page. I designed and built the web and iOS product, including payments and provider integration.",
   },
   {
     index: "③",
-    year: "2025",
+    year: "2025 – 2026",
     role: "Independent product · Design + Engineering",
     title: "Roomboard",
     blurb:
@@ -65,8 +70,8 @@ export const FEATURED: Project[] = [
       { label: "case study", href: "/work/roomboard" },
     ],
     caseSlug: "roomboard",
-    thumb: "/work/roomboard/landing-hero.png",
-    demo: "roomboard",
+    thumb: "/work/roomboard/canvas-room.png",
+    evidenceCaption: "A private review room with cards, comments, and sharing controls. I built the canvas and collaboration workflow.",
   },
 ];
 
@@ -174,3 +179,43 @@ export const CONTACT = [
   },
   { key: "résumé", label: "Ilya_Moskovkin_CV.pdf", href: "/Ilya_Moskovkin_CV.pdf" },
 ] as const;
+
+
+export const IOS_APPS: (Project & { imageAlt: string; decision: string })[] = [
+  {
+    index: "phosphene-ios",
+    year: "Published",
+    role: "Independent iOS product · Design + Engineering",
+    title: "Phosphene",
+    blurb: "An AI photo studio with guided templates, reference photos, and a private gallery.",
+    decision: "Connect generation to the iPhone photo picker, saving to Photos, and sharing results.",
+    tags: ["iOS", "AI images", "Photos", "App Store"],
+    links: [{ label: "App Store", href: "https://apps.apple.com/app/phosphene-ai-photoshoot-studio/id6787385939" }],
+    thumb: "/work/phosphene/app-store-1.jpg",
+    imageAlt: "Phosphene App Store screenshot showing the visual template catalog",
+  },
+  {
+    index: "frume",
+    year: "Published",
+    role: "Independent iOS product · Design + Engineering",
+    title: "Frume",
+    blurb: "A photo puzzle app with personal images, adjustable puzzle sizes, and saved progress.",
+    decision: "Keep one-finger play available while using pinch to zoom into larger boards.",
+    tags: ["iOS", "Gestures", "Photos", "App Store"],
+    links: [{ label: "App Store", href: "https://apps.apple.com/app/frume/id1639767109" }],
+    thumb: "/work/frume/app-store-1.jpg",
+    imageAlt: "Frume App Store screenshot showing a photo puzzle and its piece tray",
+  },
+  {
+    index: "sleepy-agi",
+    year: "Published",
+    role: "Independent iOS product · Design + Engineering",
+    title: "Sleepy AGI",
+    blurb: "Calm audio briefings across five channels, with a playback queue and saved listening position.",
+    decision: "Let listening continue with the screen locked, with playback controls and a sleep timer.",
+    tags: ["iOS", "Audio playback", "App Store"],
+    links: [{ label: "App Store", href: "https://apps.apple.com/app/sleepy-agi/id6788091465" }],
+    thumb: "/work/sleepy-agi/app-store-1.jpg",
+    imageAlt: "Sleepy AGI App Store screenshot showing audio briefings and playback controls",
+  },
+];

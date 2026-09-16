@@ -31,7 +31,7 @@ export const PROOF_MODES: readonly ProofMode[] = [
         eyebrow: "01 · B2B SaaS",
         title: "Broker Online Exchange",
         description:
-          "I led the frontend for nearly five years. The case study covers quoting, dashboards, complex forms, a design-system migration, and bill extraction.",
+          "I led two engineers and owned frontend architecture for nearly five years. The case study covers quoting, dashboards, complex forms, a design-system migration, and bill extraction.",
         href: "/work/broker-online-exchange",
         action: "Open case study",
         evidence: "Lead frontend · B2B SaaS · 2021–2026",
@@ -62,13 +62,13 @@ export const PROOF_MODES: readonly ProofMode[] = [
     detail: "Generation, extraction, retries, and human correction.",
     outcome: "AI features with review built in",
     intro:
-      "Phosphene covers a complete AI product. Broker shows bill extraction inside a B2B workflow. SignalOps covers the operations behind generation.",
+      "Phosphene covers an AI product for web and iOS. Broker shows bill extraction inside a B2B workflow. SignalOps covers the operations behind generation.",
     stops: [
       {
         eyebrow: "01 · image generation",
         title: "Phosphene",
         description:
-          "I run this product end to end. Users start from templates, generate images, and can move into graph-based tools when they need more control.",
+          "I run this product across web and iOS. Users start from templates, generate images, and can move into graph-based tools when they need more control.",
         href: "/work/phosphene",
         action: "Open case study",
         evidence: "Nuxt 4 · image generation · payments",
@@ -105,7 +105,7 @@ export const PROOF_MODES: readonly ProofMode[] = [
         eyebrow: "01 · Phosphene",
         title: "Phosphene",
         description:
-          "I chose the product shape, designed the interfaces, built the app and backend, integrated billing, and operate the service.",
+          "I chose the product shape, designed the interfaces, built the web product and iOS app, integrated billing, and operate the service.",
         href: "/work/phosphene",
         action: "Open case study",
         evidence: "Product design · Nuxt 4 · operations",

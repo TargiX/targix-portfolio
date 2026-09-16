@@ -3,7 +3,7 @@ slug: broker-online-exchange
 title: Broker Online Exchange
 year: "2021 – 2026"
 role: Production · Lead Frontend
-blurb: "Nearly five years leading frontend for a private B2B energy platform through an acquisition: complex broker workflows, an incremental design-system re-theme, team patterns, and an AI-assisted bill-to-quote flow."
+blurb: "I led two engineers and owned frontend architecture for nearly five years: broker workflows, an incremental design-system migration, and bill extraction with human review."
 tags: ["Vue 3", "React", "TypeScript", "Design systems", "Mantine", "Zustand", "Laravel", "Yii", "Gemini Vision", "Team lead", "Mentoring"]
 links:
   - { label: "public company site", href: "https://www.brokeronlinexchange.com/" }
@@ -14,72 +14,63 @@ featured: false
 ---
 
 <CaseTLDR
-  role="Production · Lead Frontend"
-  line="Nearly five years owning the frontend of a private B2B platform through an acquisition."
-  stack="Vue 3, React, Mantine, Zustand, Gemini Vision, Team lead"
+  role="Lead Frontend · Led two engineers"
+  line="Frontend ownership for a private B2B energy platform, spanning its acquisition by AppDirect."
+  stack="Vue 3, React, TypeScript, Mantine, Zustand"
 >
 
-- Led frontend architecture, code review, delivery patterns, and junior mentorship
-- Kept a revenue-bearing platform shipping during an incremental design-system re-theme
-- Introduced React and Mantine for new product areas alongside the existing Vue application
-- Shipped Bill Scan to Quote: scanned utility bills become editable, structured quotes
+- Led two engineers: architecture, code review, delivery patterns, and mentorship
+- Shipped quoting, customer, proposal, and contract workflows over nearly five years
+- Moved shared tokens and components onto AppDirect's design language while feature delivery continued
+- Led Bill Scan to Quote: utility bills become structured data that brokers review and edit
 
 </CaseTLDR>
 
-## What shipped
+## Problem
 
-MyServiceCloud is the private platform behind **Broker Online Exchange**, used by energy brokers to manage customers, accounts, quoting, proposals, contracts, documents, and reporting. I led its frontend for close to five years: four at Broker Online Exchange and the final period after **AppDirect acquired the company**.
+Energy brokers use **MyServiceCloud**, the platform behind Broker Online Exchange, to manage customers, accounts, quotes, proposals, contracts, documents, and reporting. Dense tables and multi-step forms had to preserve progress, handle interdependent validation, and stay understandable during everyday business use.
 
-This was long-lived production ownership, not a greenfield handoff. The platform kept serving real business workflows while the team added product areas, modernized the stack, and moved the interface onto AppDirect's design language.
+After AppDirect acquired the company, the team also needed to adopt a new design language while continuing to maintain and extend the production application.
 
 ## My responsibility
 
-I set frontend architecture and component patterns, reviewed code, mentored junior engineers, and decided how new product areas should be built on the client. I also worked across the API boundary with the PHP team and stayed responsible for whether the resulting flow was understandable, resilient, and shippable.
+I led **two engineers** and owned frontend architecture, component patterns, code review, and mentorship. I worked with the PHP team on API contracts and release readiness. My tenure covered nearly five years: four at Broker Online Exchange and the final period after the acquisition.
 
-The recurring constraints were the useful kind:
+The design system was a studio collaboration. My team's responsibility was turning that design into the live, stateful application.
 
-- dense forms and tables with a large amount of interdependent state,
-- multi-step flows where partial progress and validation had to remain legible,
-- a mixed Vue and React frontend during modernization,
-- and incremental releases on a platform the business could not pause.
+## Key decision: migrate in slices
 
-## Production evidence
+I led an incremental re-theme rather than a full application rewrite. Shared tokens and component patterns moved first; product areas followed. **React, Mantine, and Zustand** supported new areas alongside the existing **Vue** application.
 
-The live application is restricted to registered brokers, so the proof here comes from the company's public walkthroughs and redacted product screenshots. The walkthrough below shows the platform as customers used it: quoting, dashboards, catalog, and document handling.
+This kept the migration compatible with ongoing feature delivery. The tradeoff was maintaining clear boundaries between two frontend stacks: deciding where new features belonged, reviewing shared patterns, and helping the team apply them consistently.
+
+## What shipped
+
+- Customer, account, quoting, proposal, contract, and document workflows in a production platform.
+- An incremental design-system migration with shared tokens and repeatable components.
+- **Bill Scan to Quote:** a broker uploads a utility bill, Gemini Vision extracts structured fields, and the broker reviews and corrects them before continuing to a quote.
+
+The bill-scanning flow keeps the original source available and allows corrections without restarting. Poor photos, multi-page documents, and uncertain fields made the review interface as important as extraction itself.
+
+## Product evidence
+
+<figure>
+  <img src="/work/broker/interface-restored.png" alt="Reconstructed Broker Online Exchange customer profile and quoting interface" width={1672} height={941} />
+  <figcaption>AI-restored illustration based on the public walkthrough, with the presenter overlay removed. Fine UI details may differ; the video below shows the original application.</figcaption>
+</figure>
+
+The application is restricted to registered brokers. The company's public walkthrough shows the customer and quoting flow my team built and maintained.
 
 <YouTubeEmbed id="_PRKfDjIIu0" start={21} poster="/work/broker/platform-quote.jpg" title="Broker Online Exchange · platform walkthrough" />
 
-<BrokerShots />
-
-Four focused walkthroughs show the everyday workflow from customer setup through quote and contract. The full public resource hub remains linked below for deeper review.
-
 <BrokerVideos />
 
-## Modernizing the design system
+The redacted design-system images below show the interface components used in the implementation. They complement the production walkthroughs.
 
-After the acquisition, I led an incremental re-theme of MyServiceCloud onto **AppDirect's design language**. New areas used **React**, **Mantine**, and **Zustand** alongside the existing Vue application.
+<BrokerShots />
 
-The important engineering decision was to make the migration additive and reviewable. Shared tokens and component patterns moved first; product areas followed in slices. That let the team improve consistency without freezing feature delivery or attempting a risky rewrite.
+## Technical detail
 
-My role covered three connected layers:
+**Vue 3 and TypeScript** supported the existing application. New areas used **React, Mantine, and Zustand**. I coordinated frontend contracts with the backend team across **Yii and Laravel** services, and **Gemini Vision** provided bill extraction.
 
-- **System direction:** translating the new visual language into tokens, components, and repeatable interaction patterns.
-- **Frontend architecture:** setting React structure and state patterns while maintaining stable boundaries with the Vue codebase.
-- **Team adoption:** reviewing implementation, documenting decisions in code, and helping junior engineers ship within the system.
-
-## Bill Scan to Quote
-
-The most distinctive feature I led turned a scanned utility bill into a structured quote. A broker uploads a PDF or photo; **Gemini Vision** extracts line items and rate-plan data; the interface then makes that output reviewable and editable before it enters the quoting workflow.
-
-The model call was only one part of the product. The frontend had to handle poor photos and multi-page bills, communicate extraction confidence, preserve the original source, and let a broker correct uncertain fields without starting over. The goal was not autonomous OCR. It was a faster human review loop that brokers could trust.
-
-## Technical boundaries
-
-- **Vue 3 + TypeScript** remained the production core.
-- **React + Mantine + Zustand** powered newer product areas and the design-system migration.
-- **Yii and Laravel** sat behind the API boundary during different phases of the platform.
-- **Gemini Vision** provided structured extraction for Bill Scan to Quote.
-
-## What this proves
-
-Five years on one platform taught me how to keep a product coherent across changing requirements, multiple engineers, a design-system migration, and an acquisition. That is the work behind the title “Lead Frontend”: not only shipping a screen, but making the next screen easier for the team to ship well.
+The recurring engineering work was keeping validation, partial progress, API failures, and mixed-stack boundaries predictable for users and for the engineers shipping the next feature.
