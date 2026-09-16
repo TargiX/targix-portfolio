@@ -54,8 +54,8 @@ export const FEATURED: Project[] = [
       { label: "case study", href: "/work/phosphene" },
     ],
     caseSlug: "phosphene",
-    thumb: "/work/phosphene/template-builder.png",
-    evidenceCaption: "References → guided inputs → generation. I designed and built the product, including payments and provider integration.",
+    thumb: "/work/phosphene/phosphene-landing-showcase.jpg",
+    evidenceCaption: "Phosphene landing page. I designed and built the web and iOS product, including payments and provider integration.",
   },
   {
     index: "③",

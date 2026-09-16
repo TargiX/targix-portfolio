@@ -148,7 +148,7 @@ export function WorkStage({ project, index }: { project: Project; index: number 
                     loading={index === 0 ? "eager" : "lazy"}
                     fill
                     sizes="(min-width: 1024px) 760px, 100vw"
-                    className="object-contain"
+                    className={caseSlug === "broker-online-exchange" || caseSlug === "phosphene" ? "object-cover object-top" : "object-contain"}
                   />
                 ) : isBroker ? (
                   <div className="absolute inset-[-4%] scale-[1.035]">
