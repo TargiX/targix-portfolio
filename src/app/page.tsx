@@ -78,6 +78,7 @@ export default function Home() {
       <SiteNav />
       <SectionTracker />
 
+      <main id="main">
       <Hero />
 
       <div className="work-continuum relative overflow-hidden">
@@ -105,7 +106,7 @@ export default function Home() {
         <MoreWorkRibbon projects={MORE} />
       </section>
 
-      <main className={`${PAGE} pb-16 pt-8`}>
+        <div className={`${PAGE} pb-16 pt-8`}>
         <Section id="about" n="03" title="About">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-16">
             <div>
@@ -145,6 +146,12 @@ export default function Home() {
                 <a href={email.href} className="text-fg transition-colors hover:text-[var(--accent)]">
                   email me ↗
                 </a>
+                <Link
+                  href="/brief"
+                  className="text-fg-muted transition-colors hover:text-[var(--accent)]"
+                >
+                  start a brief ↗
+                </Link>
                 {resume && (
                   <a
                     href={resume.href}
@@ -251,6 +258,7 @@ export default function Home() {
             </div>
           </div>
         </Section>
+        </div>
       </main>
 
       <footer className="relative mt-6 overflow-hidden">

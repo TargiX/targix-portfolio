@@ -78,20 +78,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="dark"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-      suppressHydrationWarning
     >
-      <head>
-        <script
-          id="theme-init"
-          dangerouslySetInnerHTML={{
-            __html: `try{localStorage.removeItem('portfolio-theme');document.documentElement.dataset.theme='dark'}catch(e){document.documentElement.dataset.theme='dark'}`,
-          }}
-        />
-      </head>
       <body className="min-h-full overflow-x-hidden">
         <PostHogProvider>
+          <a
+            href="#main"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-sm focus:bg-[var(--accent)] focus:px-4 focus:py-2 focus:font-mono focus:text-[12px] focus:font-bold focus:text-black"
+          >
+            Skip to content
+          </a>
           <div className="body-dots" aria-hidden="true" />
           {children}
         </PostHogProvider>

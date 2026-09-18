@@ -33,3 +33,18 @@ jobs:
 
       - name: Run quality gate
         run: pnpm check
+
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Start production server
+        run: |
+          PORT=3010 pnpm start &
+          for i in $(seq 1 60); do
+            curl -sf http://127.0.0.1:3010/ > /dev/null && exit 0
+            sleep 1
+          done
+          echo "server did not start" && exit 1
+
+      - name: Run smoke test
+        run: pnpm smoke

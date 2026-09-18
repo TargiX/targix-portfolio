@@ -2,6 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+const FORMATTER = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Asia/Ho_Chi_Minh",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false,
+});
+
 export function useVietnamTime() {
   const [t, setT] = useState<Date | null>(null);
 
@@ -11,14 +19,5 @@ export function useVietnamTime() {
     return () => clearInterval(id);
   }, []);
 
-  return useMemo(() => {
-    if (!t) return "--:--:--";
-    return new Intl.DateTimeFormat("en-GB", {
-      timeZone: "Asia/Ho_Chi_Minh",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    }).format(t);
-  }, [t]);
+  return useMemo(() => (t ? FORMATTER.format(t) : "--:--:--"), [t]);
 }

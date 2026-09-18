@@ -28,7 +28,7 @@ export function MoreWorkRibbon({ projects }: { projects: Project[] }) {
 
       <div className="relative max-w-full overflow-hidden">
         <div
-          className="ribbon-track flex snap-x items-stretch gap-3 overflow-x-auto pb-2 lg:grid lg:grid-cols-4"
+          className="ribbon-track flex snap-x items-stretch gap-3 overflow-x-auto pb-2 lg:grid lg:grid-cols-5"
           aria-label="More work — scroll horizontally"
         >
           {projects.map((p) => (
