@@ -136,8 +136,26 @@ export const MORE: Project[] = [
     links: [
       { label: "live app", href: "https://injective.ilyamoskovkin.com" },
       { label: "github", href: "https://github.com/TargiX/injective-testnet-dapp" },
+      { label: "case study", href: "/work/injective" },
     ],
+    caseSlug: "injective",
     thumb: "/work/injective/dashboard-dark.png",
+  },
+  {
+    index: "⑧",
+    year: "2025",
+    role: "Solo · CMS marketing build",
+    title: "Flux Sanity Site",
+    blurb:
+      "A small marketing-site build focused on turning polished comps into a CMS-driven landing-page system non-engineers can extend.",
+    tags: ["Next.js", "Sanity CMS", "Vercel"],
+    links: [
+      { label: "live site", href: "https://sanity.ilyamoskovkin.com" },
+      { label: "github", href: "https://github.com/TargiX/flux-sanity-site" },
+      { label: "case study", href: "/work/flux-sanity-site" },
+    ],
+    caseSlug: "flux-sanity-site",
+    thumb: "/work/flux-sanity/homepage.png",
   },
 ];
 

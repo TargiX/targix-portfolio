@@ -52,7 +52,7 @@ export function SiteNav() {
               <a
                 key={l.href}
                 href={l.href}
-                aria-current={isActive ? "true" : undefined}
+                aria-current={isActive ? "location" : undefined}
                 data-active={isActive ? "true" : undefined}
                 className={l.id === "top" ? "site-nav-link site-nav-link--top" : "site-nav-link"}
               >
@@ -63,12 +63,15 @@ export function SiteNav() {
           <a href="/proof" className="site-nav-link">
             Proof
           </a>
+          <a href="/lab" className="site-nav-link">
+            Lab
+          </a>
         </div>
 
         <div className="ml-auto flex shrink-0 items-center gap-2 font-mono text-[11px] tracking-[0.04em] sm:gap-4">
           <a
             href="mailto:hello@ilyamoskovkin.com"
-            className="hidden text-fg-dim transition-colors hover:text-fg sm:inline"
+            className="text-fg-dim transition-colors hover:text-fg"
           >
             Email
           </a>

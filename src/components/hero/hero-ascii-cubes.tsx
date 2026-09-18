@@ -457,7 +457,9 @@ export function HeroAsciiCubes({ className }: Props) {
     const FRAME_MS = 1000 / 30;
     const tick = (now = performance.now()) => {
       if (disposed) return;
-      if (document.hidden) { raf = 0; return; }
+      // No document.hidden early-return: rAF is paused by the browser while
+      // hidden anyway, and stopping here relied on visibilitychange to restart
+      // — which frozen (not hidden) tabs never fire, killing the loop for good.
       if (visible && (!reduce || reduceFrames < 8)) {
         raf = requestAnimationFrame(tick);
       } else {
@@ -596,19 +598,22 @@ export function HeroAsciiCubes({ className }: Props) {
       renderer.render(asciiScene, fsCamera);
     };
     const onVisibilityChange = () => {
-      if (document.hidden) {
-        cancelAnimationFrame(raf);
-        raf = 0;
-      } else if (visible && !raf && (!reduce || reduceFrames < 8)) {
+      // Restart-only: never cancel here. A missed visibilitychange (frozen tab
+      // resume) must not leave the loop dead — pageshow/resume cover the gaps.
+      if (!document.hidden && visible && !raf && (!reduce || reduceFrames < 8)) {
         raf = requestAnimationFrame(tick);
       }
     };
     document.addEventListener("visibilitychange", onVisibilityChange);
+    document.addEventListener("resume", onVisibilityChange);
+    window.addEventListener("pageshow", onVisibilityChange);
     raf = requestAnimationFrame(tick);
 
     return () => {
       disposed = true;
       document.removeEventListener("visibilitychange", onVisibilityChange);
+      document.removeEventListener("resume", onVisibilityChange);
+      window.removeEventListener("pageshow", onVisibilityChange);
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);

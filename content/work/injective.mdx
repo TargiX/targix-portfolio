@@ -1,0 +1,70 @@
+---
+title: Injective Trading Terminal
+slug: injective
+year: 2023 – 2026
+role: Independent system · Trading UI
+order: 7
+blurb: "A Nuxt trading terminal for the Injective testnet with wallet connection, live markets, a dense order book, and hand-rolled SVG charts — all real chain data, no mocks."
+tags:
+  - Nuxt 3
+  - TypeScript
+  - Cosmos / Injective
+  - gRPC-web
+  - Wallet integration
+  - Trading UI
+cover: "/work/injective/dashboard-dark.png"
+links:
+  - label: live app
+    href: "https://injective.ilyamoskovkin.com"
+  - label: github
+    href: "https://github.com/TargiX/injective-testnet-dapp"
+---
+
+<CaseTLDR
+  role="Independent system · Trading UI"
+  line="A Nuxt terminal that reads the Injective testnet directly: wallet, balances, markets, order book, and charts from live gRPC-web data."
+  stack="Nuxt 3, TypeScript, @injectivelabs/sdk-ts, wallet-cosmos, hand-rolled SVG charts"
+>
+
+- Keplr / Leap wallet connect via the modular `@injectivelabs/wallet-*` strategy packages
+- Live on-chain order book with depth bars, spread, and ~2.5s polling
+- Price and depth charts drawn in plain SVG — zero chart-library dependency
+
+</CaseTLDR>
+
+## The pitch
+
+Injective is a Cosmos SDK chain with a fully on-chain order book — which makes it a good stress test for frontend craft: the data is real, dense, and arrives over gRPC-web whether your UI is ready for it or not. This terminal is one focused project that touches the whole stack: wallet integration, bech32 addresses, bank balances, indexer market data, and a live order book.
+
+The dashboard is a single screen with three panels: wallet + balances, spot markets, and a live order book with price and depth charts. Everything renders real testnet data — there are no fixtures and no demo mode.
+
+![Injective trading terminal dashboard](/work/injective/dashboard-dark.png)
+
+## The order book is the hard part
+
+An order book is the most demanding everyday component in trading UI: two dense columns of bids and asks, cumulative depth bars behind each row, a spread readout, and constant updates. The terminal polls `fetchOrderbookV2` every ~2.5 seconds and re-renders depth bars against the largest cumulative side, so the visual weight of the book is readable at a glance.
+
+On-chain values arrive as raw integers with per-market decimals, so a `utils/inj-format.ts` layer handles the scaling from chain units to human price/quantity before anything reaches the template. Keeping that conversion in one place is what makes the dense UI trustworthy — a misplaced decimal in a trading interface is not a cosmetic bug.
+
+## Hand-rolled SVG charts
+
+Both charts — the recent-trades price area and the cumulative bid/ask depth curve — are plain SVG written by hand. No chart library: full control over the visual language, no bundle weight, and no SSR/hydration risk. For production candlesticks the natural choice would be TradingView Lightweight Charts (what Injective's own UI uses), but for a terminal this size, two honest SVG panels say more than a heavy dependency.
+
+## Zero-friction review
+
+Every panel loads immediately with real data and **no wallet required** — chain reads are public. The balances panel defaults to a funded read-only demo address, so anyone opening the link sees actual balances without installing Keplr. Connecting a wallet just switches the panel to your own address. That decision matters for a portfolio piece: the evidence has to work for a reviewer who will never click "connect."
+
+## Stack decisions
+
+**Client-only rendering (`ssr: false`).** The Injective SDK pulls in node-oriented dependencies, so the app runs as a SPA with `vite-plugin-node-polyfills` providing `Buffer`/`global`/`process` in the browser. The wallet is a browser extension anyway — client-only is the logically correct home for it, not a workaround.
+
+**gRPC-web over REST.** Chain reads go through the `injective-ts` gRPC-web clients (`ChainGrpcBankApi`, `IndexerGrpcSpotApi`) — typed, streaming-capable, and the same transport Injective's own tooling uses.
+
+**One composable owns the chain.** `useInjective.ts` holds the gRPC clients, wallet strategy, and reactive state; components stay presentational. Polling lives in the page, not scattered across panels.
+
+## What it shows
+
+- **Dense financial UI:** a two-sided order book with depth bars and spread that stays legible under constant updates.
+- **Real integration, not a mock:** wallet strategy packages, bech32 addresses, gRPC-web transport, on-chain unit scaling.
+- **Review-friendly defaults:** read-only demo address means the evidence loads for anyone, instantly.
+- **Dependency discipline:** hand-rolled SVG charts where a library would only add weight.

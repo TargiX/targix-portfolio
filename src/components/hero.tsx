@@ -1,6 +1,6 @@
 import { ArrowDownRight, FileText, Mail } from "lucide-react";
 
-import { HeroAsciiCubes } from "@/components/hero/hero-ascii-cubes";
+import { LazyHeroCubes } from "@/components/lazy-hero-cubes";
 
 const EMAIL_HREF =
   "mailto:hello@ilyamoskovkin.com?subject=Senior%20frontend%20or%20design-engineering%20role";
@@ -10,7 +10,7 @@ export function Hero() {
     <header className="hero-scroll-wrap relative" data-screen-label="00 Hero">
       <div className="hero-shell relative isolate w-full overflow-hidden">
         <div aria-hidden="true" className="hero-bg absolute inset-0 z-0" />
-        <HeroAsciiCubes className="absolute inset-0 z-[2]" />
+        <LazyHeroCubes className="absolute inset-0 z-[2]" />
         <HeroPosterGrid />
 
         <div className="hero-copy-shell relative z-10 grid w-full">

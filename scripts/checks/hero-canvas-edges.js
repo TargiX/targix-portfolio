@@ -29,7 +29,11 @@
         if (frame < 40 || frame % 5 !== 0) continue;
         context.clearRect(0, 0, probe.width, probe.height);
         context.drawImage(source, 0, 0);
-        if (fraction === 0 && frame === 75) {
+        // Sample every frame while at the top: drawImage on a WebGL canvas
+        // without preserveDrawingBuffer races the compositor, so a single
+        // sample can land on a cleared buffer. Max alpha over frames is the
+        // deterministic signal that the cube actually painted.
+        if (fraction === 0) {
           const fullFrame = context.getImageData(0, 0, probe.width, probe.height).data;
           for (let i = 3; i < fullFrame.length; i += 4) {
             if (fullFrame[i] > 0) { hasDrawing = true; break; }
