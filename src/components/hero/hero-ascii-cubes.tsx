@@ -26,7 +26,6 @@ varying vec2 vUv;
 uniform vec3  uAccent;
 uniform vec3  uAccent2;
 uniform float uTime;
-uniform float uLight;
 
 float hash21(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
 float vnoise(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.0-2.0*f);
@@ -41,7 +40,6 @@ void main(){
   float b = fbm(vUv * 3.1 - vec2(t * 1.3, t));
   vec3 base = mix(vec3(0.06, 0.07, 0.075), vec3(0.14, 0.17, 0.18), a);
   vec3 col = base + uAccent * pow(b, 2.0) * 0.75 + uAccent2 * pow(a, 2.4) * 0.55;
-  col = mix(col, vec3(0.90, 0.94, 0.92) + uAccent * 0.06, uLight);
   gl_FragColor = vec4(col, 1.0);
 }
 `;
@@ -64,7 +62,6 @@ varying vec3 vP;
 uniform sampler2D uScene;
 uniform vec2  uRes;
 uniform vec3  uAccent;
-uniform float uLight;
 uniform float uReveal;
 
 void main(){
@@ -78,11 +75,11 @@ void main(){
   vec3 col = mix(refr, refl, fres * 0.85);
 
   float facing = clamp(N.z * 0.5 + 0.5, 0.0, 1.0);
-  col += uAccent * fres * mix(0.16, 0.05, uLight);
-  col += mix(vec3(0.04, 0.045, 0.05), vec3(0.0), uLight);
-  col *= mix(0.74, 0.9, uLight) + mix(0.26, 0.1, uLight) * facing;
+  col += uAccent * fres * 0.16;
+  col += vec3(0.04, 0.045, 0.05);
+  col *= 0.74 + 0.26 * facing;
   vec3 rim = vec3(0.7, 0.74, 0.8);
-  col += rim * pow(fres, 2.0) * mix(0.5, 0.32, uLight);
+  col += rim * pow(fres, 2.0) * 0.5;
   col = clamp(col, 0.0, 1.0);
 
   float alpha = (0.85 + fres * 0.15) * uReveal;
@@ -128,7 +125,6 @@ uniform float uGlyphCount;
 uniform vec3  uAccent;
 uniform vec3  uAccent2;
 uniform float uTime;
-uniform float uLight;
 
 float hash21(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
 
@@ -154,7 +150,7 @@ void main(){
   // schematic palette: graphite body like the page's dot lattice, accent only
   // where the glass is actually bright (edges, specular) — kills the
   // green-rain association while keeping the accent meaningful
-  vec3 graphite = mix(vec3(0.42, 0.45, 0.47), vec3(0.35, 0.38, 0.40), uLight);
+  vec3 graphite = vec3(0.42, 0.45, 0.47);
   vec3 ink = mix(graphite, vec3(0.78, 0.82, 0.84), smoothstep(0.25, 0.7, l));
   ink = mix(ink, mix(uAccent, vec3(0.93, 0.98, 0.95), 0.25), smoothstep(0.62, 0.95, l));
 
@@ -225,13 +221,8 @@ export function HeroAsciiCubes({ className }: Props) {
     const rootStyles = getComputedStyle(document.documentElement);
     const accent = rootStyles.getPropertyValue("--accent").trim() || "#a3e635";
     const accent2 = rootStyles.getPropertyValue("--accent-2").trim() || "#2dd4bf";
-    const dataTheme = document.documentElement.dataset.theme;
-    const isLight =
-      dataTheme === "light" ||
-      (dataTheme !== "dark" && window.matchMedia?.("(prefers-color-scheme: light)").matches);
     const accentRgb = hexToRgb(accent);
     const accent2Rgb = hexToRgb(accent2);
-    const uLight = isLight ? 1 : 0;
 
     let renderer: THREE.WebGLRenderer;
     try {
@@ -288,7 +279,6 @@ export function HeroAsciiCubes({ className }: Props) {
         uAccent: { value: new THREE.Vector3(...accentRgb) },
         uAccent2: { value: new THREE.Vector3(...accent2Rgb) },
         uTime: { value: 0 },
-        uLight: { value: uLight },
       },
     });
     const feedScene = new THREE.Scene();
@@ -305,7 +295,6 @@ export function HeroAsciiCubes({ className }: Props) {
         // uRes must match the target the cubes render into (gl_FragCoord space)
         uRes: { value: new THREE.Vector2(renderW * pr * RT_SCALE, renderH * pr * RT_SCALE) },
         uAccent: { value: new THREE.Vector3(...accentRgb) },
-        uLight: { value: uLight },
         uReveal: { value: 0 },
       },
     });
@@ -352,7 +341,6 @@ export function HeroAsciiCubes({ className }: Props) {
         uAccent: { value: new THREE.Vector3(...accentRgb) },
         uAccent2: { value: new THREE.Vector3(...accent2Rgb) },
         uTime: { value: 0 },
-        uLight: { value: uLight },
       },
     });
     const asciiScene = new THREE.Scene();

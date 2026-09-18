@@ -78,18 +78,8 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="dark"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-      suppressHydrationWarning
     >
-      <head>
-        <script
-          id="theme-init"
-          dangerouslySetInnerHTML={{
-            __html: `try{localStorage.removeItem('portfolio-theme');document.documentElement.dataset.theme='dark'}catch(e){document.documentElement.dataset.theme='dark'}`,
-          }}
-        />
-      </head>
       <body className="min-h-full overflow-x-hidden">
         <PostHogProvider>
           <a
