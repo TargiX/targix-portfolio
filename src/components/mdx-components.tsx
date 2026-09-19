@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
@@ -108,16 +109,25 @@ export const mdxComponents: MDXComponents = {
       {...props}
     />
   ),
-  img: ({ className, alt, ...props }) => (
-    <img
-      alt={alt ?? ""}
-      className={cn(
-        "my-8 w-full rounded-md border border-line-soft bg-bg-2/70",
-        className,
-      )}
-      {...props}
-    />
-  ),
+  img: ({ className, alt, src, width: _w, height: _h, ...props }) => {
+    // width/height 0 + height:auto lets the optimizer serve resized WebP/AVIF
+    // for MDX images whose intrinsic size we don't declare in the source.
+    if (typeof src !== "string" || !src) return null;
+    return (
+      <Image
+        src={src}
+        alt={alt ?? ""}
+        width={0}
+        height={0}
+        sizes="(min-width: 1280px) 720px, 100vw"
+        className={cn(
+          "my-8 h-auto w-full rounded-md border border-line-soft bg-bg-2/70",
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
   code: ({ className, ...props }) => (
     <code
       className={cn(
