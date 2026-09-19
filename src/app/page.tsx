@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, LayoutDashboard, PackageCheck, UserCheck } from "lucide-react";
 
@@ -178,13 +179,12 @@ export default function Home() {
             <aside className="lg:sticky lg:top-24">
               <figure className="relative mx-auto aspect-[4/5] w-full max-w-[340px]">
                 <div className="relative size-full overflow-hidden rounded-sm bg-bg-2/30 shadow-[0_28px_80px_rgba(0,0,0,.28)]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src="/about/ilya-2026.jpg"
                     alt="Ilya Moskovkin"
                     width={1540}
                     height={1924}
-                    loading="lazy"
+                    sizes="(min-width: 1024px) 340px, 80vw"
                     className="block size-full select-none object-cover object-[50%_38%]"
                   />
                 </div>

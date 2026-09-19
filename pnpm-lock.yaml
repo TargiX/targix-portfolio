@@ -47,9 +47,6 @@ importers:
       resend:
         specifier: ^6.12.3
         version: 6.12.3
-      shadcn:
-        specifier: ^4.7.0
-        version: 4.7.0(@types/node@20.19.41)(typescript@5.9.3)
       shiki:
         specifier: ^4.1.0
         version: 4.1.0
@@ -87,6 +84,9 @@ importers:
       playwright:
         specifier: ^1.63.0
         version: 1.63.0
+      shadcn:
+        specifier: ^4.7.0
+        version: 4.7.0(@types/node@20.19.41)(typescript@5.9.3)
       tailwindcss:
         specifier: ^4
         version: 4.3.0
