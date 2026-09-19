@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
@@ -83,7 +84,7 @@ export default async function CasePage({ params }: { params: Params }) {
 
       {c.slug === "broker-online-exchange" && c.cover && (
         <figure className="mb-10 mt-10 overflow-hidden rounded-md border border-line-soft">
-          <img src={c.cover} alt="Broker Online Exchange interface overview" width={1200} height={630} className="h-auto w-full" />
+          <Image src={c.cover} alt="Broker Online Exchange interface overview" width={1200} height={630} sizes="(min-width: 1280px) 800px, 100vw" className="h-auto w-full" />
         </figure>
       )}
 
