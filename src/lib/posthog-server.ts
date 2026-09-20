@@ -15,7 +15,7 @@ const POSTHOG_KEY = process.env.POSTHOG_PROJECT_TOKEN ?? process.env.NEXT_PUBLIC
 const POSTHOG_HOST = process.env.POSTHOG_HOST ?? process.env.NEXT_PUBLIC_POSTHOG_HOST;
 
 function getPostHogClient() {
-  if (!POSTHOG_KEY || !POSTHOG_HOST) return null;
+  if (process.env.VERCEL_ENV !== "production" || !POSTHOG_KEY || !POSTHOG_HOST) return null;
 
   return new PostHog(POSTHOG_KEY, {
     host: POSTHOG_HOST,
@@ -46,7 +46,7 @@ export async function captureServerEvent({
     client.capture({
       distinctId,
       event,
-      properties,
+      properties: { ...properties, app_id: "portfolio", environment: "production" },
     });
     await client.shutdown();
   } catch (error) {

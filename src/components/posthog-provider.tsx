@@ -37,7 +37,7 @@ function PostHogPageView() {
   useEffect(() => {
     const key =
       process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN ?? process.env.NEXT_PUBLIC_POSTHOG_KEY;
-    if (!key || !pathname) return;
+    if (!key || !pathname || !["ilyamoskovkin.com", "www.ilyamoskovkin.com"].includes(window.location.hostname)) return;
 
     let active = true;
 
@@ -50,7 +50,16 @@ function PostHogPageView() {
           capture_pageview: false,
           capture_pageleave: true,
           capture_exceptions: true,
-          person_profiles: "always",
+          person_profiles: "identified_only",
+          cross_subdomain_cookie: false,
+          disable_session_recording: true,
+          before_send: (event) => {
+            if (event) {
+              event.properties.app_id = "portfolio";
+              event.properties.environment = "production";
+            }
+            return event;
+          },
         });
         initialized = true;
       }
