@@ -460,8 +460,8 @@ export function HeroAsciiCubes({ className }: Props) {
       feedMat.uniforms.uTime.value = elapsed;
       asciiMat.uniforms.uTime.value = elapsed;
 
-      mouse.x += (mouse.tx - mouse.x) * 0.08;
-      mouse.y += (mouse.ty - mouse.y) * 0.08;
+      mouse.x += (mouse.tx - mouse.x) * 0.14;
+      mouse.y += (mouse.ty - mouse.y) * 0.14;
 
       // ── cluster: reveal, slow spin, breathe ──
       const reveal = 1 - Math.pow(1 - Math.min(1, elapsed / 1.1), 3);
@@ -535,7 +535,7 @@ export function HeroAsciiCubes({ className }: Props) {
             targetBulge = Math.pow(1 - dist / radius, 2) * 1.2 * popIn;
           }
         }
-        c.bulge += (targetBulge - c.bulge) * 0.12;
+        c.bulge += (targetBulge - c.bulge) * 0.18;
         if (c.bulge > 0.001) {
           if (_p.lengthSq() > 0.01) {
             _pushVec.copy(_p).normalize().multiplyScalar(c.bulge);
