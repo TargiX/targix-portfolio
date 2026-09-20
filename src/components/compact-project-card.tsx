@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Code, ExternalLink } from "lucide-react";
 import type { Project } from "@/lib/data";
@@ -40,12 +41,12 @@ export function CompactProjectCard({ project }: { project: Project }) {
         />
 
         {thumb ? (
-          <img
+          <Image
             src={thumb}
             alt={title}
-            loading="lazy"
-            decoding="async"
-            className="compact-card-media absolute inset-0 h-full w-full object-cover object-top"
+            fill
+            sizes="(min-width: 1280px) 400px, (min-width: 640px) 50vw, 100vw"
+            className="compact-card-media object-cover object-top"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
