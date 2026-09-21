@@ -460,8 +460,8 @@ export function HeroAsciiCubes({ className }: Props) {
       feedMat.uniforms.uTime.value = elapsed;
       asciiMat.uniforms.uTime.value = elapsed;
 
-      mouse.x += (mouse.tx - mouse.x) * 0.08;
-      mouse.y += (mouse.ty - mouse.y) * 0.08;
+      mouse.x += (mouse.tx - mouse.x) * 0.14;
+      mouse.y += (mouse.ty - mouse.y) * 0.14;
 
       // ── cluster: reveal, slow spin, breathe ──
       const reveal = 1 - Math.pow(1 - Math.min(1, elapsed / 1.1), 3);
@@ -500,10 +500,15 @@ export function HeroAsciiCubes({ className }: Props) {
       }
       _q.setFromAxisAngle(twist ? CUBE_AXES[twist.axisIdx] : CUBE_AXES[0], angle);
 
-      // hover bulge: raycast to the cluster plane
+      // hover bulge: raycast to the cluster plane. The camera renders only the
+      // host sub-rect via setViewOffset, so NDC must be in canvas space — not
+      // surface space (mouse.x/W would shift the hotspot right and compress it).
       _cameraForward.set(0, 0, 1).transformDirection(cubeCam.matrixWorld);
       _plane.setFromNormalAndCoplanarPoint(_cameraForward, cubeGroup.position);
-      _ndc.set((mouse.x / W) * 2 - 1, -(mouse.y / H) * 2 + 1);
+      _ndc.set(
+        ((mouse.x - host.offsetLeft) / renderW) * 2 - 1,
+        -(((mouse.y - host.offsetTop) / renderH) * 2 - 1),
+      );
       raycaster.setFromCamera(_ndc, cubeCam);
       const hitPlane = raycaster.ray.intersectPlane(_plane, _intersectPoint);
       if (hitPlane) {
@@ -535,7 +540,7 @@ export function HeroAsciiCubes({ className }: Props) {
             targetBulge = Math.pow(1 - dist / radius, 2) * 1.2 * popIn;
           }
         }
-        c.bulge += (targetBulge - c.bulge) * 0.12;
+        c.bulge += (targetBulge - c.bulge) * 0.18;
         if (c.bulge > 0.001) {
           if (_p.lengthSq() > 0.01) {
             _pushVec.copy(_p).normalize().multiplyScalar(c.bulge);
