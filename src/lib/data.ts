@@ -159,33 +159,6 @@ export const MORE: Project[] = [
   },
 ];
 
-export const STACK = [
-  {
-    label: "core",
-    items: [
-      "TypeScript",
-      "React 19 / Next.js (App Router)",
-      "TanStack Query · Zustand",
-      "Vue 3 / Nuxt 4",
-      "Node.js",
-    ],
-  },
-  {
-    label: "data & infra",
-    items: [
-      "Postgres / Prisma",
-      "Redis",
-      "tRPC / REST",
-      "GraphQL / Apollo",
-      "Stripe · Paddle · Creem",
-      "AWS · S3 · Hetzner · Vercel",
-    ],
-  },
-  {
-    label: "craft",
-    items: ["Figma · UX research", "Tailwind · shadcn", "Three.js · Pixi.js", "Sentry · PostHog"],
-  },
-];
 
 export const CONTACT = [
   { key: "email", label: "hello@ilyamoskovkin.com", href: "mailto:hello@ilyamoskovkin.com" },
