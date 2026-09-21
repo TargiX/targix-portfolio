@@ -26,14 +26,14 @@ export default async function ProductLaunchPage({
     <main className="min-h-screen px-5 pb-16 pt-8 sm:px-8 sm:pb-24 sm:pt-10">
       <div className="mx-auto w-full max-w-[1280px]">
         <Link
-          href="/#stack"
+          href="/#about"
           className="group inline-flex items-center gap-2 rounded-sm font-mono text-[11px] lowercase tracking-[0.06em] text-fg-dim transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
         >
           <ArrowLeft
             className="size-3.5 transition-transform group-hover:-translate-x-0.5"
             aria-hidden="true"
           />
-          Back to product workflow
+          Back to portfolio
         </Link>
 
         <header className="grid gap-8 pb-10 pt-14 lg:grid-cols-[minmax(0,1fr)_minmax(280px,380px)] lg:items-end lg:gap-16 lg:pb-14 lg:pt-20">

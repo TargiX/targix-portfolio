@@ -52,16 +52,15 @@ function clearPendingRestore() {
   }
 }
 
-function restoreScrollY(y: number) {
-  const root = document.documentElement;
-  const maxY = Math.max(0, root.scrollHeight - window.innerHeight);
-  window.scrollTo({
-    top: Math.min(Math.max(0, y), maxY),
-    left: 0,
-    behavior: "auto",
-  });
-}
-
+const SCROLL_KEYS: Record<string, true> = {
+  ArrowUp: true,
+  ArrowDown: true,
+  PageUp: true,
+  PageDown: true,
+  Home: true,
+  End: true,
+  " ": true,
+};
 export function WorkScrollMemory() {
   useLayoutEffect(() => {
     const onClickCapture = (event: MouseEvent) => {
@@ -99,8 +98,13 @@ export function WorkScrollMemory() {
     if (window.location.pathname !== "/") return;
 
     const position = readWorkScrollPosition();
+    // Consume the flag whatever we decide below — a skipped restore must not
+    // fire on some later, unrelated visit to "/".
+    clearPendingRestore();
     if (!position) return;
-
+    // An explicit anchor ("/#work" back links) beats saved position: let
+    // Next.js scroll to the hash instead of racing it with restores.
+    if (window.location.hash) return;
     const root = document.documentElement;
     const body = document.body;
     const previousRootBehavior = root.style.scrollBehavior;
@@ -113,7 +117,42 @@ export function WorkScrollMemory() {
 
     const frames: number[] = [];
     const timeouts: number[] = [];
-    const restore = () => restoreScrollY(position.y);
+    let cleanupTimeout = 0;
+    let targetY = position.y;
+    let done = false;
+
+    const restore = () => {
+      const maxY = Math.max(0, root.scrollHeight - window.innerHeight);
+      targetY = Math.min(Math.max(0, position.y), maxY);
+      window.scrollTo({ top: targetY, left: 0, behavior: "auto" });
+    };
+
+    // Stop retrying restores. Called on the final cleanup tick AND the moment
+    // the user takes over scrolling — otherwise a queued restore fires after
+    // their first wheel/touch and yanks the page back up to the saved spot.
+    const finish = () => {
+      if (done) return;
+      done = true;
+      for (const frame of frames) window.cancelAnimationFrame(frame);
+      for (const timeout of timeouts) window.clearTimeout(timeout);
+      window.clearTimeout(cleanupTimeout);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("wheel", finish);
+      window.removeEventListener("touchmove", finish);
+      window.removeEventListener("keydown", onKeyDown);
+      root.style.scrollBehavior = previousRootBehavior;
+      body.style.scrollBehavior = previousBodyBehavior;
+      window.history.scrollRestoration = previousHistoryRestoration;
+    };
+
+    // A scroll position we didn't set means the user (or a scrollbar drag)
+    // moved the page — our restores must not fight that.
+    const onScroll = () => {
+      if (Math.abs(window.scrollY - targetY) > 2) finish();
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (SCROLL_KEYS[event.key]) finish();
+    };
 
     restore();
     frames.push(
@@ -127,23 +166,17 @@ export function WorkScrollMemory() {
       timeouts.push(window.setTimeout(restore, delay));
     }
 
-    const cleanupTimeout = window.setTimeout(() => {
-      restoreScrollY(position.y);
-      root.style.scrollBehavior = previousRootBehavior;
-      body.style.scrollBehavior = previousBodyBehavior;
-      window.history.scrollRestoration = previousHistoryRestoration;
+    cleanupTimeout = window.setTimeout(() => {
+      restore();
+      finish();
     }, 1300);
 
-    clearPendingRestore();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("wheel", finish, { passive: true });
+    window.addEventListener("touchmove", finish, { passive: true });
+    window.addEventListener("keydown", onKeyDown);
 
-    return () => {
-      for (const frame of frames) window.cancelAnimationFrame(frame);
-      for (const timeout of timeouts) window.clearTimeout(timeout);
-      window.clearTimeout(cleanupTimeout);
-      root.style.scrollBehavior = previousRootBehavior;
-      body.style.scrollBehavior = previousBodyBehavior;
-      window.history.scrollRestoration = previousHistoryRestoration;
-    };
+    return finish;
   }, []);
 
   return null;
