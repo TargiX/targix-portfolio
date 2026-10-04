@@ -2,9 +2,9 @@
 title: SignalOps
 slug: signalops
 year: 2024
-role: Solo · React systems
+role: Solo · Data-UI showcase
 order: 5
-blurb: "An operations cockpit for AI generation infrastructure: provider health monitoring, incident drill-down with guided replay, virtualized job inspection, and routing-rule simulation."
+blurb: "A working telemetry platform for AI generation infrastructure: canonical V1 event contract, token-authed ingestion into Postgres, SLO/incident workflow, guided replay, and a 10k-row virtualized cockpit. Started as a synthetic-data demo; now ingests real events from a live product."
 tags:
   - Next.js 16
   - React 19
@@ -13,7 +13,8 @@ tags:
   - TanStack Table
   - TanStack Virtual
   - Recharts
-  - Framer Motion
+  - PostgreSQL
+  - Event contracts
 cover: "/work/signalops/landing.png"
 links:
   - label: signalops.cc
@@ -23,24 +24,45 @@ links:
 ---
 
 <CaseTLDR
-  role="Solo · React systems"
-  line="An operations cockpit for AI generation infrastructure, built to show frontend craft serving operational decisions."
-  stack="Next.js 16, React 19, TanStack Table/Virtual, Recharts, TypeScript"
+  role="Solo · Data-UI showcase"
+  line="An observability platform for AI generation workloads — the data-UI craft (virtualization, guided replay, routing simulation) now sits on top of a real ingestion pipeline."
+  stack="Next.js 16, React 19, TanStack Table/Virtual, Recharts, TypeScript, PostgreSQL"
 >
 
-- 10k-row virtualized job queue (TanStack Table + Virtual), memo-derived charts
-- Guided incident replay that drives the real dashboard controls, not a video
-- Saved views + a routing-rule builder with live impact projection
+- Canonical V1 telemetry contract with a privacy gate; zero-storage public validation, token-authed idempotent ingest
+- Postgres persistence, SLO/incident workflow, cost reconciliation — exercised in CI against a real Postgres service
+- 10k-row virtualized job queue (TanStack Table + Virtual) and guided incident replay that drives the real dashboard controls
 
 </CaseTLDR>
 
+## From demo to platform
+
+SignalOps started in July as a dense data-UI study: a synthetic 10,000-job cockpit to prove virtualization, derived state, and guided replay. That cockpit still exists — honestly labeled, still useful for the replay walkthrough below.
+
+Since then it grew into a working telemetry platform in its own right: a public beta at [signalops.cc](https://signalops.cc) with self-serve workspace activation, developer docs, a live status page backed by real readiness probes, and an ingestion path that other products integrate against. The demo-to-platform split is deliberate — the synthetic cockpit demonstrates UI mechanics; the platform demonstrates contract design, ingestion safety, and operational truth.
+
 ## The pitch
 
-Image-generation infrastructure runs across multiple providers — fal.ai, Google AI, Alibaba/Qwen — and each one fails differently: latency spikes, retry storms, cost bleed from silent retries. An operator needs to notice the problem, trace it to affected jobs, draft a mitigation, see the projected impact, and hand it off. Most dashboards stop at "something is red." SignalOps tries to close the full loop.
+Image-generation infrastructure runs across multiple providers — fal.ai, Google AI, Alibaba/Qwen — and each one fails differently: latency spikes, retry storms, cost bleed from silent retries. An operator needs to notice the problem, trace it to affected jobs, draft a mitigation, see the projected impact, and hand it off. Most dashboards stop at "something is red." SignalOps closes the full loop.
 
 The main screen is a **decision surface**: provider health cards, live KPI tiles, an incident timeline, a 10,000-row job queue, and a routing-rule builder that previews impact before you commit. Every control drives shared React state, so changing a filter or sliding traffic share re-renders charts, cards, and tables from the same source.
 
 ![SignalOps full dashboard](/work/signalops/cockpit.png)
+
+## A telemetry contract with teeth
+
+The core of the platform is **Canonical AI Telemetry V1** — a vendor-neutral event contract with five lifecycle boundaries: operation accepted/terminal, attempt started/terminal, and optional provider probes. Every retry and fallback gets its own attempt ID; every operation ends in exactly one terminal state. The contract rejects privacy-hostile payloads at the boundary: prompts, media, identities, URLs, raw errors, and stack traces are removed or rejected, so clients can integrate without a data-leak review.
+
+Ingestion safety is designed, not asserted:
+
+- **Zero-storage validation.** A public `/validate` endpoint and playground accept arbitrary events, run the full contract check, and persist nothing — validation failures and duplicate retries never become billable usage.
+- **Token-authed ingest.** Protected writes go to `/v1/events` with scoped, owner-revocable keys, idempotent event IDs, and tenant isolation, landing in Postgres through checked-in migrations and RPCs.
+- **CI exercises the real database.** The pipeline runs migrations and stored procedures against a Postgres service container — the storage layer is tested, not mocked.
+- **SLOs and incidents on top.** Service-level windows, incident workflow, and a spend-efficiency lens that reports its own coverage instead of implying complete totals — the cockpit stays truthful for low-volume tenants too.
+
+## Phosphene as the first producer
+
+The first real producer is [Phosphene](https://phosphene.cc), my AI image product. Integration goes through a public Node producer adapter and a conformance suite that any future client uses — no private back doors. The ownership boundary is explicit: Phosphene owns execution, providers, prompts, and identity; SignalOps stays observation-only and cannot select, disable, or reroute a Phosphene provider. Production delivery rides Phosphene's durable outbox, so telemetry commits atomically with the lifecycle change it describes.
 
 ## Guided incident replay
 
@@ -54,7 +76,7 @@ Each scenario advances through five steps: signal → affected jobs → draft mi
 
 <SignalOpsReplayDemo />
 
-The replay is not a video or a mockup. It drives the real TanStack Query hydration, the real TanStack Table + Virtual row rendering, and the real Recharts memo-derived series. The proof callouts on each step name the implementation: "TanStack Virtual filters 10,000 synthetic jobs to the impacted provider with only visible rows mounted," "Applying the rule rewrites derived provider/timeline memos, so KPI cards and every chart re-render from one source."
+The replay runs on the synthetic dataset and says so — it demonstrates the UI mechanics, not production traffic. It still drives the real TanStack Query hydration, the real TanStack Table + Virtual row rendering, and the real Recharts memo-derived series. A typed event timeline feeds the same store the dashboard renders from — same reducers, same derived state, no parallel "demo mode" rendering path.
 
 ## Saved views and the routing builder
 
@@ -70,19 +92,21 @@ The routing-rule builder sits inside the investigation flow. It offers two trigg
 
 **TanStack Table + TanStack Virtual over a dropped-in enterprise grid.** The generation queue hits 10,000+ rows. TanStack Virtual keeps only visible rows mounted, and TanStack Table gives column-level control over sorting, filtering, and status badges without pulling in a heavy grid framework.
 
-**Recharts for charts.** The latency timeline, throughput area chart, spend donut, and performance scatter all share memoized series derived from the same TanStack Query snapshot. One `useMemo` per chart series; no duplicate data fetching.
+**Recharts for charts.** The latency timeline, throughput area chart, spend donut, and performance scatter all share memoized series derived from the same snapshot. One `useMemo` per chart series; no duplicate data fetching.
 
 **Framer Motion for replay transitions.** Each replay step animates in/out with `AnimatePresence`, so the narrative panel and step rail feel like a guided presentation rather than a form submission.
 
-**One source of truth for dashboard state.** Saved view, provider filter, job status filter, trigger mode, traffic share, and routing-applied flag all live in a single `ReplayState` object. The replay sets this state; manual controls set the same state. Charts, KPI cards, and the table all read from it. No shadow state, no stale closures.
+**One source of truth for dashboard state.** Saved view, provider filter, job status filter, trigger mode, traffic share, and routing-applied flag all live in a single state object. The replay sets this state; manual controls set the same state. Charts, KPI cards, and the table all read from it. No shadow state, no stale closures.
+
+**Contract-first I/O.** Every inbound event is schema-validated at the boundary before it can touch storage, and the same validation is exposed publicly so integrators can test against the exact gate the server uses.
 
 ## What it shows
 
-- **Route-level product flow:** overview → incident detail → affected jobs → routing preview → export.
+- **Contract design as a product skill:** five lifecycle boundaries, a privacy gate, and idempotent ingest — designed once, integrated by an external producer through a conformance suite.
+- **Honest data plumbing:** zero-storage validation, tenant-isolated Postgres persistence exercised in CI, and cost reporting that discloses its own coverage.
 - **Dense data UI:** provider health, KPI tiles, timeline, 10k-row virtualized table, five chart types, and a rule builder in one viewport.
-- **Operational state:** saved views, provider focus, selected generation status, simulated routing impact — all driven from one state object.
-- **Design-system discipline:** restrained color palette, consistent tokens, readable data hierarchy, no decorative chartjunk.
+- **One source of truth:** replay and manual controls drive the same state; charts and tables derive from it without shadow paths.
 
 ## Why this exists
 
-Phosphene is the product. SignalOps is the kind of internal surface that product would eventually need: provider latency, retry clusters, generation cost, and user-facing credit impact all in one place. It is intentionally small, but it is shaped like a real tool rather than a dashboard wallpaper. The guided replay turns a demo into a narrative — you don't just see data, you walk through an operational decision.
+Phosphene is the product; SignalOps is the observability layer such a product actually needs once it runs across paid providers. It began as a frontend craft study and kept the craft — virtualization, derived state, guided replay — while growing the parts that are usually faked in portfolio projects: a real contract, real ingestion, real storage, and a public surface that reports its own readiness. The demo says it is a demo; the platform says what it sees.
