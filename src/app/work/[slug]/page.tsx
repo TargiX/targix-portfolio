@@ -25,6 +25,11 @@ import {
 
 type Params = Promise<{ slug: string }>;
 
+// Unknown slugs must return a real 404. With the default dynamicParams=true,
+// a missing case streams the loading shell first, so notFound() can no longer
+// change the status code and crawlers/CDNs see a soft 404 (HTTP 200).
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const slugs = await getAllSlugs();
   return slugs.map((slug) => ({ slug }));
