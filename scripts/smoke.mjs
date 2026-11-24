@@ -48,6 +48,20 @@ function check(name, ok, detail = "") {
   }
 }
 
+/** Decode the five XML named entities plus numeric character references, single pass. */
+function decodeXmlEntities(text) {
+  const named = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'" };
+  return text.replace(/&(amp|lt|gt|quot|apos|#x?[0-9a-fA-F]+);/g, (entity, code) => {
+    if (code in named) return named[code];
+    const point = code.startsWith("#x")
+      ? parseInt(code.slice(2), 16)
+      : parseInt(code.slice(1), 10);
+    return Number.isInteger(point) && point >= 0 && point <= 0x10_ffff
+      ? String.fromCodePoint(point)
+      : entity;
+  });
+}
+
 const browser = await chromium.launch();
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -174,7 +188,9 @@ try {
     sitemap.status === 200 && sitemapBody.includes("<urlset"),
     `status=${sitemap.status}`,
   );
-  const sitemapUrls = [...sitemapBody.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)].map((m) => m[1]);
+  const sitemapUrls = [...sitemapBody.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)].map((m) =>
+    decodeXmlEntities(m[1]),
+  );
   const missingFromSitemap = slugs.filter(
     (slug) => !sitemapUrls.includes(`${SITE_URL}/work/${slug}`),
   );
@@ -201,7 +217,7 @@ try {
     `status=${llms.status}`,
   );
   const llmsUrls = [
-    ...llmsBody.matchAll(/https:\/\/ilyamoskovkin\.com\/work\/[^\s)"']+/g),
+    ...llmsBody.matchAll(/https:\/\/ilyamoskovkin\.com\/work\/[^\s)]+/g),
   ].map((m) => m[0].replace(/[.,;]+$/, ""));
   const missingFromLlms = slugs.filter(
     (slug) => !llmsUrls.includes(`${SITE_URL}/work/${slug}`),
