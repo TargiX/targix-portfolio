@@ -174,8 +174,9 @@ try {
     sitemap.status === 200 && sitemapBody.includes("<urlset"),
     `status=${sitemap.status}`,
   );
+  const sitemapUrls = [...sitemapBody.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)].map((m) => m[1]);
   const missingFromSitemap = slugs.filter(
-    (slug) => !sitemapBody.includes(`${SITE_URL}/work/${slug}`),
+    (slug) => !sitemapUrls.includes(`${SITE_URL}/work/${slug}`),
   );
   check(
     "sitemap lists every case study",
@@ -185,10 +186,11 @@ try {
 
   const robots = await fetch(`${BASE_URL}/robots.txt`);
   const robotsBody = await robots.text();
+  const sitemapDirective = robotsBody.match(/^sitemap:\s*(\S+)\s*$/im)?.[1];
   check(
     "/robots.txt references the sitemap",
-    robots.status === 200 && /sitemap:/i.test(robotsBody),
-    `status=${robots.status}`,
+    robots.status === 200 && sitemapDirective === `${SITE_URL}/sitemap.xml`,
+    `status=${robots.status}, sitemap=${sitemapDirective ?? "none"}`,
   );
 
   const llms = await fetch(`${BASE_URL}/llms.txt`);
@@ -198,8 +200,11 @@ try {
     llms.status === 200 && llmsBody.includes("## Case study index"),
     `status=${llms.status}`,
   );
+  const llmsUrls = [
+    ...llmsBody.matchAll(/https:\/\/ilyamoskovkin\.com\/work\/[^\s)"']+/g),
+  ].map((m) => m[0].replace(/[.,;]+$/, ""));
   const missingFromLlms = slugs.filter(
-    (slug) => !llmsBody.includes(`${SITE_URL}/work/${slug}`),
+    (slug) => !llmsUrls.includes(`${SITE_URL}/work/${slug}`),
   );
   check(
     "llms.txt lists every case study",
