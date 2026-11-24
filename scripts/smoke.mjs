@@ -7,10 +7,14 @@
 //
 // In CI the workflow does exactly that; locally any running instance works.
 
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
+import path from "node:path";
+
+import matter from "gray-matter";
 import { chromium } from "playwright";
 
 const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3010";
+const SITE_URL = "https://ilyamoskovkin.com";
 
 const CHECKS = [
   "scripts/checks/hero-canvas-budget.js",
@@ -19,6 +23,21 @@ const CHECKS = [
 
 const failures = [];
 const consoleErrors = [];
+
+/** Case slugs derived the same way the app derives them (frontmatter slug ?? filename). */
+async function getCaseSlugs() {
+  const dir = path.join(process.cwd(), "content/work");
+  const entries = await readdir(dir);
+  const slugs = await Promise.all(
+    entries
+      .filter((f) => f.endsWith(".mdx"))
+      .map(async (filename) => {
+        const { data } = matter(await readFile(path.join(dir, filename), "utf8"));
+        return (typeof data.slug === "string" && data.slug) || filename.replace(/\.mdx$/, "");
+      }),
+  );
+  return slugs.sort();
+}
 
 function check(name, ok, detail = "") {
   if (ok) {
@@ -107,6 +126,98 @@ try {
     consoleErrors.length === 0,
     consoleErrors.slice(0, 3).join(" | "),
   );
+
+  // ---- case study pages ----
+  const slugs = await getCaseSlugs();
+  console.log("case studies:");
+  for (const slug of slugs) {
+    const pageErrors = [];
+    const casePage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+    casePage.on("console", (msg) => {
+      if (msg.type() === "error") pageErrors.push(msg.text());
+    });
+    casePage.on("pageerror", (err) => pageErrors.push(String(err)));
+    try {
+      const response = await casePage.goto(`${BASE_URL}/work/${slug}`, {
+        waitUntil: "load",
+        timeout: 30_000,
+      });
+      check(
+        `/work/${slug} returns 200`,
+        response?.status() === 200,
+        `status=${response?.status()}`,
+      );
+      check(
+        `/work/${slug} renders an h1`,
+        (await casePage.locator("h1").first().textContent().catch(() => ""))?.trim() !== "",
+      );
+      check(`/work/${slug} has no console errors`, pageErrors.length === 0, pageErrors.slice(0, 2).join(" | "));
+    } finally {
+      await casePage.close();
+    }
+
+    const caseLlms = await fetch(`${BASE_URL}/work/${slug}/llms.txt`);
+    const caseLlmsBody = await caseLlms.text();
+    check(
+      `/work/${slug}/llms.txt returns 200 with canonical URL`,
+      caseLlms.status === 200 && caseLlmsBody.includes(`https://ilyamoskovkin.com/work/${slug}`),
+      `status=${caseLlms.status}`,
+    );
+  }
+
+  // ---- SEO / machine routes ----
+  console.log("seo routes:");
+  const sitemap = await fetch(`${BASE_URL}/sitemap.xml`);
+  const sitemapBody = await sitemap.text();
+  check(
+    "/sitemap.xml returns urlset",
+    sitemap.status === 200 && sitemapBody.includes("<urlset"),
+    `status=${sitemap.status}`,
+  );
+  const missingFromSitemap = slugs.filter(
+    (slug) => !sitemapBody.includes(`${SITE_URL}/work/${slug}`),
+  );
+  check(
+    "sitemap lists every case study",
+    missingFromSitemap.length === 0,
+    `missing: ${missingFromSitemap.join(", ")}`,
+  );
+
+  const robots = await fetch(`${BASE_URL}/robots.txt`);
+  const robotsBody = await robots.text();
+  check(
+    "/robots.txt references the sitemap",
+    robots.status === 200 && /sitemap:/i.test(robotsBody),
+    `status=${robots.status}`,
+  );
+
+  const llms = await fetch(`${BASE_URL}/llms.txt`);
+  const llmsBody = await llms.text();
+  check(
+    "/llms.txt returns an index",
+    llms.status === 200 && llmsBody.includes("## Case study index"),
+    `status=${llms.status}`,
+  );
+  const missingFromLlms = slugs.filter(
+    (slug) => !llmsBody.includes(`${SITE_URL}/work/${slug}`),
+  );
+  check(
+    "llms.txt lists every case study",
+    missingFromLlms.length === 0,
+    `missing: ${missingFromLlms.join(", ")}`,
+  );
+
+  const missingPage = await browser.newPage();
+  const missingResponse = await missingPage.goto(`${BASE_URL}/work/definitely-not-a-case`, {
+    waitUntil: "load",
+    timeout: 30_000,
+  });
+  check(
+    "unknown case slug returns 404",
+    missingResponse?.status() === 404,
+    `status=${missingResponse?.status()}`,
+  );
+  await missingPage.close();
 } finally {
   await browser.close();
 }
