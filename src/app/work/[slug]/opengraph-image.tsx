@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { notFound } from "next/navigation";
 import { getCase } from "@/lib/content";
 
 export const alt = "Case study · Ilya Moskovkin";
@@ -29,13 +30,14 @@ function truncateAtWord(value: string, maxLength: number) {
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const c = await getCase(slug);
+  if (!c) notFound();
 
-  const title = c?.title ?? "Case study";
-  const blurb = c?.blurb ?? "";
-  const role = c?.role ?? "";
-  const year = c?.year ?? "";
-  const coverUrl = getCoverUrl(c?.cover);
-  const tags = c?.tags.slice(0, 4) ?? [];
+  const title = c.title;
+  const blurb = c.blurb;
+  const role = c.role;
+  const year = c.year;
+  const coverUrl = getCoverUrl(c.cover);
+  const tags = c.tags.slice(0, 4);
 
   return new ImageResponse(
     (
