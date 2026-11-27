@@ -28,6 +28,25 @@ const nextConfig: NextConfig = {
   },
   // PostHog's API routes are sensitive to trailing-slash redirects.
   skipTrailingSlashRedirect: true,
+  // Baseline security headers on every response. No Content-Security-Policy
+  // here yet: Next.js inline/bootstrap scripts need a nonce-based CSP, which
+  // is its own verified change.
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
