@@ -26,7 +26,7 @@ Run the development server:
 pnpm run dev
 ```
 
-By default the dev server starts at `http://localhost:3010`. If that port is busy, `scripts/start-next.mjs` automatically falls forward to the next open port and logs the fallback before Next.js prints the final local URL.
+By default the dev server starts at `http://localhost:3010`. If that port is busy, `scripts/start-next.mjs` automatically falls forward to the next open port (up to 50 ports) and logs the fallback before Next.js prints the final local URL. The fallback applies only when `NODE_ENV` is not `production`: production starts (`pnpm run start`, or `pnpm run dev` with `NODE_ENV=production` set) check only the requested port and exit with an error if it is unavailable.
 
 ## Environment
 
@@ -43,11 +43,11 @@ CONTACT_FROM="Portfolio <onboarding@resend.dev>"
 ## Scripts
 
 ```bash
-pnpm run dev        # start Next.js on port 3010
+pnpm run dev        # start Next.js on port 3010 (falls forward if busy; exits if NODE_ENV=production and the port is taken)
 pnpm run typecheck  # run TypeScript without emitting files
 pnpm run check      # typecheck, then production build
 pnpm run build      # production build and type check
-pnpm run start      # serve the production build on port 3010
+pnpm run start      # serve the production build on port 3010 (exits if busy)
 ```
 
 ## Content
